@@ -6,7 +6,7 @@
 Учебный период: весенний семестр 2015г.
 
 ##Студенты
-Нейман Кирилл, https://github.com/neikila, neikila@gmail.com
+Нейман Кирилл, https://github.com/neikila, neikila@gmail.com;
 Копытов Василий, , 
 Семенов Иван, ,
 
