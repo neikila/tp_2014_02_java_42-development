@@ -5,10 +5,10 @@
 
 Учебный период: весенний семестр 2015г.
 
-##Студенты
-Нейман Кирилл, https://github.com/neikila, neikila@gmail.com;
-Копытов Василий, , 
-Семенов Иван, ,
+##Студенты:
+Копытов Василий, https://github.com/neikila, @gmail.com ;
+Нейман Кирилл, https://github.com/neikila, neikila@gmail.com ;
+Семенов Иван, https://github.com/neikila, @gmail.com .
 
 Подробное о проекте можно прочесть на сайте [Технопарка] [1]
 [1]: tp.mail.ru
