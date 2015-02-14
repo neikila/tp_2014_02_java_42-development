@@ -7,7 +7,9 @@
 
 ##Студенты:
 Копытов Василий, https://github.com/neikila, @gmail.com ;
+
 Нейман Кирилл, https://github.com/neikila, neikila@gmail.com ;
+
 Семенов Иван, https://github.com/neikila, @gmail.com .
 
 Подробное о проекте можно прочесть на сайте [Технопарка] [1]
