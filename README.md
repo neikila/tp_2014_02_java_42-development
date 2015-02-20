@@ -6,7 +6,7 @@
 Учебный период: весенний семестр 2015г.
 
 ##Студенты:
-Копытов Василий, /* пока нет */, kopytovsv@gmail.com ;
+Копытов Василий, https://github.com/Vasiliy-tech, kopytovsv@gmail.com ;
 
 Нейман Кирилл, https://github.com/neikila, neikila@gmail.com ;
 
