@@ -50,7 +50,7 @@ public class SignUpServlet extends HttpServlet {
 
         UserProfile user = new UserProfile(login, password, email, server);
 
-        String pageTml = "signupstatus.html";
+        String pageToReturn = "signupstatus.html";
 
         Map<String, Object> pageVariables = new HashMap<>();
 
@@ -60,9 +60,9 @@ public class SignUpServlet extends HttpServlet {
         } else {
             pageVariables.put("signUpStatus", "User with login: " +
                     "" + login + " already exists. Try again.");
-            pageTml = "signUpForm.html";
+            pageToReturn = "signUpForm.html";
         }
-        response.getWriter().println(PageGenerator.getPage(pageTml, pageVariables));
+        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
         response.setStatus(HttpServletResponse.SC_OK);
     }
 }

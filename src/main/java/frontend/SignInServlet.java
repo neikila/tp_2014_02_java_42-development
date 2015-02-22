@@ -24,6 +24,24 @@ public class SignInServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
+
+        response.setStatus(HttpServletResponse.SC_OK);
+
+        String pageToReturn;
+
+        Map<String, Object> pageVariables = new HashMap<>();
+
+        String message = "Log In:";
+
+        pageToReturn = "signInForm.html";
+
+        pageVariables.put("loginStatus", message);
+
+        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
+    }
+/* //Исходник
+    public void doGet(HttpServletRequest request,
+                      HttpServletResponse response) throws ServletException, IOException {
         String name = request.getParameter("name");
         String password = request.getParameter("password");
 
@@ -39,7 +57,32 @@ public class SignInServlet extends HttpServlet {
 
         response.getWriter().println(PageGenerator.getPage("authstatus.html", pageVariables));
     }
+*/
 
+    public void doPost(HttpServletRequest request,
+                       HttpServletResponse response) throws ServletException, IOException {
+        String login = request.getParameter("login");
+        String password = request.getParameter("password");
+
+        response.setStatus(HttpServletResponse.SC_OK);
+
+        String pageToReturn = "authstatus.html";
+
+        Map<String, Object> pageVariables = new HashMap<>();
+
+        UserProfile profile = accountService.getUser(login);
+        String message;
+        if (profile != null && profile.getPassword().equals(password)) {
+            message = "Login passed";
+        } else {
+            message = "Wrong login/password! Try again.";
+            pageToReturn = "signInForm.html";
+        }
+        pageVariables.put("loginStatus", message);
+
+        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
+    }
+/* //Исходик
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
@@ -53,4 +96,5 @@ public class SignInServlet extends HttpServlet {
 
         response.getWriter().println(PageGenerator.getPage("authresponse.txt", pageVariables));
     }
+*/
 }
