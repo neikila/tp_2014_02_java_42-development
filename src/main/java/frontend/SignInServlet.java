@@ -85,11 +85,16 @@ public class SignInServlet extends HttpServlet {
 
         UserProfile profile = accountService.getUser(login);
         String message;
-        if (profile != null && profile.getPassword().equals(password)) {
-            accountService.addSessions(session.getId(), profile);
-            message = "Login passed";
+        if (!accountService.isSessionWithSuchLoginExist(login)) {
+            if (profile != null && profile.getPassword().equals(password)) {
+                accountService.addSessions(session.getId(), profile);
+                message = "Login passed";
+            } else {
+                message = "Wrong login/password! Try again.";
+                pageToReturn = "signInForm.html";
+            }
         } else {
-            message = "Wrong login/password! Try again.";
+            message = "User with such login is already online.";
             pageToReturn = "signInForm.html";
         }
         pageVariables.put("loginStatus", message);

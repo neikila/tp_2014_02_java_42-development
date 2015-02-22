@@ -1,6 +1,8 @@
 package main;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -28,6 +30,19 @@ public class AccountService {
     }
 
     public int getAmountOfSessions() {return  sessions.size();};
+
+    public boolean isSessionWithSuchLoginExist(String userName) {
+        Collection<UserProfile> temp = sessions.values();
+        Iterator<UserProfile> itr = temp.iterator();
+        while ( itr.hasNext() )
+        {
+            if ( itr.next().getLogin().equals(userName) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public UserProfile getUser(String userName) {
         return users.get(userName);

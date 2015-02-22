@@ -26,7 +26,6 @@ public class Main {
         String server = "10";
         String email = "admin@gmail.com";
         accountService.addUser("admin",  new UserProfile(login, password, email, server));
-        accountService.addSessions("1", new UserProfile(login, password, email, server));
     }
     public static void main(String[] args) throws Exception {
         int port = 8080;
