@@ -16,10 +16,11 @@ import java.util.Map;
 /**
  * @author v.chibrikov
  */
-public class SignInServlet extends HttpServlet {
+public class ProfileServlet extends HttpServlet {
+
     private AccountService accountService;
 
-    public SignInServlet(AccountService accountService) {
+    public ProfileServlet(AccountService accountService) {
         this.accountService = accountService;
     }
 
@@ -34,18 +35,19 @@ public class SignInServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-        String loginStatus;
         UserProfile user = accountService.getSessions(session.getId());
+
         if (user == null)
         {
-            loginStatus = "Log In:";
+            pageVariables.put("loginStatus", "You haven't Logged In:");
             pageToReturn = "signInForm.html";
         } else {
-            loginStatus = "You have already logged in";
-            pageToReturn = "authstatus.html";
+            pageToReturn = "profile.html";
+            pageVariables.put("login", user.getLogin());
+            pageVariables.put("password", user.getPassword());
+            pageVariables.put("email", user.getEmail());
+            pageVariables.put("server", user.getServer());
         }
-
-        pageVariables.put("loginStatus", loginStatus);
 
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
     }

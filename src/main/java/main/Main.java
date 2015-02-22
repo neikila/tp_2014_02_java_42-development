@@ -1,5 +1,6 @@
 package main;
 
+import frontend.ProfileServlet;
 import frontend.SignInServlet;
 import frontend.SignUpServlet;
 import org.eclipse.jetty.server.Handler;
@@ -24,6 +25,7 @@ public class Main {
         String server = "10";
         String email = "admin@gmail.com";
         accountService.addUser("admin",  new UserProfile(login, password, email, server));
+        accountService.addSessions("1", new UserProfile(login, password, email, server));
     }
     public static void main(String[] args) throws Exception {
         int port = 8080;
@@ -40,10 +42,12 @@ public class Main {
 
         Servlet signIn = new SignInServlet(accountService);
         Servlet signUp = new SignUpServlet(accountService);
+        Servlet profileInfo = new ProfileServlet(accountService);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(signIn), "/api/v1/auth/signin");
         context.addServlet(new ServletHolder(signUp), "/api/v1/auth/signup");
+        context.addServlet(new ServletHolder(profileInfo), "/api/v1/auth/profile");
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);

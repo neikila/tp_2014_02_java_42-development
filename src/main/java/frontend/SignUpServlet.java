@@ -25,6 +25,7 @@ public class SignUpServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
+
         String name = request.getParameter("name"); //Потом нужно как-то вытаскивать из сессии для сравнения =)
 
         String pageTml = "signupstatus.html";
@@ -49,13 +50,14 @@ public class SignUpServlet extends HttpServlet {
         String email = request.getParameter("email");
 
         UserProfile user = new UserProfile(login, password, email, server);
+        HttpSession session = request.getSession();
 
         String pageToReturn = "signupstatus.html";
 
         Map<String, Object> pageVariables = new HashMap<>();
 
         if (accountService.addUser(login, user)) {
-            accountService.addSessions("" + (accountService.getAmountOfSessions() + 1), user);
+            accountService.addSessions(session.getId(), user);
             pageVariables.put("signUpStatus", "New user created");
         } else {
             pageVariables.put("signUpStatus", "User with login: " +
