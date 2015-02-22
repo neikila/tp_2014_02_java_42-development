@@ -26,18 +26,18 @@ public class SignUpServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
-        String name = request.getParameter("name"); //Потом нужно как-то вытаскивать из сессии для сравнения =)
+        HttpSession session = request.getSession();
+        UserProfile profile = accountService.getSessions(session.getId());
 
-        String pageTml = "signupstatus.html";
+        String pageTml;
 
         Map<String, Object> pageVariables = new HashMap<>();
-        if (accountService.isUserExist(name)) {
-            pageVariables.put("signUpStatus", "User with name: " +
-                    "" + name + " already exists");
-        } else {
+        if (profile == null) {
             pageTml = "signUpForm.html";
+        } else {
+            pageTml = "signupstatus.html";
+            pageVariables.put("signUpStatus", "You have to logout before signing up.");
         }
-        pageVariables.put("signUpStatus", "");
         response.getWriter().println(PageGenerator.getPage(pageTml, pageVariables));
         response.setStatus(HttpServletResponse.SC_OK);
     }

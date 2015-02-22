@@ -1,5 +1,6 @@
 package main;
 
+import frontend.LogOutServlet;
 import frontend.ProfileServlet;
 import frontend.SignInServlet;
 import frontend.SignUpServlet;
@@ -43,11 +44,13 @@ public class Main {
         Servlet signIn = new SignInServlet(accountService);
         Servlet signUp = new SignUpServlet(accountService);
         Servlet profileInfo = new ProfileServlet(accountService);
+        Servlet logOut = new LogOutServlet(accountService);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(signIn), "/api/v1/auth/signin");
         context.addServlet(new ServletHolder(signUp), "/api/v1/auth/signup");
         context.addServlet(new ServletHolder(profileInfo), "/api/v1/auth/profile");
+        context.addServlet(new ServletHolder(logOut), "/api/v1/auth/logout");
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);

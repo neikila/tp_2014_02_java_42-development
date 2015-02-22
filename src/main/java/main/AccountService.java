@@ -28,11 +28,16 @@ public class AccountService {
     }
 
     public int getAmountOfSessions() {return  sessions.size();};
+
     public UserProfile getUser(String userName) {
         return users.get(userName);
     }
 
     public UserProfile getSessions(String sessionId) {
         return sessions.get(sessionId);
+    }
+
+    public void removeSession(String sessionId) {
+        sessions.remove(sessionId);
     }
 }

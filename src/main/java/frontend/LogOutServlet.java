@@ -16,11 +16,11 @@ import java.util.Map;
 /**
  * @author v.chibrikov
  */
-public class ProfileServlet extends HttpServlet {
+public class LogOutServlet extends HttpServlet {
 
     private AccountService accountService;
 
-    public ProfileServlet(AccountService accountService) {
+    public LogOutServlet(AccountService accountService) {
         this.accountService = accountService;
     }
 
@@ -42,41 +42,40 @@ public class ProfileServlet extends HttpServlet {
             pageVariables.put("loginStatus", "You haven't Logged In:");
             pageToReturn = "signInForm.html";
         } else {
-            pageToReturn = "profile.html";
-            pageVariables.put("login", user.getLogin());
-            pageVariables.put("password", user.getPassword());
-            pageVariables.put("email", user.getEmail());
-            pageVariables.put("server", user.getServer());
+            pageToReturn = "logOut.html";
+            pageVariables.put("logOutStatus", "Are you sure you want to exit?");
         }
 
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
     }
 
+
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
-        /*String login = request.getParameter("login");
-        String password = request.getParameter("password");
+        String answer = request.getParameter("answer");
 
         response.setStatus(HttpServletResponse.SC_OK);
 
-        String pageToReturn = "authstatus.html";
+        String pageToReturn;
 
         Map<String, Object> pageVariables = new HashMap<>();
 
         HttpSession session = request.getSession();
 
-        UserProfile profile = accountService.getUser(login);
-        String message;
-        if (profile != null && profile.getPassword().equals(password)) {
-            accountService.addSessions(session.getId(), profile);
-            message = "Login passed";
-        } else {
-            message = "Wrong login/password! Try again.";
+        UserProfile profile = accountService.getSessions(session.getId());
+
+        if (answer.equals("Yes") || profile == null) {
+            accountService.removeSession(session.getId());
+            pageVariables.put("loginStatus", "Log In:");
             pageToReturn = "signInForm.html";
+        } else {
+            pageToReturn = "profile.html";
+            pageVariables.put("login", profile.getLogin());
+            pageVariables.put("password", profile.getPassword());
+            pageVariables.put("email", profile.getEmail());
+            pageVariables.put("server", profile.getServer());
         }
-        pageVariables.put("loginStatus", message);
 
-        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));*/
+        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
     }
-
 }

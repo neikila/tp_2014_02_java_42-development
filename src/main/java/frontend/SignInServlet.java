@@ -33,9 +33,10 @@ public class SignInServlet extends HttpServlet {
         Map<String, Object> pageVariables = new HashMap<>();
 
         HttpSession session = request.getSession();
+        UserProfile user = accountService.getSessions(session.getId());
 
         String loginStatus;
-        UserProfile user = accountService.getSessions(session.getId());
+
         if (user == null)
         {
             loginStatus = "Log In:";
