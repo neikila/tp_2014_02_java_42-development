@@ -15,6 +15,16 @@ import javax.servlet.Servlet;
  * @author v.chibrikov
  */
 public class Main {
+
+    // Действия необходимые для тестирования
+    private static void preparationForTest(AccountService accountService) {
+        // Создание в базе пользователя по дефолту. Имитация бд ввиду её отстсвия.
+        String login = "admin";
+        String password = "admin";
+        String server = "10";
+        String email = "admin@gmail.com";
+        accountService.addUser("admin",  new UserProfile(login, password, email, server));
+    }
     public static void main(String[] args) throws Exception {
         int port = 8080;
         if (args.length == 1) {
@@ -25,6 +35,8 @@ public class Main {
         System.out.append("Starting at port: ").append(String.valueOf(port)).append('\n');
 
         AccountService accountService = new AccountService();
+
+        preparationForTest(accountService);
 
         Servlet signIn = new SignInServlet(accountService);
         Servlet signUp = new SignUpServlet(accountService);

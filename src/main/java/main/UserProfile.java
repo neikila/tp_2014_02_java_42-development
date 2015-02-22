@@ -7,11 +7,13 @@ public class UserProfile {
     private String login;
     private String password;
     private String email;
+    private String server;
 
-    public UserProfile(String login, String password, String email) {
+    public UserProfile(String login, String password, String email, String server) {
         this.login = login;
         this.password = password;
         this.email = email;
+        this.server = server;
     }
 
     public String getLogin() {
@@ -24,5 +26,9 @@ public class UserProfile {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getServer() {
+        return server;
     }
 }

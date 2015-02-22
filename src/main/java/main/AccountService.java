@@ -27,6 +27,7 @@ public class AccountService {
         sessions.put(sessionId, userProfile);
     }
 
+    public int getAmountOfSessions() {return  sessions.size();};
     public UserProfile getUser(String userName) {
         return users.get(userName);
     }
