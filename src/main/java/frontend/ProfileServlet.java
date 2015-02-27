@@ -52,6 +52,7 @@ public class ProfileServlet extends HttpServlet {
             pageVariables.put("password", user.getPassword());
             pageVariables.put("email", user.getEmail());
             pageVariables.put("server", user.getServer());
+            pageVariables.put("role", user.getRole());
         }
 
         // Генерирование страницы с заданными параметрами.

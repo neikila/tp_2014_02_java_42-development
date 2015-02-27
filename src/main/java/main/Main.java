@@ -1,9 +1,6 @@
 package main;
 
-import frontend.LogOutServlet;
-import frontend.ProfileServlet;
-import frontend.SignInServlet;
-import frontend.SignUpServlet;
+import frontend.*;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -26,8 +23,11 @@ public class Main {
         String password = "admin";
         String server = "10";
         String email = "admin@gmail.com";
-        accountService.addUser("admin",  new UserProfile(login, password, email, server));
+        UserProfile profile = new UserProfile(login, password, email, server);
+        profile.setRole("Admin");
+        accountService.addUser("admin",  profile);
     }
+
     public static void main(String[] args) throws Exception {
         int port = 8080;
         if (args.length == 1) {
@@ -35,20 +35,23 @@ public class Main {
             port = Integer.valueOf(portString);
         }
 
+        AccountService accountService = new AccountService();
+        preparationForTest(accountService);
+
         System.out.append("Starting at port: ").append(String.valueOf(port)).append('\n');
 
-        AccountService accountService = new AccountService();
 
-        preparationForTest(accountService);
 
         // Создание объекта сервлета, который бдет обрабатывать запрос
         Servlet signIn = new SignInServlet(accountService);
         Servlet signUp = new SignUpServlet(accountService);
         Servlet profileInfo = new ProfileServlet(accountService);
         Servlet logOut = new LogOutServlet(accountService);
+        Servlet admin = new AdminServlet(accountService);
 
         // Распределение: какой сервлет соответствует какому url
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.addServlet(new ServletHolder(admin), "/api/v1/auth/admin");
         context.addServlet(new ServletHolder(signIn), "/api/v1/auth/signin");
         context.addServlet(new ServletHolder(signUp), "/api/v1/auth/signup");
         context.addServlet(new ServletHolder(profileInfo), "/api/v1/auth/profile");
@@ -66,5 +69,6 @@ public class Main {
 
         server.start();
         server.join();
+
     }
 }
