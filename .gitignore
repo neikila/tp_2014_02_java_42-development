@@ -2,6 +2,7 @@
 *~
 */.idea/workspace.xml
 */.idea/tasks.xml
+*/node_modules/*
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 

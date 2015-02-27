@@ -83,22 +83,32 @@ public class SignInServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-        UserProfile profile = accountService.getUser(login);
         String message;
+
+        // Проверка авторизован ли уже польлзвоатель
         if (!accountService.isSessionWithSuchLoginExist(login)) {
+            // Получение профиля польлзователя по username
+            UserProfile profile = accountService.getUser(login);
+            // Если профиль найден, то проверка пароля
             if (profile != null && profile.getPassword().equals(password)) {
                 accountService.addSessions(session.getId(), profile);
+                // Задание сообщения об успешности операции
                 message = "Login passed";
             } else {
+                // Замена результирующей страницы на страницу повторного воода с соответствующим сообщением
                 message = "Wrong login/password! Try again.";
                 pageToReturn = "signInForm.html";
             }
         } else {
+            // Создание сообщения о следующей ошибке: пользователь с заданным логином уже авторизован
+            // и замена результирующей страницы на страницу авторизации
             message = "User with such login is already online.";
             pageToReturn = "signInForm.html";
         }
+        //Запись сообщения в переменные, передаваемые в генератор страницы
         pageVariables.put("loginStatus", message);
 
+        //Генерация странницы
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
     }
 /* //Исходик

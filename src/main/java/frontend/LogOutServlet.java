@@ -64,18 +64,19 @@ public class LogOutServlet extends HttpServlet {
 
         UserProfile profile = accountService.getSessions(session.getId());
 
+        // В случае, если пользователь подтверждает logout, удаляем пользователя из сессии и возвращаем страницу авторизации
         if (answer.equals("Yes") || profile == null) {
             accountService.removeSession(session.getId());
             pageVariables.put("loginStatus", "Log In:");
             pageToReturn = "signInForm.html";
         } else {
+            // В случае отказа возвращаем страницу профиля
             pageToReturn = "profile.html";
             pageVariables.put("login", profile.getLogin());
             pageVariables.put("password", profile.getPassword());
             pageVariables.put("email", profile.getEmail());
             pageVariables.put("server", profile.getServer());
         }
-
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
     }
 }

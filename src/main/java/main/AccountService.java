@@ -29,20 +29,39 @@ public class AccountService {
         sessions.put(sessionId, userProfile);
     }
 
+    // Метод получения количества авторизованных пользователей
     public int getAmountOfSessions() {return  sessions.size();};
 
+    // Поиск сессии по логину
     public boolean isSessionWithSuchLoginExist(String userName) {
+
+        // Для перебор все элементов в карте необходимо выполнить преобразование к коллекции
         Collection<UserProfile> temp = sessions.values();
+        // Создание итератора по коллекции
         Iterator<UserProfile> itr = temp.iterator();
-        while ( itr.hasNext() )
+
+        // Выполнение перебора
+        boolean returnValue = false;
+        while (!returnValue && itr.hasNext() )
         {
             if ( itr.next().getLogin().equals(userName) )
             {
-                return true;
+                returnValue = true;
             }
         }
-        return false;
+        return returnValue;
     }
+
+    // Валидация UserName'а
+    public boolean IsUserNameValid(String userName) {
+        boolean returnValue = true;
+        if (userName.length() < 5)
+        {
+            returnValue = false;
+        }
+        return returnValue;
+    }
+
 
     public UserProfile getUser(String userName) {
         return users.get(userName);
@@ -52,6 +71,7 @@ public class AccountService {
         return sessions.get(sessionId);
     }
 
+    // Удаление сессии по ключу
     public void removeSession(String sessionId) {
         sessions.remove(sessionId);
     }

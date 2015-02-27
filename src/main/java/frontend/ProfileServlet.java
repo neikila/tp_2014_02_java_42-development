@@ -29,14 +29,19 @@ public class ProfileServlet extends HttpServlet {
 
         response.setStatus(HttpServletResponse.SC_OK);
 
+        // Задание строки с названием файла, на основе которого будет генерироваться ответ
         String pageToReturn;
 
         Map<String, Object> pageVariables = new HashMap<>();
 
+        // Создание объекта сессии, полученной от полльзователя в запросе
         HttpSession session = request.getSession();
 
+        // Идентификация пользователя на основе id-хэша
         UserProfile user = accountService.getSessions(session.getId());
 
+        // Если пользователь не определен, то возвращаем ему странницу авторизации
+        // в противном случае достаем "из базы" информацию о пользователе
         if (user == null)
         {
             pageVariables.put("loginStatus", "You haven't Logged In:");
@@ -49,34 +54,11 @@ public class ProfileServlet extends HttpServlet {
             pageVariables.put("server", user.getServer());
         }
 
+        // Генерирование страницы с заданными параметрами.
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
     }
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
-        /*String login = request.getParameter("login");
-        String password = request.getParameter("password");
-
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        String pageToReturn = "authstatus.html";
-
-        Map<String, Object> pageVariables = new HashMap<>();
-
-        HttpSession session = request.getSession();
-
-        UserProfile profile = accountService.getUser(login);
-        String message;
-        if (profile != null && profile.getPassword().equals(password)) {
-            accountService.addSessions(session.getId(), profile);
-            message = "Login passed";
-        } else {
-            message = "Wrong login/password! Try again.";
-            pageToReturn = "signInForm.html";
-        }
-        pageVariables.put("loginStatus", message);
-
-        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));*/
     }
-
 }

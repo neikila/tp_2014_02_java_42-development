@@ -19,6 +19,7 @@ import javax.servlet.Servlet;
 public class Main {
 
     // Действия необходимые для тестирования
+    // Вызывается в начале запуска сервера
     private static void preparationForTest(AccountService accountService) {
         // Создание в базе пользователя по дефолту. Имитация бд ввиду её отстсвия.
         String login = "admin";
@@ -40,11 +41,13 @@ public class Main {
 
         preparationForTest(accountService);
 
+        // Создание объекта сервлета, который бдет обрабатывать запрос
         Servlet signIn = new SignInServlet(accountService);
         Servlet signUp = new SignUpServlet(accountService);
         Servlet profileInfo = new ProfileServlet(accountService);
         Servlet logOut = new LogOutServlet(accountService);
 
+        // Распределение: какой сервлет соответствует какому url
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(signIn), "/api/v1/auth/signin");
         context.addServlet(new ServletHolder(signUp), "/api/v1/auth/signup");
