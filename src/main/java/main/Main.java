@@ -40,35 +40,7 @@ public class Main {
 
         System.out.append("Starting at port: ").append(String.valueOf(port)).append('\n');
 
-
-
-        // Создание объекта сервлета, который бдет обрабатывать запрос
-        Servlet signIn = new SignInServlet(accountService);
-        Servlet signUp = new SignUpServlet(accountService);
-        Servlet profileInfo = new ProfileServlet(accountService);
-        Servlet logOut = new LogOutServlet(accountService);
-        Servlet admin = new AdminServlet(accountService);
-
-        // Распределение: какой сервлет соответствует какому url
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(admin), "/api/v1/auth/admin");
-        context.addServlet(new ServletHolder(signIn), "/api/v1/auth/signin");
-        context.addServlet(new ServletHolder(signUp), "/api/v1/auth/signup");
-        context.addServlet(new ServletHolder(profileInfo), "/api/v1/auth/profile");
-        context.addServlet(new ServletHolder(logOut), "/api/v1/auth/logout");
-
-        ResourceHandler resource_handler = new ResourceHandler();
-        resource_handler.setDirectoriesListed(true);
-        resource_handler.setResourceBase("public_html");
-
-        HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{resource_handler, context});
-
-        Server server = new Server(port);
-        server.setHandler(handlers);
-
-        server.start();
-        server.join();
-
+        AppServer server = new AppServer(port, accountService);
+        server.Start();
     }
 }

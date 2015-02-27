@@ -1,6 +1,7 @@
 package frontend;
 
 import main.AccountService;
+import main.AppServer;
 import main.UserProfile;
 import org.eclipse.jetty.server.Server;
 import templater.PageGenerator;
@@ -20,10 +21,11 @@ import java.util.Map;
 public class AdminServlet extends HttpServlet {
 
     private AccountService accountService;
-    private Server server;
+    private AppServer server;
 
-    public AdminServlet(AccountService accountService) {
+    public AdminServlet(AccountService accountService, AppServer server) {
         this.accountService = accountService;
+        this.server = server;
     }
 
     public void doGet(HttpServletRequest request,
@@ -70,33 +72,22 @@ public class AdminServlet extends HttpServlet {
             if(action != null)
             {
                 switch (action) {
-                    case ("Stop server"):
-                        try {
-
-                            System.out.append("Success");
-                        }  catch (Exception e) {
-                            System.out.append("Not stopped");
-                            e.printStackTrace();
-                        }
+                    case "Stop server":
+                        pageVariables.put("topicMessage", "Statistic");
+                        pageToReturn = "byeBye.html";
+                        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
+                        server.Stop();
+                        System.out.append("Success");
                         break;
-                    case ("Get Statistic"):
+                    case "Get statistic":
+                        pageVariables.put("topicMessage", "Statistic");
+                        pageVariables.put("amountOfLoggedIn", accountService.getAmountOfSessions());
+                        pageVariables.put("amountOfSignedUp", accountService.getAmountOfUsers());
+                        pageToReturn = "statistic.html";
                         break;
                 }
             }
         }
-        // В случае, если пользователь подтверждает logout, удаляем пользователя из сессии и возвращаем страницу авторизации
-/*        if (answer.equals("Yes") || profile == null) {
-            accountService.removeSession(session.getId());
-            pageVariables.put("loginStatus", "Log In:");
-            pageToReturn = "signInForm.html";
-        } else {
-            // В случае отказа возвращаем страницу профиля
-            pageToReturn = "profile.html";
-            pageVariables.put("login", profile.getLogin());
-            pageVariables.put("password", profile.getPassword());
-            pageVariables.put("email", profile.getEmail());
-            pageVariables.put("server", profile.getServer());
-        }*/
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
     }
 }

@@ -30,7 +30,10 @@ public class AccountService {
     }
 
     // Метод получения количества авторизованных пользователей
-    public int getAmountOfSessions() {return  sessions.size();};
+    public int getAmountOfSessions() {return  sessions.size();}
+
+    // Метод получения количества авторизованных пользователей
+    public int getAmountOfUsers() {return  users.size();}
 
     // Поиск сессии по логину
     public boolean isSessionWithSuchLoginExist(String userName) {
