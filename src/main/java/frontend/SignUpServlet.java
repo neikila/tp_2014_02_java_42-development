@@ -1,6 +1,8 @@
 package frontend;
 
+import com.sun.xml.internal.ws.developer.MemberSubmissionAddressing;
 import main.AccountService;
+import main.MyValidator;
 import main.UserProfile;
 import templater.PageGenerator;
 
@@ -13,9 +15,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by v.chibrikov on 13.09.2014.
- */
 public class SignUpServlet extends HttpServlet {
     private AccountService accountService;
 
@@ -57,23 +56,33 @@ public class SignUpServlet extends HttpServlet {
         UserProfile user = new UserProfile(login, password, email, server);
         HttpSession session = request.getSession();
 
-        String pageToReturn = "signupstatus.html";
+        String pageToReturn = "signUpForm.html";
 
         Map<String, Object> pageVariables = new HashMap<>();
 
         String message = "";
 
-        // В случае успешной регистрации производиться автоматическая авторизация и возврат сообщения об успешно регистрации
-        // Можно переделать на возврат формы профиля
-        if (accountService.addUser(login, user)) {
-            accountService.addSessions(session.getId(), user);
-            message = "New user created";;
+        MyValidator validator = new MyValidator();
+
+        // Проверка соотвествия login'а стандарту
+        if (validator.isUserNameValid(login) && validator.isPasswordValid(password) && validator.isEmailValid(email))
+        {
+            // В случае успешной регистрации производиться автоматическая авторизация и возврат сообщения об успешно регистрации
+            // Можно переделать на возврат формы профиля
+            if (accountService.addUser(login, user)) {
+                accountService.addSessions(session.getId(), user);
+                message = "New user created";
+                pageToReturn = "signupstatus.html";
+            } else {
+                // В случае, если такой логин уже занят, возвращается соответствующее сообщение и повторная форма регистрации
+                message = "User with login: " +
+                        "" + login + " already exists. Try again.";
+            }
         } else {
-            // В случае, если такой логин уже занят, возвращается соответствующее сообщение и повторная форма регистрации
-            message = "User with login: " +
-                    "" + login + " already exists. Try again.";
-            pageToReturn = "signUpForm.html";
+            // Не вижу смысла в более подробном сообщении. Об этом позабоиться frontend.
+            message = "Wrong login or password or email.";
         }
+
 
         pageVariables.put("signUpStatus", message);
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));

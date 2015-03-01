@@ -1,36 +1,27 @@
 package main;
 
-/**
- * Created by v.chibrikov on 13.09.2014.
- */
 public class UserProfile {
     private String login;
     private String password;
     private String email;
     private String server;
-    private String role;
+    private boolean isSuperUser;
 
     public UserProfile(String login, String password, String email, String server) {
         this.login = login;
         this.password = password;
         this.email = email;
         this.server = server;
-        this.role = "User";
+        this.isSuperUser = false;
     }
 
-    public boolean setRole(String role) {
-        boolean returnValue = true;
-        switch(role) {
-            case "User":;
-            case "Admin": this.role = role; break;
-            default: returnValue = false;
-        }
-        return returnValue;
+    public void setAdmin(boolean value) {
+        isSuperUser = value;
     }
 
-    public boolean isAdmin() { return role.equals("Admin"); }
+    public boolean isAdmin() { return isSuperUser; }
 
-    public String getRole() { return role; }
+    public String getRole() { return isSuperUser?"Admin":"User"; }
 
     public String getLogin() {
         return login;

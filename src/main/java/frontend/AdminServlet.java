@@ -3,7 +3,6 @@ package frontend;
 import main.AccountService;
 import main.AppServer;
 import main.UserProfile;
-import org.eclipse.jetty.server.Server;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -15,9 +14,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author v.chibrikov
- */
 public class AdminServlet extends HttpServlet {
 
     private AccountService accountService;
@@ -76,8 +72,7 @@ public class AdminServlet extends HttpServlet {
                         pageVariables.put("topicMessage", "Statistic");
                         pageToReturn = "byeBye.html";
                         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
-                        server.Stop();
-                        System.out.append("Success");
+                        server.stop();
                         break;
                     case "Get statistic":
                         pageVariables.put("topicMessage", "Statistic");
