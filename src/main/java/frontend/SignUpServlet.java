@@ -1,6 +1,5 @@
 package frontend;
 
-import com.sun.xml.internal.ws.developer.MemberSubmissionAddressing;
 import main.AccountService;
 import main.MyValidator;
 import main.UserProfile;
@@ -48,6 +47,7 @@ public class SignUpServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
+
         String login = request.getParameter("login");
         String password = request.getParameter("password");
         String server = request.getParameter("server");
@@ -60,7 +60,7 @@ public class SignUpServlet extends HttpServlet {
 
         Map<String, Object> pageVariables = new HashMap<>();
 
-        String message = "";
+        String message;
 
         MyValidator validator = new MyValidator();
 
