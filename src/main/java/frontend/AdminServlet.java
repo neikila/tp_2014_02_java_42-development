@@ -52,7 +52,6 @@ public class AdminServlet extends HttpServlet {
                        HttpServletResponse response) throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        System.out.append("Action = ").append(action).append(' ').append((action == null)?"true\n":"false\n");
 
         response.setStatus(HttpServletResponse.SC_OK);
 

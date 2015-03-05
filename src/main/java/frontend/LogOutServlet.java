@@ -73,6 +73,7 @@ public class LogOutServlet extends HttpServlet {
             pageVariables.put("password", profile.getPassword());
             pageVariables.put("email", profile.getEmail());
             pageVariables.put("server", profile.getServer());
+            pageVariables.put("role", profile.getRole());
         }
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
     }
