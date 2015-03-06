@@ -3,7 +3,6 @@ package frontend;
 import main.AccountService;
 import main.UserProfile;
 import org.json.simple.JSONObject;
-import templater.PageGenerator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,14 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-public class LogOutServlet extends HttpServlet {
+public class SignOutServlet extends HttpServlet {
 
     private AccountService accountService;
 
-    public LogOutServlet(AccountService accountService) {
+    public SignOutServlet(AccountService accountService) {
         this.accountService = accountService;
     }
 

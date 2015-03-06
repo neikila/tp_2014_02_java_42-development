@@ -88,8 +88,9 @@ public class SignUpServlet extends HttpServlet {
         if (status != 200) {
             data.put("message", message);
         } else {
+            String pass = user.getPassword();
+            data.put("password", pass.substring(0, (pass.length() - 3)).replaceAll(".", "*") + pass.substring((pass.length() - 3), pass.length()));
             data.put("login", login);
-            data.put("password", password); //TODO вернуть только часть пароля
             data.put("email", email);
             data.put("server", server);
         }

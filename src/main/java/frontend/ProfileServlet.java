@@ -49,8 +49,9 @@ public class ProfileServlet extends HttpServlet {
         if (status != 200) {
             data.put("message", message);
         } else {
+            String pass = user.getPassword();
+            data.put("password", pass.substring(0, (pass.length() - 3)).replaceAll(".", "*") + pass.substring((pass.length() - 3), pass.length()));
             data.put("login", user.getLogin());
-            data.put("password", user.getPassword()); //TODO вернуть только часть пароля
             data.put("email", user.getEmail());
             data.put("server", user.getServer());
             data.put("role", user.getRole());

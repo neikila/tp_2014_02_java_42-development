@@ -2,27 +2,25 @@ package main;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.validator.EmailValidator;
 
 public  class MyValidator {
+    private static EmailValidator emailValidator = EmailValidator.getInstance();
+    private static Pattern usernamePattern = Pattern.compile("^\\w{5,}$");
+    private static Pattern passwordPatern = Pattern.compile("^\\w{6,}$");
 
-    // Валидация UserName'а
     public static boolean isUserNameValid(String userName) {
-        Pattern p = Pattern.compile("^\\w{5,}$");
-        Matcher m = p.matcher(userName);
+        Matcher m = usernamePattern.matcher(userName);
         return m.matches();
     }
 
-    // Валидация пароля (пока что они похожи, в дальнейшем возможно наожим другие ограничения)
     public static boolean isPasswordValid(String password) {
-        Pattern p = Pattern.compile("^\\w{6,}$");
-        Matcher m = p.matcher(password);
+        Matcher m = passwordPatern.matcher(password);
         return m.matches();
     }
 
-    // Валидация имейла
     public static boolean isEmailValid(String email) {
-        Pattern p = Pattern.compile("^.+@[a-zA-Z]+\\.[a-z]+$");
-        Matcher m = p.matcher(email);
-        return m.matches();
+        return emailValidator.isValid(email);
     }
 }
+

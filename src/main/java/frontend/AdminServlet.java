@@ -17,11 +17,9 @@ import java.util.Map;
 public class AdminServlet extends HttpServlet {
 
     private AccountService accountService;
-    private AppServer server;
 
-    public AdminServlet(AccountService accountService, AppServer server) {
+    public AdminServlet(AccountService accountService) {
         this.accountService = accountService;
-        this.server = server;
     }
 
     public void doGet(HttpServletRequest request,
@@ -71,7 +69,7 @@ public class AdminServlet extends HttpServlet {
                         pageVariables.put("topicMessage", "Statistic");
                         pageToReturn = "byeBye.html";
                         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
-                        server.stop();
+                        System.exit(0);
                         break;
                     case "Get statistic":
                         pageVariables.put("topicMessage", "Statistic");

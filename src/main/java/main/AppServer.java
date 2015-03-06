@@ -17,20 +17,18 @@ public class AppServer {
 
         server = new Server(port);
 
-        // Создание объекта сервлета, который бдет обрабатывать запрос
         Servlet signIn = new SignInServlet(accountService);
         Servlet signUp = new SignUpServlet(accountService);
         Servlet profileInfo = new ProfileServlet(accountService);
-        Servlet logOut = new LogOutServlet(accountService);
-        Servlet admin = new AdminServlet(accountService, this);
+        Servlet signOut = new SignOutServlet(accountService);
+        Servlet admin = new AdminServlet(accountService);
 
-        // Распределение: какой сервлет соответствует какому url
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(admin), "/api/v1/auth/admin");
         context.addServlet(new ServletHolder(signIn), "/api/v1/auth/signin");
         context.addServlet(new ServletHolder(signUp), "/api/v1/auth/signup");
-        context.addServlet(new ServletHolder(profileInfo), "/api/v1/auth/profile");
-        context.addServlet(new ServletHolder(logOut), "/api/v1/auth/logout");
+        context.addServlet(new ServletHolder(profileInfo), "/api/v1/auth/check");
+        context.addServlet(new ServletHolder(signOut), "/api/v1/auth/signout");
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
