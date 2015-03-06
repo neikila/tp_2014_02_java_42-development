@@ -12,6 +12,7 @@ public class Main {
         String email = "admin@gmail.com";
         UserProfile profile = new UserProfile(login, password, email, server);
         profile.setAdmin(true);
+        profile.setScore(1000);
         accountService.addUser(login,  profile);
 
         login = "test";
@@ -19,6 +20,7 @@ public class Main {
         server = "10";
         email = "test@gmail.com";
         profile = new UserProfile(login, password, email, server);
+        profile.setScore(100);
         profile.setAdmin(true);
         accountService.addUser(login,  profile);
     }

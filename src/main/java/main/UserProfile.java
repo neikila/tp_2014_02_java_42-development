@@ -6,6 +6,7 @@ public class UserProfile {
     private String email;
     private String server;
     private boolean isSuperUser;
+    private int score;
 
     public UserProfile(String login, String password, String email, String server) {
         this.login = login;
@@ -13,7 +14,12 @@ public class UserProfile {
         this.email = email;
         this.server = server;
         this.isSuperUser = false;
+        this.score = 0;
     }
+
+    public int getScore() { return score; }
+
+    public void setScore(int value) { score = value; }
 
     public void setAdmin(boolean value) {
         isSuperUser = value;

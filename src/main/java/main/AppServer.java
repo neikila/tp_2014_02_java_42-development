@@ -17,18 +17,14 @@ public class AppServer {
 
         server = new Server(port);
 
-        Servlet signIn = new SignInServlet(accountService);
-        Servlet signUp = new SignUpServlet(accountService);
-        Servlet profileInfo = new ProfileServlet(accountService);
-        Servlet signOut = new SignOutServlet(accountService);
-        Servlet admin = new AdminServlet(accountService);
-
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(admin), "/api/v1/auth/admin");
-        context.addServlet(new ServletHolder(signIn), "/api/v1/auth/signin");
-        context.addServlet(new ServletHolder(signUp), "/api/v1/auth/signup");
-        context.addServlet(new ServletHolder(profileInfo), "/api/v1/auth/check");
-        context.addServlet(new ServletHolder(signOut), "/api/v1/auth/signout");
+
+        addServletToContext(context, new SignInServlet(accountService), "/auth/signin");
+        addServletToContext(context, new SignUpServlet(accountService), "/auth/signup");
+        addServletToContext(context, new ProfileServlet(accountService), "/auth/check");
+        addServletToContext(context, new AdminServlet(accountService), "/auth/admin");
+        addServletToContext(context, new SignOutServlet(accountService), "/auth/signout");
+        addServletToContext(context, new ScoreServlet(accountService), "/score");
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
@@ -38,6 +34,12 @@ public class AppServer {
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[]{resource_handler, context});
         server.setHandler(handlers);
+    }
+
+    private void addServletToContext(ServletContextHandler context, Servlet servlet, String entity){
+        String apiVersion = "v1";
+        String url = "/api/" + apiVersion + entity;
+        context.addServlet(new ServletHolder(servlet), url);
     }
 
     public void start(){
