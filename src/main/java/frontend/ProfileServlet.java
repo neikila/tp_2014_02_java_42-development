@@ -2,6 +2,7 @@ package frontend;
 
 import main.AccountService;
 import main.UserProfile;
+import org.json.simple.JSONObject;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -24,39 +25,39 @@ public class ProfileServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
-        response.setStatus(HttpServletResponse.SC_OK);
 
-        // Задание строки с названием файла, на основе которого будет генерироваться ответ
-        String pageToReturn;
-
-        Map<String, Object> pageVariables = new HashMap<>();
-
-        // Создание объекта сессии, полученной от полльзователя в запросе
         HttpSession session = request.getSession();
 
-        // Идентификация пользователя на основе id-хэша
         UserProfile user = accountService.getSessions(session.getId());
 
-        // Если пользователь не определен, то возвращаем ему странницу авторизации
-        // в противном случае достаем "из базы" информацию о пользователе
+        short status;
+        String message = "";
+
         if (user == null)
         {
-            pageVariables.put("loginStatus", "You haven't Logged In:");
-            pageToReturn = "signInForm.html";
+            status = 401;
+            message = "Unauthorized";
         } else {
-            pageToReturn = "profile.html";
-            pageVariables.put("login", user.getLogin());
-            pageVariables.put("password", user.getPassword());
-            pageVariables.put("email", user.getEmail());
-            pageVariables.put("server", user.getServer());
-            pageVariables.put("role", user.getRole());
+            status = 200;
         }
 
-        // Генерирование страницы с заданными параметрами.
-        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
-    }
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-cache");
 
-    public void doPost(HttpServletRequest request,
-                       HttpServletResponse response) throws ServletException, IOException {
+        JSONObject obj = new JSONObject();
+        JSONObject data = new JSONObject();
+        if (status != 200) {
+            data.put("message", message);
+        } else {
+            data.put("login", user.getLogin());
+            data.put("password", user.getPassword()); //TODO вернуть только часть пароля
+            data.put("email", user.getEmail());
+            data.put("server", user.getServer());
+            data.put("role", user.getRole());
+        }
+        obj.put("data", data);
+        obj.put("status", status);
+        response.getWriter().write(obj.toString());
     }
 }

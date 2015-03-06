@@ -78,9 +78,11 @@ body: {
     id: 2, 
     name: "Vasya", 
     email: "vasya@mail.ru", 
-    password: "" 
+    password: //last three symbols
     } 
 }
+
+// TODO зачем возвращать пароль, как было предложено в примере протокола?
 
 /api/v1/auth/signin — Авторизация
 Запрос: POST
@@ -96,32 +98,12 @@ password: String
 status: 200, 
 body: { 
     id: 2, 
-    name: "Vasya", 
-    email: "vasya@mail.ru", 
-    password: "" 
+    login: "Vasya", 
     } 
 }
 
-/api/v1/auth/check — Проверка авторизации
-Запрос: GET — без параметров
-Ответ: 200
+// TODO зачем возвращать пароль, как было предложено в примере протокола?
 
-{ 
-status: 200, 
-body: { 
-    id: 2, 
-    name: "Vasya", 
-    email: "vasya@mail.ru", 
-    password: "" 
-    } 
-}
-
-Ответ: 401
-
-{ 
-status: 401, 
-body: {} 
-}
 
 /api/v1/auth/signout — Сброс авторизации
 Запрос: POST — без параметров

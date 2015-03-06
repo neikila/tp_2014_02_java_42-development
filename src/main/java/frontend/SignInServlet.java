@@ -51,45 +51,42 @@ public class SignInServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
+
         String login = request.getParameter("login");
         String password = request.getParameter("password");
 
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        String pageToReturn = "authstatus.html";
-
-        Map<String, Object> pageVariables = new HashMap<>();
-
         HttpSession session = request.getSession();
 
-        String message;
+        String message = "";
+        short status;
 
         if (!accountService.isSessionWithSuchLoginExist(login)) {
             UserProfile profile = accountService.getUser(login);
             if (profile != null && profile.getPassword().equals(password)) {
                 accountService.addSessions(session.getId(), profile);
-                message = "Login passed";
+                status = 200;
             } else {
-                message = "Wrong login/password! Try again.";
+                status = 400;
+                message = "Wrong";
             }
         } else {
-            message = "User with such login is already online.";
+            status =  400;
+            message = "Already";
         }
-        pageVariables.put("loginStatus", message);
-//text/x-json
+
+        response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
 
-        int status = 200;
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();
-        data.put("message", message);
+        if (status != 200) {
+            data.put("message", message);
+        } else {
+            data.put("login", login);
+        }
         obj.put("data", data);
         obj.put("status", status);
-        try {
-            response.getWriter().write(obj.toString());
-        } catch (IOException e) {
-
-        }
+        response.getWriter().write(obj.toString());
     }
 }

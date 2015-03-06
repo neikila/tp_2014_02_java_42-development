@@ -3,6 +3,7 @@ package frontend;
 import main.AccountService;
 import main.MyValidator;
 import main.UserProfile;
+import org.json.simple.JSONObject;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -53,39 +54,47 @@ public class SignUpServlet extends HttpServlet {
         String server = request.getParameter("server");
         String email = request.getParameter("email");
 
+        //TODO заменить на прием JSON (пока не трогаю, чтобы было удобно показывать)
+
         UserProfile user = new UserProfile(login, password, email, server);
         HttpSession session = request.getSession();
 
-        String pageToReturn = "signUpForm.html";
+        String message = "";
+        short status;
 
-        Map<String, Object> pageVariables = new HashMap<>();
-
-        String message;
-
-        MyValidator validator = new MyValidator();
-
-        // Проверка соотвествия login'а стандарту
-        if (validator.isUserNameValid(login) && validator.isPasswordValid(password) && validator.isEmailValid(email))
-        {
-            // В случае успешной регистрации производиться автоматическая авторизация и возврат сообщения об успешно регистрации
-            // Можно переделать на возврат формы профиля
-            if (accountService.addUser(login, user)) {
-                accountService.addSessions(session.getId(), user);
-                message = "New user created";
-                pageToReturn = "signupstatus.html";
+        if (accountService.getSessions(session.getId()) == null) {
+            if (MyValidator.isUserNameValid(login) && MyValidator.isPasswordValid(password) && MyValidator.isEmailValid(email)) {
+                if (accountService.addUser(login, user)) {
+                    accountService.addSessions(session.getId(), user);
+                    status = 200;
+                } else {
+                    status = 400;
+                    message = "Exist";
+                }
             } else {
-                // В случае, если такой логин уже занят, возвращается соответствующее сообщение и повторная форма регистрации
-                message = "User with login: " +
-                        "" + login + " already exists. Try again.";
+                status = 400;
+                message = "Wrong";
             }
         } else {
-            // Не вижу смысла в более подробном сообщении. Об этом позабоиться frontend.
-            message = "Wrong login or password or email.";
+            status = 400;
+            message = "Already";
         }
-
-
-        pageVariables.put("signUpStatus", message);
-        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
         response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-cache");
+
+        JSONObject obj = new JSONObject();
+        JSONObject data = new JSONObject();
+        if (status != 200) {
+            data.put("message", message);
+        } else {
+            data.put("login", login);
+            data.put("password", password); //TODO вернуть только часть пароля
+            data.put("email", email);
+            data.put("server", server);
+        }
+        obj.put("data", data);
+        obj.put("status", status);
+        response.getWriter().write(obj.toString());
     }
 }
