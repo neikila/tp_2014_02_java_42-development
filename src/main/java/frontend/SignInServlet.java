@@ -1,5 +1,7 @@
 package frontend;
 
+import org.json.simple.JSONObject;
+
 import main.AccountService;
 import main.UserProfile;
 import templater.PageGenerator;
@@ -62,30 +64,32 @@ public class SignInServlet extends HttpServlet {
 
         String message;
 
-        // Проверка авторизован ли уже польлзвоатель
         if (!accountService.isSessionWithSuchLoginExist(login)) {
-            // Получение профиля польлзователя по username
             UserProfile profile = accountService.getUser(login);
-            // Если профиль найден, то проверка пароля
             if (profile != null && profile.getPassword().equals(password)) {
                 accountService.addSessions(session.getId(), profile);
-                // Задание сообщения об успешности операции
                 message = "Login passed";
             } else {
-                // Замена результирующей страницы на страницу повторного воода с соответствующим сообщением
                 message = "Wrong login/password! Try again.";
-                pageToReturn = "signInForm.html";
             }
         } else {
-            // Создание сообщения о следующей ошибке: пользователь с заданным логином уже авторизован
-            // и замена результирующей страницы на страницу авторизации
             message = "User with such login is already online.";
-            pageToReturn = "signInForm.html";
         }
-        //Запись сообщения в переменные, передаваемые в генератор страницы
         pageVariables.put("loginStatus", message);
+//text/x-json
+        response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-cache");
 
-        //Генерация странницы
-        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
+        int status = 200;
+        JSONObject obj = new JSONObject();
+        JSONObject data = new JSONObject();
+        data.put("message", message);
+        obj.put("data", data);
+        obj.put("status", status);
+        try {
+            response.getWriter().write(obj.toString());
+        } catch (IOException e) {
+
+        }
     }
 }
