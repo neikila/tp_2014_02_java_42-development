@@ -2,6 +2,7 @@ package frontend;
 
 import main.AccountService;
 import main.UserProfile;
+import org.json.simple.JSONObject;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -22,59 +23,32 @@ public class LogOutServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
-
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        String pageToReturn;
-
-        Map<String, Object> pageVariables = new HashMap<>();
-
-        HttpSession session = request.getSession();
-
-        UserProfile user = accountService.getSessions(session.getId());
-
-        if (user == null)
-        {
-            pageVariables.put("loginStatus", "You haven't Logged In:");
-            pageToReturn = "signInForm.html";
-        } else {
-            pageToReturn = "logOut.html";
-            pageVariables.put("logOutStatus", "Are you sure you want to exit?");
-        }
-
-        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
-    }
-
-
-    public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
-        String answer = request.getParameter("answer");
-
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        String pageToReturn;
-
-        Map<String, Object> pageVariables = new HashMap<>();
 
         HttpSession session = request.getSession();
 
         UserProfile profile = accountService.getSessions(session.getId());
 
-        // В случае, если пользователь подтверждает logout, удаляем пользователя из сессии и возвращаем страницу авторизации
-        if (answer.equals("Yes") || profile == null) {
+        short status;
+
+        if (profile != null) {
             accountService.removeSession(session.getId());
-            pageVariables.put("loginStatus", "Log In:");
-            pageToReturn = "signInForm.html";
+            status = 200;
         } else {
-            // В случае отказа возвращаем страницу профиля
-            pageToReturn = "profile.html";
-            pageVariables.put("login", profile.getLogin());
-            pageVariables.put("password", profile.getPassword());
-            pageVariables.put("email", profile.getEmail());
-            pageVariables.put("server", profile.getServer());
-            pageVariables.put("role", profile.getRole());
+            status = 401;
         }
-        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-cache");
+
+        JSONObject obj = new JSONObject();
+        JSONObject data = new JSONObject();
+        if (status != 200) {
+            data.put("message", "Unauthorized");
+        }
+        obj.put("data", data);
+        obj.put("status", status);
+        response.getWriter().write(obj.toString());
     }
 }

@@ -52,6 +52,9 @@ public class SignInServlet extends HttpServlet {
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
 
+
+        //TODO заменить на прием JSON (пока не трогаю, чтобы было удобно показывать)
+
         String login = request.getParameter("login");
         String password = request.getParameter("password");
 
