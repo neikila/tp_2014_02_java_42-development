@@ -60,6 +60,7 @@ public class ProfileServlet extends HttpServlet {
             data.put("email", user.getEmail());
             data.put("server", user.getServer());
             data.put("role", user.getRole());
+            data.put("score", user.getScore());
         }
         obj.put("data", data);
         obj.put("status", status);

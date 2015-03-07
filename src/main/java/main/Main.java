@@ -21,7 +21,6 @@ public class Main {
         email = "test@gmail.com";
         profile = new UserProfile(login, password, email, server);
         profile.setScore(100);
-        profile.setAdmin(true);
         accountService.addUser(login,  profile);
     }
 
