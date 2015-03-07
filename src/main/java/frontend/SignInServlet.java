@@ -22,6 +22,8 @@ public class SignInServlet extends HttpServlet {
         this.accountService = accountService;
     }
 
+
+    //Для демонстрации!
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
@@ -77,15 +79,21 @@ public class SignInServlet extends HttpServlet {
             message = "Already";
         }
 
-        response.setStatus(HttpServletResponse.SC_OK);
+        createResponse(response, status, message, login);
+    }
+
+    private void createResponse(HttpServletResponse response, short status, String errorMessage, String login) throws IOException {
+
         response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
 
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();
         if (status != 200) {
-            data.put("message", message);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            data.put("message", errorMessage);
         } else {
+            response.setStatus(HttpServletResponse.SC_OK);
             data.put("login", login);
         }
         obj.put("data", data);

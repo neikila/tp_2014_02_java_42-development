@@ -19,7 +19,8 @@ public class SignOutServlet extends HttpServlet {
         this.accountService = accountService;
     }
 
-    public void doGet(HttpServletRequest request,
+
+    public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
@@ -34,15 +35,22 @@ public class SignOutServlet extends HttpServlet {
         } else {
             status = 401;
         }
+        createResponse(response, status);
+    }
 
-        response.setStatus(HttpServletResponse.SC_OK);
+
+    private void createResponse(HttpServletResponse response, short status) throws IOException {
+
         response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
 
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();
         if (status != 200) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             data.put("message", "Unauthorized");
+        } else {
+            response.setStatus(HttpServletResponse.SC_OK);
         }
         obj.put("data", data);
         obj.put("status", status);

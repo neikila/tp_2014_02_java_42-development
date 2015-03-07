@@ -40,15 +40,20 @@ public class ProfileServlet extends HttpServlet {
             status = 200;
         }
 
-        response.setStatus(HttpServletResponse.SC_OK);
+        createResponse(response, status, message, user);
+    }
+
+    private void createResponse(HttpServletResponse response, short status, String errorMessage, UserProfile user) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
 
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();
         if (status != 200) {
-            data.put("message", message);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            data.put("message", errorMessage);
         } else {
+            response.setStatus(HttpServletResponse.SC_OK);
             String pass = user.getPassword();
             data.put("password", pass.substring(0, (pass.length() - 3)).replaceAll(".", "*") + pass.substring((pass.length() - 3), pass.length()));
             data.put("login", user.getLogin());

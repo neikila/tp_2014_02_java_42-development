@@ -26,14 +26,8 @@ public class ScoreServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
-        short status;
-
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json;charset=UTF-8");
-        response.setHeader("Cache-Control", "no-cache");
-
+        short status = 200; // Без базы ошибок нет;
         String message = "mysql error";
-        status = 200; // Без базы ошибки нет
 
         String username[] =  new String [4];
         username[0] = "Vasya";
@@ -42,6 +36,15 @@ public class ScoreServlet extends HttpServlet {
         username[3] = "Danya";
 
         int scoreMas[] = {14, 12, 10, 2};
+
+        createResponse(response, status, message, username, scoreMas);
+    }
+
+    private void createResponse(HttpServletResponse response, short status, String errorMessage, String username[], int scoreMas[]) throws IOException {
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-cache");
 
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();
@@ -56,12 +59,13 @@ public class ScoreServlet extends HttpServlet {
         }
 
         if (status != 200) {
-            data.put("message", message);
+            data.put("message", errorMessage);
         } else {
             data.put("scoreList", scoreList);
         }
         obj.put("data", data);
         obj.put("status", status);
+
         response.getWriter().write(obj.toString());
     }
 }

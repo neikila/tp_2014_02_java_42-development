@@ -18,10 +18,12 @@ import java.util.Map;
 public class SignUpServlet extends HttpServlet {
     private AccountService accountService;
 
+
     public SignUpServlet(AccountService accountService) {
         this.accountService = accountService;
     }
-    // Действие, которое производиться, если пришел запрос метода Get
+
+    // Для демонстрации! Ну, и, отладки
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
@@ -32,12 +34,10 @@ public class SignUpServlet extends HttpServlet {
         String message;
         Map<String, Object> pageVariables = new HashMap<>();
 
-        // Если пользователь на авторизован, то возвращается форма регистрации
         if (profile == null) {
             pageToReturn = "signUpForm.html";
             message = "Fill all gaps, please:";
         } else {
-            // В противном случае возвращается сообщение о том, что нельзя зарегистрироваться, не выполнив logout
             pageToReturn = "signupstatus.html";
             message = "You have to logout before signing up.";
         }
@@ -45,6 +45,7 @@ public class SignUpServlet extends HttpServlet {
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
         response.setStatus(HttpServletResponse.SC_OK);
     }
+
 
     public void doPost(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
@@ -79,20 +80,26 @@ public class SignUpServlet extends HttpServlet {
             status = 400;
             message = "Already";
         }
-        response.setStatus(HttpServletResponse.SC_OK);
+        createResponse(response, status, message, user);
+    }
+
+
+    private void createResponse (HttpServletResponse response, short status, String message, UserProfile user) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
 
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();
         if (status != 200) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             data.put("message", message);
         } else {
+            response.setStatus(HttpServletResponse.SC_OK);
             String pass = user.getPassword();
             data.put("password", pass.substring(0, (pass.length() - 3)).replaceAll(".", "*") + pass.substring((pass.length() - 3), pass.length()));
-            data.put("login", login);
-            data.put("email", email);
-            data.put("server", server);
+            data.put("login", user.getLogin());
+            data.put("email", user.getEmail());
+            data.put("server", user.getServer());
         }
         obj.put("data", data);
         obj.put("status", status);

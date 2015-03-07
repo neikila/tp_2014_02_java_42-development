@@ -12,28 +12,19 @@ public class AccountService {
         return (!users.containsKey(userName) && (users.put(userName, userProfile) == null));
     }
 
-    public boolean isUserExist(String userName) {
-        return users.containsKey(userName);
-    }
-
     public void addSessions(String sessionId, UserProfile userProfile) {
         sessions.put(sessionId, userProfile);
     }
 
-    // Метод получения количества авторизованных пользователей
     public int getAmountOfSessions() {return sessions.size();}
 
-    // Метод получения количества авторизованных пользователей
     public int getAmountOfUsers() {return  users.size();}
 
-    // Поиск сессии по логину
     public boolean isSessionWithSuchLoginExist(String userName) {
 
         Collection<UserProfile> temp = sessions.values();
-        // Создание итератора по коллекции
         Iterator<UserProfile> itr = temp.iterator();
 
-        // Выполнение перебора
         boolean returnValue = false;
         while (!returnValue && itr.hasNext()) {
             if (itr.next().getLogin().equals(userName)) {
@@ -51,7 +42,6 @@ public class AccountService {
         return sessions.get(sessionId);
     }
 
-    // Удаление сессии по ключу
     public void removeSession(String sessionId) {
         sessions.remove(sessionId);
     }

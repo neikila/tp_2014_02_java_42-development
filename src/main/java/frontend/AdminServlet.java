@@ -51,10 +51,9 @@ public class AdminServlet extends HttpServlet {
 
         String action = request.getParameter("action");
 
-        response.setStatus(HttpServletResponse.SC_OK);
-
         String pageToReturn;
         Map<String, Object> pageVariables = new HashMap<>();
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         pageVariables.put("errorMessage", "404: Not Found.");
         pageToReturn = "errorPage.html";
 
@@ -72,6 +71,7 @@ public class AdminServlet extends HttpServlet {
                         System.exit(0);
                         break;
                     case "Get statistic":
+                        response.setStatus(HttpServletResponse.SC_OK);
                         pageVariables.put("topicMessage", "Statistic");
                         pageVariables.put("amountOfLoggedIn", accountService.getAmountOfSessions());
                         pageVariables.put("amountOfSignedUp", accountService.getAmountOfUsers());
