@@ -36,6 +36,8 @@ public class Main {
         AccountService accountService = new AccountService();
         preparationForTest(accountService);
 
+        //TODO перенести подготовку внутрь создания accountservice
+
         System.out.append("Starting at port: ").append(String.valueOf(port)).append('\n');
 
         AppServer server = new AppServer(port, accountService);
