@@ -8,8 +8,6 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
-import javax.servlet.Servlet;
-
 public class AppServer {
     private Server server;
 
@@ -18,14 +16,16 @@ public class AppServer {
         server = new Server(port);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        //TODO создание url
 
-        addServletToContext(context, new SignInServlet(accountService), "/auth/signin");
-        addServletToContext(context, new SignUpServlet(accountService), "/auth/signup");
-        addServletToContext(context, new ProfileServlet(accountService), "/auth/check");
-        addServletToContext(context, new AdminServlet(accountService), "/auth/admin");
-        addServletToContext(context, new SignOutServlet(accountService), "/auth/signout");
-        addServletToContext(context, new ScoreServlet(accountService), "/score");
+        String  apiVersion = "v1";
+        String url = "/api/" + apiVersion;
+
+        context.addServlet(new ServletHolder(new SignInServlet(accountService)), url + "/auth/signin");
+        context.addServlet(new ServletHolder(new SignUpServlet(accountService)), url + "/auth/signup");
+        context.addServlet(new ServletHolder(new ProfileServlet(accountService)), url + "/auth/check");
+        context.addServlet(new ServletHolder(new AdminServlet(accountService)), url + "/auth/admin");
+        context.addServlet(new ServletHolder(new SignOutServlet(accountService)), url + "/auth/signout");
+        context.addServlet(new ServletHolder(new ScoreServlet(accountService)), url + "/score");
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
@@ -34,12 +34,6 @@ public class AppServer {
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[]{resource_handler, context});
         server.setHandler(handlers);
-    }
-
-    private void addServletToContext(ServletContextHandler context, Servlet servlet, String entity){
-        String apiVersion = "v1";
-        String url = "/api/" + apiVersion + entity;
-        context.addServlet(new ServletHolder(servlet), url);
     }
 
     public void start(){

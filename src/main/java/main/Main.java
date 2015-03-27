@@ -2,28 +2,6 @@ package main;
 
 public class Main {
 
-    // Действия необходимые для тестирования
-    // Вызывается в начале запуска сервера
-    private static void preparationForTest(AccountService accountService) {
-        // Создание в базе пользователя по дефолту. Имитация бд ввиду её отстсвия.
-        String login = "admin";
-        String password = "admin";
-        String server = "10";
-        String email = "admin@gmail.com";
-        UserProfile profile = new UserProfile(login, password, email, server);
-        profile.setAdmin(true);
-        profile.setScore(1000);
-        accountService.addUser(login,  profile);
-
-        login = "test";
-        password = "test";
-        server = "10";
-        email = "test@gmail.com";
-        profile = new UserProfile(login, password, email, server);
-        profile.setScore(100);
-        accountService.addUser(login,  profile);
-    }
-
     public static void main(String[] args) throws Exception {
         int port = 80;
         if (args.length == 1) {
@@ -34,9 +12,7 @@ public class Main {
         }
 
         AccountService accountService = new AccountService();
-        preparationForTest(accountService);
-
-        //TODO перенести подготовку внутрь создания accountservice
+        accountService.preparationForTest();
 
         System.out.append("Starting at port: ").append(String.valueOf(port)).append('\n');
 
