@@ -2,10 +2,13 @@ package Test;
 
 import main.AccountServiceImpl;
 import Interface.AccountService;
+import main.UserComparatorByScore;
 import main.UserProfile;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.TreeSet;
 
 import static org.junit.Assert.*;
 
@@ -146,5 +149,31 @@ public class AccountServiceTest {
         UserProfile resultUserAdmin = accountService.getUser("admin");
 
         assertEquals(resultUserAdmin, profileAdmin);
+    }
+
+    @Test
+    public void testGetFirstByScore() throws Exception {
+        UserComparatorByScore comp = new UserComparatorByScore();
+        TreeSet<UserProfile> FirstFour = new TreeSet<>(comp);
+
+        UserProfile Vas = new UserProfile("Vasya", "Vasya", "Vasya@gmail.com");
+        Vas.setScore(14);
+        FirstFour.add(Vas);
+        accountService.addUser(Vas.getLogin(), Vas);
+        UserProfile Van = new UserProfile("Vanya", "Vanya", "Vanya@gmail.com");
+        Van.setScore(12);
+        FirstFour.add(Van);
+        accountService.addUser(Van.getLogin(), Van);
+        UserProfile Pet = new UserProfile("Petya", "Petya", "Petya@gmail.com");
+        Pet.setScore(10);
+        FirstFour.add(Pet);
+        accountService.addUser(Pet.getLogin(), Pet);
+        UserProfile Dan = new UserProfile("Danya", "Danya", "Danya@gmail.com");
+        Dan.setScore(2);
+        accountService.addUser(Dan.getLogin(), Dan);
+
+        TreeSet<UserProfile> resultTree = accountService.getFirstPlayersByScore(Helper.getLimit() - 1);
+
+        assertEquals("GetFirstByScore", FirstFour, resultTree);
     }
 }

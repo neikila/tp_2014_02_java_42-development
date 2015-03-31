@@ -66,8 +66,8 @@ public class AccountServiceImpl implements Interface.AccountService{
     public TreeSet <UserProfile> getFirstPlayersByScore(int limit) {
         UserComparatorByScore comp = new UserComparatorByScore();
         TreeSet <UserProfile> FirstFour = new TreeSet<>(comp);
-        Collection<UserProfile> tree = users.values();
-        Iterator<UserProfile> iterator = tree.iterator();
+        Collection<UserProfile> collection = users.values();
+        Iterator<UserProfile> iterator = collection.iterator();
         UserProfile temp;
 
         while (iterator.hasNext()) {

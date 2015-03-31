@@ -1,6 +1,8 @@
 package Test;
 
+import Interface.AccountService;
 import frontend.ScoreServlet;
+import main.AccountServiceImpl;
 import main.UserProfile;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +11,7 @@ import java.io.StringWriter;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.startsWith;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ScoreServletTest extends ServletTest {
     private ScoreServlet servlet;
@@ -32,7 +34,7 @@ public class ScoreServletTest extends ServletTest {
 
     @Before
     public void setUp() throws Exception {
-        accountService = Helper.setUpAccountServices(false);
+        accountService = new AccountServiceImpl();
         servlet = new ScoreServlet(accountService);
         stringWriter = new StringWriter();
         response = Helper.getMockedResponse(stringWriter);
@@ -42,7 +44,9 @@ public class ScoreServletTest extends ServletTest {
     public void testDoGet() throws Exception {
         createUsers();
         request = Helper.getMockedRequest(Helper.getSessionId());
-        when(request.getParameter("limit")).thenReturn("4");
+        when(request.getParameter("limit")).thenReturn(String.valueOf(Helper.getLimit()));
+        //final AccountService spyAccountService = spy(accountService);
+        //doNothing().when(spyAccountService).getFirstPlayersByScore(Helper.getLimit());
         String correctAnswer = "{\"data\":" +
                 "{\"scoreList\":[" +
                                     "{\"score\":14,\"login\":\"Vasya\"}," +
@@ -55,5 +59,6 @@ public class ScoreServletTest extends ServletTest {
         servlet.doGet(request, response);
 
         assertEquals("GetScore", correctAnswer, stringWriter.toString());
+        //verify(spyAccountService, times(1)).getFirstPlayersByScore(Helper.getLimit());
     }
 }
