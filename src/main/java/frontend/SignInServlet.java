@@ -2,7 +2,8 @@ package frontend;
 
 import org.json.simple.JSONObject;
 
-import main.AccountService;
+import Interface.AccountService;
+import Interface.FrontendServlet;
 import main.UserProfile;
 import templater.PageGenerator;
 
@@ -24,7 +25,7 @@ public class SignInServlet extends HttpServlet {
 
 
     //Для демонстрации!
-    public void doGet(HttpServletRequest request,
+    protected void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
         response.setStatus(HttpServletResponse.SC_OK);

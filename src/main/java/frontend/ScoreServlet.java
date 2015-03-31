@@ -1,19 +1,18 @@
 package frontend;
 
-import main.AccountService;
+import Interface.AccountService;
+import Interface.FrontendServlet;
+import main.UserComparatorByScore;
 import main.UserProfile;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import templater.PageGenerator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.TreeSet;
 
 public class ScoreServlet extends HttpServlet {
 
@@ -28,19 +27,11 @@ public class ScoreServlet extends HttpServlet {
 
         short status = 200; // Без базы ошибок нет;
         String message = "mysql error";
-
-        String username[] =  new String [4];
-        username[0] = "Vasya";
-        username[1] = "Vanya";
-        username[2] = "Petya";
-        username[3] = "Danya";
-
-        int scoreMas[] = {14, 12, 10, 2};
-
-        createResponse(response, status, message, username, scoreMas);
+        int limit = Integer.parseInt(request.getParameter("limit"));
+        createResponse(response, status, message, accountService.getFirstPlayersByScore(limit));
     }
 
-    private void createResponse(HttpServletResponse response, short status, String errorMessage, String username[], int scoreMas[]) throws IOException {
+    private void createResponse(HttpServletResponse response, short status, String errorMessage, TreeSet<UserProfile> FirstLimit) throws IOException {
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json;charset=UTF-8");
@@ -51,10 +42,11 @@ public class ScoreServlet extends HttpServlet {
         JSONArray scoreList = new JSONArray();
         JSONObject scoreItem;
 
-        for (int i = 0; i < 4; ++i) {
+        while (!FirstLimit.isEmpty()) {
             scoreItem = new JSONObject();
-            scoreItem.put("login", username[i]);
-            scoreItem.put("score", scoreMas[i]);
+            UserProfile temp = FirstLimit.pollFirst();
+            scoreItem.put("login", temp.getLogin());
+            scoreItem.put("score", temp.getScore());
             scoreList.add(scoreItem);
         }
 

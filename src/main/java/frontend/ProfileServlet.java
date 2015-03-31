@@ -1,9 +1,9 @@
 package frontend;
 
-import main.AccountService;
+import Interface.AccountService;
+import Interface.FrontendServlet;
 import main.UserProfile;
 import org.json.simple.JSONObject;
-import templater.PageGenerator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ProfileServlet extends HttpServlet {
 
@@ -32,8 +30,7 @@ public class ProfileServlet extends HttpServlet {
         short status;
         String message = "";
 
-        if (user == null)
-        {
+        if (user == null) {
             status = 401;
             message = "Unauthorized";
         } else {
@@ -58,7 +55,6 @@ public class ProfileServlet extends HttpServlet {
             data.put("password", pass.substring(0, (pass.length() - 3)).replaceAll(".", "*") + pass.substring((pass.length() - 3), pass.length()));
             data.put("login", user.getLogin());
             data.put("email", user.getEmail());
-            data.put("server", user.getServer());
             data.put("role", user.getRole());
             data.put("score", user.getScore());
         }

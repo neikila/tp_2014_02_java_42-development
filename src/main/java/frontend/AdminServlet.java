@@ -1,7 +1,7 @@
 package frontend;
 
-import main.AccountService;
-import main.AppServer;
+import Interface.AccountService;
+import Interface.FrontendServlet;
 import main.UserProfile;
 import templater.PageGenerator;
 
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AdminServlet extends HttpServlet {
+public class AdminServlet extends HttpServlet implements FrontendServlet{
 
     private AccountService accountService;
 
@@ -65,10 +65,10 @@ public class AdminServlet extends HttpServlet {
             {
                 switch (action) {
                     case "Stop server":
-                        pageVariables.put("topicMessage", "Statistic");
+                        /*pageVariables.put("topicMessage", "Statistic");
                         pageToReturn = "byeBye.html";
-                        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
-                        System.exit(0);
+                        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));*/
+                        StopServers();
                         break;
                     case "Get statistic":
                         response.setStatus(HttpServletResponse.SC_OK);
@@ -81,5 +81,10 @@ public class AdminServlet extends HttpServlet {
             }
         }
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
+    }
+
+    protected void StopServers() {
+        //TODO some logic here: logger for example
+        System.exit(0);
     }
 }

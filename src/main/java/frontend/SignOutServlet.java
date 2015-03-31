@@ -1,6 +1,7 @@
 package frontend;
 
-import main.AccountService;
+import Interface.AccountService;
+import Interface.FrontendServlet;
 import main.UserProfile;
 import org.json.simple.JSONObject;
 
@@ -11,12 +12,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class SignOutServlet extends HttpServlet {
+public class SignOutServlet extends HttpServlet{
 
     private AccountService accountService;
 
     public SignOutServlet(AccountService accountService) {
         this.accountService = accountService;
+    }
+
+
+    public void doGet(HttpServletRequest request,
+                       HttpServletResponse response) throws ServletException, IOException {
+        super.doGet(request, response);
     }
 
 

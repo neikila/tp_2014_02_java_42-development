@@ -2,25 +2,14 @@ package main;
 
 import java.util.*;
 
-public class AccountService {
+import Interface.AccountService;
+
+public class AccountServiceImpl implements Interface.AccountService{
     private Map<String, UserProfile> users = new HashMap<>();
     private Map<String, UserProfile> sessions = new HashMap<>();
     private Map<String, UserProfile> sessionsWithUserAsKey = new HashMap<>();
 
-    public AccountService() {
-        //TODO Добавлять админа
-/*        String login = "admin";
-        String password = "admin";
-        String server = "10";
-        String email = "admin@gmail.com";
-        UserProfile profile = new UserProfile(login, password, email, server);
-        profile.setAdmin(true);
-        profile.setScore(1000);
-        addUser(login, profile);*/
-    }
-
-
-        public boolean addUser(String userName, UserProfile userProfile) {
+    public boolean addUser(String userName, UserProfile userProfile) {
         return (!users.containsKey(userName) && (users.put(userName, userProfile) == null));
     }
 
@@ -63,23 +52,35 @@ public class AccountService {
         sessions.remove(sessionId);
     }
 
-    public void preparationForTest() {
+    public void createAdmin() {
         // Создание в базе пользователей по дефолту. Имитация бд ввиду её отстсвия.
         String login = "admin";
         String password = "admin";
-        String server = "10";
         String email = "admin@gmail.com";
-        UserProfile profile = new UserProfile(login, password, email, server);
+        UserProfile profile = new UserProfile(login, password, email);
         profile.setAdmin(true);
         profile.setScore(1000);
         addUser(login, profile);
+    }
 
-        login = "test";
-        password = "test";
-        server = "10";
-        email = "test@gmail.com";
-        profile = new UserProfile(login, password, email, server);
-        profile.setScore(100);
-        addUser(login, profile);
+    public TreeSet <UserProfile> getFirstPlayersByScore(int limit) {
+        UserComparatorByScore comp = new UserComparatorByScore();
+        TreeSet <UserProfile> FirstFour = new TreeSet<>(comp);
+        Collection<UserProfile> tree = users.values();
+        Iterator<UserProfile> iterator = tree.iterator();
+        UserProfile temp;
+
+        while (iterator.hasNext()) {
+            temp = iterator.next();
+            if (FirstFour.size() < limit) {
+                FirstFour.add(temp);
+            } else {
+                if (comp.compare(FirstFour.last(), temp) > 0) {
+                    FirstFour.pollLast();
+                    FirstFour.add(temp);
+                }
+            }
+        }
+        return FirstFour;
     }
 }

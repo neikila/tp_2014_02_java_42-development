@@ -1,6 +1,7 @@
 package frontend;
 
-import main.AccountService;
+import Interface.AccountService;
+import Interface.FrontendServlet;
 import main.MyValidator;
 import main.UserProfile;
 import org.json.simple.JSONObject;
@@ -15,9 +16,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SignUpServlet extends HttpServlet {
+public class SignUpServlet extends HttpServlet implements FrontendServlet {
     private AccountService accountService;
-
 
     public SignUpServlet(AccountService accountService) {
         this.accountService = accountService;
@@ -52,12 +52,11 @@ public class SignUpServlet extends HttpServlet {
 
         String login = request.getParameter("login");
         String password = request.getParameter("password");
-        String server = request.getParameter("server");
         String email = request.getParameter("email");
 
         //TODO заменить на прием JSON (пока не трогаю, чтобы было удобно показывать)
 
-        UserProfile user = new UserProfile(login, password, email, server);
+        UserProfile user = new UserProfile(login, password, email);
         HttpSession session = request.getSession();
 
         String message = "";
@@ -99,7 +98,6 @@ public class SignUpServlet extends HttpServlet {
             data.put("password", pass.substring(0, (pass.length() - 3)).replaceAll(".", "*") + pass.substring((pass.length() - 3), pass.length()));
             data.put("login", user.getLogin());
             data.put("email", user.getEmail());
-            data.put("server", user.getServer());
         }
         obj.put("data", data);
         obj.put("status", status);
