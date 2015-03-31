@@ -1,8 +1,7 @@
 package frontend;
 
 import Interface.AccountService;
-import Interface.FrontendServlet;
-import main.UserComparatorByScore;
+import main.Context;
 import main.UserProfile;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -18,8 +17,8 @@ public class ScoreServlet extends HttpServlet {
 
     private AccountService accountService;
 
-    public ScoreServlet(AccountService accountService) {
-        this.accountService = accountService;
+    public ScoreServlet(Context contextGlobal) {
+        this.accountService = (AccountService)contextGlobal.get(AccountService.class);
     }
 
     public void doGet(HttpServletRequest request,
@@ -27,7 +26,15 @@ public class ScoreServlet extends HttpServlet {
 
         short status = 200; // Без базы ошибок нет;
         String message = "mysql error";
-        int limit = Integer.parseInt(request.getParameter("limit"));
+        String limitInRequest = request.getParameter("limit");
+        int limit;
+        if (limitInRequest == null) {
+            limit = 0;
+            message = "WrongLimit";
+            status = 400;
+        } else {
+            limit = Integer.parseInt(request.getParameter("limit"));
+        }
         createResponse(response, status, message, accountService.getFirstPlayersByScore(limit));
     }
 
@@ -42,17 +49,16 @@ public class ScoreServlet extends HttpServlet {
         JSONArray scoreList = new JSONArray();
         JSONObject scoreItem;
 
-        while (!FirstLimit.isEmpty()) {
-            scoreItem = new JSONObject();
-            UserProfile temp = FirstLimit.pollFirst();
-            scoreItem.put("login", temp.getLogin());
-            scoreItem.put("score", temp.getScore());
-            scoreList.add(scoreItem);
-        }
-
         if (status != 200) {
             data.put("message", errorMessage);
         } else {
+            while (!FirstLimit.isEmpty()) {
+                scoreItem = new JSONObject();
+                UserProfile temp = FirstLimit.pollFirst();
+                scoreItem.put("login", temp.getLogin());
+                scoreItem.put("score", temp.getScore());
+                scoreList.add(scoreItem);
+            }
             data.put("scoreList", scoreList);
         }
         obj.put("data", data);

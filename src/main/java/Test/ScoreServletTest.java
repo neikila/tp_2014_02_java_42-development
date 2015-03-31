@@ -3,7 +3,9 @@ package Test;
 import Interface.AccountService;
 import frontend.ScoreServlet;
 import main.AccountServiceImpl;
+import main.Context;
 import main.UserProfile;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,9 +37,15 @@ public class ScoreServletTest extends ServletTest {
     @Before
     public void setUp() throws Exception {
         accountService = new AccountServiceImpl();
-        servlet = new ScoreServlet(accountService);
+        context.add(AccountService.class, accountService);
+        servlet = new ScoreServlet(context);
         stringWriter = new StringWriter();
         response = Helper.getMockedResponse(stringWriter);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        context.remove(AccountService.class);
     }
 
     @Test
@@ -55,6 +63,21 @@ public class ScoreServletTest extends ServletTest {
                                     "{\"score\":2,\"login\":\"Danya\"}" +
                 "]}," +
                 "\"status\":200}";
+
+        servlet.doGet(request, response);
+
+        assertEquals("GetScore", correctAnswer, stringWriter.toString());
+        //verify(spyAccountService, times(1)).getFirstPlayersByScore(Helper.getLimit());
+    }
+
+    @Test
+    public void testDoGetWithNoLimit() throws Exception {
+        createUsers();
+        request = Helper.getMockedRequest(Helper.getSessionId());
+        when(request.getParameter("limit")).thenReturn(null);
+        //final AccountService spyAccountService = spy(accountService);
+        //doNothing().when(spyAccountService).getFirstPlayersByScore(Helper.getLimit());
+        String correctAnswer = "{\"data\":{\"message\":\"WrongLimit\"},\"status\":400}";
 
         servlet.doGet(request, response);
 

@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Admin page</title>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8">
+    <script type="text/javascript" src="/js/lib/jquery.js"></script>
+    <script type="text/javascript" src="/js/select.js"></script>
 </head>
 <body>
 <p>${titleMessage}</p>
-<form action="/api/v1/auth/admin" method="POST">
-    <input type="submit" name="action" value="Get statistic">
-    <input type="submit" name="action" value="Stop server">
-</form>
-
-<form action="/api/v1/auth/signout" method="POST">
-    <input type="submit" name="action" value="out">
-</form>
+<input type="button" id="getStatistic" value="Get statistic">
+<input type="button" id="stopServer" value="Stop server">
+<br>
 </body>
 </html>

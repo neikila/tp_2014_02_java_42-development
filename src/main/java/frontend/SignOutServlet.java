@@ -1,7 +1,7 @@
 package frontend;
 
 import Interface.AccountService;
-import Interface.FrontendServlet;
+import main.Context;
 import main.UserProfile;
 import org.json.simple.JSONObject;
 
@@ -16,8 +16,8 @@ public class SignOutServlet extends HttpServlet{
 
     private AccountService accountService;
 
-    public SignOutServlet(AccountService accountService) {
-        this.accountService = accountService;
+    public SignOutServlet(Context contextGlobal) {
+        this.accountService = (AccountService)contextGlobal.get(AccountService.class);
     }
 
 

@@ -3,7 +3,9 @@ package Test;
 import Interface.AccountService;
 import frontend.AdminServlet;
 import frontend.ProfileServlet;
+import main.Context;
 import main.UserProfile;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,8 +21,8 @@ public class AdminServletTest extends ServletTest {
 
         private boolean wasExecuted;
 
-        AdminServletTestExtension(AccountService accountService1) {
-            super(accountService1);
+        AdminServletTestExtension(Context context) {
+            super(context);
             wasExecuted = false;
         }
 
@@ -37,9 +39,15 @@ public class AdminServletTest extends ServletTest {
     @Before
     public void setUp() throws Exception {
         accountService = Helper.setUpAccountServices(false);
-        servlet = new AdminServletTestExtension(accountService);
+        context.add(AccountService.class, accountService);
+        servlet = new AdminServletTestExtension(context);
         stringWriter = new StringWriter();
         response = Helper.getMockedResponse(stringWriter);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        context.remove(AccountService.class);
     }
 
     @Test
@@ -48,7 +56,7 @@ public class AdminServletTest extends ServletTest {
         accountService.addUser(admin.getLogin(), admin);
         accountService.addSessions(Helper.getSessionId(), admin);
         request = Helper.getMockedRequest(Helper.getSessionId());
-        when(request.getParameter("action")).thenReturn("Stop server");
+        when(request.getParameter("action")).thenReturn("stop");
 
         servlet.doPost(request, response);
 

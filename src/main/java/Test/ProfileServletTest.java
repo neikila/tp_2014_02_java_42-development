@@ -1,7 +1,10 @@
 package Test;
 
+import Interface.AccountService;
 import frontend.ProfileServlet;
 import frontend.SignUpServlet;
+import main.Context;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,9 +19,15 @@ public class ProfileServletTest extends ServletTest {
     @Before
     public void setUp() throws Exception {
         accountService = Helper.setUpAccountServices(true);
-        servlet = new ProfileServlet(accountService);
+        context.add(AccountService.class, accountService);
+        servlet = new ProfileServlet(context);
         stringWriter = new StringWriter();
         response = Helper.getMockedResponse(stringWriter);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        context.remove(AccountService.class);
     }
 
     @Test

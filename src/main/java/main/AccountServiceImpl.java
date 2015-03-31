@@ -3,6 +3,7 @@ package main;
 import java.util.*;
 
 import Interface.AccountService;
+import com.sun.istack.internal.NotNull;
 
 public class AccountServiceImpl implements Interface.AccountService{
     private Map<String, UserProfile> users = new HashMap<>();
@@ -63,6 +64,7 @@ public class AccountServiceImpl implements Interface.AccountService{
         addUser(login, profile);
     }
 
+    @NotNull
     public TreeSet <UserProfile> getFirstPlayersByScore(int limit) {
         UserComparatorByScore comp = new UserComparatorByScore();
         TreeSet <UserProfile> FirstFour = new TreeSet<>(comp);
@@ -75,7 +77,7 @@ public class AccountServiceImpl implements Interface.AccountService{
             if (FirstFour.size() < limit) {
                 FirstFour.add(temp);
             } else {
-                if (comp.compare(FirstFour.last(), temp) > 0) {
+                if (FirstFour.size() > 0 && comp.compare(FirstFour.last(), temp) > 0) {
                     FirstFour.pollLast();
                     FirstFour.add(temp);
                 }

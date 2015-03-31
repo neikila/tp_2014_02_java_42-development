@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
  * Created by neikila on 30.03.15.
  */
 public class Helper {
+    private static Helper helper;
     private final static int limit = 4;
     private final static String sessionId = "1111";
     private final static UserProfile user = new UserProfile("test_test", "test_test", "test@test.test");
@@ -56,4 +57,13 @@ public class Helper {
     }
 
     public static int getLimit() { return limit; }
+
+    private Helper () {};
+
+    public Helper instance() {
+        if (helper == null) {
+            helper = new Helper();
+        }
+        return helper;
+    }
 }

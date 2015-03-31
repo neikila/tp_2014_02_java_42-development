@@ -5,4 +5,6 @@ package MBean;
  */
 public interface AccountServiceControllerMBean {
     public int getUsers();
+    public void setBlock();
+    public void unsetBlock();
 }

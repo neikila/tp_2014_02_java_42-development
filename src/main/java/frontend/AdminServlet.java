@@ -1,7 +1,7 @@
 package frontend;
 
 import Interface.AccountService;
-import Interface.FrontendServlet;
+import main.Context;
 import main.UserProfile;
 import templater.PageGenerator;
 
@@ -14,12 +14,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AdminServlet extends HttpServlet implements FrontendServlet{
+public class AdminServlet extends HttpServlet{
 
     private AccountService accountService;
 
-    public AdminServlet(AccountService accountService) {
-        this.accountService = accountService;
+    public AdminServlet(Context contextGlobal) {
+        this.accountService = (AccountService)contextGlobal.get(AccountService.class);
     }
 
     public void doGet(HttpServletRequest request,
@@ -41,7 +41,6 @@ public class AdminServlet extends HttpServlet implements FrontendServlet{
             pageVariables.put("errorMessage", "404: Not Found.");
             pageToReturn = "errorPage.html";
         }
-
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
     }
 
@@ -64,13 +63,13 @@ public class AdminServlet extends HttpServlet implements FrontendServlet{
             if(action != null)
             {
                 switch (action) {
-                    case "Stop server":
+                    case "stop":
                         /*pageVariables.put("topicMessage", "Statistic");
                         pageToReturn = "byeBye.html";
                         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));*/
                         StopServers();
                         break;
-                    case "Get statistic":
+                    case "get":
                         response.setStatus(HttpServletResponse.SC_OK);
                         pageVariables.put("topicMessage", "Statistic");
                         pageVariables.put("amountOfLoggedIn", accountService.getAmountOfSessions());

@@ -1,7 +1,7 @@
 package frontend;
 
 import Interface.AccountService;
-import Interface.FrontendServlet;
+import main.Context;
 import main.MyValidator;
 import main.UserProfile;
 import org.json.simple.JSONObject;
@@ -16,11 +16,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SignUpServlet extends HttpServlet implements FrontendServlet {
-    private AccountService accountService;
+public class SignUpServlet extends HttpServlet {
+    final private AccountService accountService;
+    final private Context context;
 
-    public SignUpServlet(AccountService accountService) {
-        this.accountService = accountService;
+    public SignUpServlet(Context contextGlobal) {
+        this.accountService = (AccountService)contextGlobal.get(AccountService.class);
+        context = contextGlobal;
     }
 
     // Для демонстрации! Ну, и, отладки
@@ -33,13 +35,17 @@ public class SignUpServlet extends HttpServlet implements FrontendServlet {
         String pageToReturn;
         String message;
         Map<String, Object> pageVariables = new HashMap<>();
-
-        if (profile == null) {
-            pageToReturn = "signUpForm.html";
-            message = "Fill all gaps, please:";
+        if (!context.isBlocked()) {
+            if (profile == null) {
+                pageToReturn = "signUpForm.html";
+                message = "Fill all gaps, please:";
+            } else {
+                pageToReturn = "signupstatus.html";
+                message = "You have to logout before signing up.";
+            }
         } else {
             pageToReturn = "signupstatus.html";
-            message = "You have to logout before signing up.";
+            message = "Signing up is blocked.";
         }
         pageVariables.put("signUpStatus", message);
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
@@ -62,22 +68,27 @@ public class SignUpServlet extends HttpServlet implements FrontendServlet {
         String message = "";
         short status;
 
-        if (accountService.getSessions(session.getId()) == null) {
-            if (MyValidator.isUserNameValid(login) && MyValidator.isPasswordValid(password) && MyValidator.isEmailValid(email)) {
-                if (accountService.addUser(login, user)) {
-                    accountService.addSessions(session.getId(), user);
-                    status = 200;
+        if (!context.isBlocked()) {
+            if (accountService.getSessions(session.getId()) == null) {
+                if (MyValidator.isUserNameValid(login) && MyValidator.isPasswordValid(password) && MyValidator.isEmailValid(email)) {
+                    if (accountService.addUser(login, user)) {
+                        accountService.addSessions(session.getId(), user);
+                        status = 200;
+                    } else {
+                        status = 400;
+                        message = "Exist";
+                    }
                 } else {
                     status = 400;
-                    message = "Exist";
+                    message = "Wrong";
                 }
             } else {
                 status = 400;
-                message = "Wrong";
+                message = "Already";
             }
         } else {
             status = 400;
-            message = "Already";
+            message = "Blocked";
         }
         createResponse(response, status, message, user);
     }

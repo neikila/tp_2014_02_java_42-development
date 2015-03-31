@@ -12,21 +12,22 @@ import Interface.AccountService;
 public class AppServer {
     private Server server;
 
-    public AppServer(int port, AccountService accountService) {
+    public AppServer(Context contextGlobal) {
 
-        server = new Server(port);
+        server = new Server(contextGlobal.getPort());
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
         String  apiVersion = "v1";
         String url = "/api/" + apiVersion;
 
-        context.addServlet(new ServletHolder(new SignInServlet(accountService)), url + "/auth/signin");
-        context.addServlet(new ServletHolder(new SignUpServlet(accountService)), url + "/auth/signup");
-        context.addServlet(new ServletHolder(new ProfileServlet(accountService)), url + "/auth/check");
-        context.addServlet(new ServletHolder(new AdminServlet(accountService)), url + "/auth/admin");
-        context.addServlet(new ServletHolder(new SignOutServlet(accountService)), url + "/auth/signout");
-        context.addServlet(new ServletHolder(new ScoreServlet(accountService)), url + "/score");
+        context.addServlet(new ServletHolder(new SignInServlet(contextGlobal)), url + "/auth/signin");
+        context.addServlet(new ServletHolder(new SignUpServlet(contextGlobal)), url + "/auth/signup");
+        context.addServlet(new ServletHolder(new ProfileServlet(contextGlobal)), url + "/auth/check");
+        context.addServlet(new ServletHolder(new AdminServlet(contextGlobal)), url + "/auth/admin");
+        context.addServlet(new ServletHolder(new SignOutServlet(contextGlobal)), url + "/auth/signout");
+        context.addServlet(new ServletHolder(new ScoreServlet(contextGlobal)), url + "/score");
+        context.addServlet(new ServletHolder(new TestServlet()), url + "/test");
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);

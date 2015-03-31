@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.validator.EmailValidator;
 
 public class MyValidator {
+    private static MyValidator myValidator;
     private static Pattern usernamePattern = Pattern.compile("^\\w{5,63}$");
     private static Pattern passwordPattern = Pattern.compile("^\\w{6,20}$");
 
@@ -21,6 +22,15 @@ public class MyValidator {
 
     public static boolean isEmailValid(String email) {
         return EmailValidator.getInstance().isValid(email);
+    }
+
+    private MyValidator() {}
+
+    public static MyValidator instance() {
+        if (myValidator == null) {
+            myValidator = new MyValidator();
+        }
+        return myValidator;
     }
 }
 

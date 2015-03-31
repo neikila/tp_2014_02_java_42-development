@@ -1,7 +1,9 @@
 package Test;
 
+import Interface.AccountService;
 import frontend.SignInServlet;
 import frontend.SignUpServlet;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,9 +18,15 @@ public class SignUpServletTest extends ServletTest {
     @Before
     public void setUp() throws Exception {
         accountService = Helper.setUpAccountServices(false);
-        servlet = new SignUpServlet(accountService);
+        context.add(AccountService.class, accountService);
+        servlet = new SignUpServlet(context);
         stringWriter = new StringWriter();
         response = Helper.getMockedResponse(stringWriter);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        context.remove(AccountService.class);
     }
 
     @Test

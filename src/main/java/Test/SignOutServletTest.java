@@ -1,6 +1,8 @@
 package Test;
 
+import Interface.AccountService;
 import frontend.SignOutServlet;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import java.io.StringWriter;
@@ -13,9 +15,15 @@ public class SignOutServletTest extends ServletTest{
     @Before
     public void setUp() throws Exception {
         accountService = Helper.setUpAccountServices(true);
-        servlet = new SignOutServlet(accountService);
+        context.add(AccountService.class, accountService);
+        servlet = new SignOutServlet(context);
         stringWriter = new StringWriter();
         response = Helper.getMockedResponse(stringWriter);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        context.remove(AccountService.class);
     }
 
     @Test

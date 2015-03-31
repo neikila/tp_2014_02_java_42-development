@@ -1,9 +1,9 @@
 package frontend;
 
+import main.Context;
 import org.json.simple.JSONObject;
 
 import Interface.AccountService;
-import Interface.FrontendServlet;
 import main.UserProfile;
 import templater.PageGenerator;
 
@@ -17,14 +17,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SignInServlet extends HttpServlet {
-    private AccountService accountService;
+    final private AccountService accountService;
+    final private Context context;
 
-    public SignInServlet(AccountService accountService) {
-        this.accountService = accountService;
+    public SignInServlet(Context contextGlobal) {
+        this.accountService = (AccountService)contextGlobal.get(AccountService.class);
+        context = contextGlobal;
     }
 
-
-    //Для демонстрации!
     protected void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
@@ -39,11 +39,16 @@ public class SignInServlet extends HttpServlet {
 
         String loginStatus;
 
-        if (user == null) {
-            loginStatus = "Log In:";
-            pageToReturn = "signInForm.html";
+        if (!context.isBlocked()) {
+            if (user == null) {
+                loginStatus = "Log In:";
+                pageToReturn = "signInForm.html";
+            } else {
+                loginStatus = "You have already logged in";
+                pageToReturn = "authstatus.html";
+            }
         } else {
-            loginStatus = "You have already logged in";
+            loginStatus = "Auth is blocked";
             pageToReturn = "authstatus.html";
         }
 
@@ -55,9 +60,6 @@ public class SignInServlet extends HttpServlet {
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
 
-
-        //TODO заменить на прием JSON (пока не трогаю, чтобы было удобно показывать)
-
         String login = request.getParameter("login");
         String password = request.getParameter("password");
 
@@ -66,18 +68,23 @@ public class SignInServlet extends HttpServlet {
         String message = "";
         short status;
 
-        if (!accountService.isSessionWithSuchLoginExist(login)) {
-            UserProfile profile = accountService.getUser(login);
-            if (profile != null && profile.getPassword().equals(password)) {
-                accountService.addSessions(session.getId(), profile);
-                status = 200;
+        if (!context.isBlocked()) {
+            if (!accountService.isSessionWithSuchLoginExist(login)) {
+                UserProfile profile = accountService.getUser(login);
+                if (profile != null && profile.getPassword().equals(password)) {
+                    accountService.addSessions(session.getId(), profile);
+                    status = 200;
+                } else {
+                    status = 400;
+                    message = "Wrong";
+                }
             } else {
                 status = 400;
-                message = "Wrong";
+                message = "Already";
             }
         } else {
-            status =  400;
-            message = "Already";
+            status = 400;
+            message = "Blocked";
         }
 
         createResponse(response, status, message, login);

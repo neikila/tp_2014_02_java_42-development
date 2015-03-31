@@ -1,7 +1,7 @@
 package frontend;
 
 import Interface.AccountService;
-import Interface.FrontendServlet;
+import main.Context;
 import main.UserProfile;
 import org.json.simple.JSONObject;
 
@@ -16,8 +16,8 @@ public class ProfileServlet extends HttpServlet {
 
     private AccountService accountService;
 
-    public ProfileServlet(AccountService accountService) {
-        this.accountService = accountService;
+    public ProfileServlet(Context contextGlobal) {
+        this.accountService = (AccountService)contextGlobal.get(AccountService.class);
     }
 
     public void doGet(HttpServletRequest request,
