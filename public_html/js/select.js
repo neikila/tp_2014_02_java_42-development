@@ -5,30 +5,6 @@
 $(document).ready(function () {
     var version = "v1";
     console.log("It is ready!!");
-    $('#user_getAll').click(function () {
-        console.log("Request: user_getAll!");
-        var country_id = $(this).val();
-        var url = '/db/api/user/getAll/';
-        $.get(
-            url,
-            "",
-            function (result) {
-                console.log("Response on user_getAll!");
-                if (result.type == 'error') {
-                    alert('error');
-                    return(false);
-                }
-                else {
-                    console.log($(result.code));
-                    $(result.response.userList).each(function() {
-                        console.log((this));
-                    });
-                }
-            },
-            "json"
-        );
-    });
-
 
     $('#score').click(function () {
         console.log("Request: score!");
@@ -47,7 +23,7 @@ $(document).ready(function () {
         console.log("Request: getStatistic!");
         $.ajax({
             url: "/api/v1/auth/admin?action=get",
-            type: "get",
+            type: "post",
             success: function(result){
                 console.log("Response on adminGetStatistic!");
                 console.log($(result.code));
@@ -55,6 +31,20 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#stopServer').click(function () {
+        console.log("Request: stopServer!");
+        $.ajax({
+            url: "/api/v1/auth/admin?action=stop",
+            type: "post",
+            success: function(result){
+                console.log("Response on adminStopServer!");
+                console.log($(result.code));
+                console.log($(result));
+            }
+        });
+    });
+
 
     $('#signOut').click(function () {
         console.log("Request: signOut!");

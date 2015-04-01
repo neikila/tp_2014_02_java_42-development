@@ -3,6 +3,8 @@ package frontend;
 import Interface.AccountService;
 import main.Context;
 import main.UserProfile;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
@@ -14,6 +16,7 @@ import java.io.IOException;
 
 public class SignOutServlet extends HttpServlet{
 
+    final static private Logger logger = LogManager.getLogger(SignOutServlet.class.getName());
     private AccountService accountService;
 
     public SignOutServlet(Context contextGlobal) {
@@ -30,6 +33,7 @@ public class SignOutServlet extends HttpServlet{
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
 
+        logger.info("doPost Start");
         HttpSession session = request.getSession();
 
         UserProfile profile = accountService.getSessions(session.getId());
@@ -37,12 +41,15 @@ public class SignOutServlet extends HttpServlet{
         short status;
 
         if (profile != null) {
+            logger.info("User: {} logged out", profile.getLogin());
             accountService.removeSession(session.getId());
             status = 200;
         } else {
+            logger.info("User is not authorized");
             status = 401;
         }
         createResponse(response, status);
+        logger.info("doPost Success");
     }
 
 

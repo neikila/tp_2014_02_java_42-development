@@ -1,15 +1,20 @@
 package main;
 
 import frontend.*;
+import org.apache.logging.log4j.LogManager;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import Interface.AccountService;
+import org.apache.logging.log4j.Logger;
+
 
 public class AppServer {
+
+    static final Logger logger = LogManager.getLogger(AppServer.class.getName());
+
     private Server server;
 
     public AppServer(Context contextGlobal) {
@@ -42,12 +47,18 @@ public class AppServer {
         try {
             server.start();
             server.join();
-        } catch (Exception e) { System.out.append("There is an error in Server.Start()"); System.exit(1); }
+        } catch (Exception e) {
+            logger.fatal("There is an error in Server.Start()");
+            System.exit(1);
+        }
     }
 
     public void stop(){
         try {
             System.exit(0);
-        } catch (Exception e) { System.out.append("There is an error in Server.Stop()"); System.exit(1); }
+        } catch (Exception e) {
+            logger.fatal("There is an error in Server.Stop()");
+            System.exit(1);
+        }
     }
 }

@@ -3,6 +3,8 @@ package frontend;
 import Interface.AccountService;
 import main.Context;
 import main.UserProfile;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -15,6 +17,7 @@ import java.util.TreeSet;
 
 public class ScoreServlet extends HttpServlet {
 
+    final static private Logger logger = LogManager.getLogger(ScoreServlet.class.getName());
     private AccountService accountService;
 
     public ScoreServlet(Context contextGlobal) {
@@ -24,18 +27,29 @@ public class ScoreServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
+        logger.info("doGet Start");
+
         short status = 200; // Без базы ошибок нет;
-        String message = "mysql error";
+        String message = "";
         String limitInRequest = request.getParameter("limit");
         int limit;
         if (limitInRequest == null) {
+            logger.info("No param \"limit\" in request");
             limit = 0;
             message = "WrongLimit";
             status = 400;
         } else {
-            limit = Integer.parseInt(request.getParameter("limit"));
+            try {
+                limit = Integer.parseInt(request.getParameter("limit"));
+            } catch (Exception e) {
+                logger.error("limit is not an integer");
+                limit = 0;
+                message = "WrongLimit";
+                status = 400;
+            }
         }
         createResponse(response, status, message, accountService.getFirstPlayersByScore(limit));
+        logger.info("doGet Success");
     }
 
     private void createResponse(HttpServletResponse response, short status, String errorMessage, TreeSet<UserProfile> FirstLimit) throws IOException {

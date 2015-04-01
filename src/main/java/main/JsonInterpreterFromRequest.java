@@ -4,6 +4,8 @@ package main;
  * Created by neikila on 31.03.15.
  */
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -12,6 +14,8 @@ import java.io.BufferedReader;
 
 public class JsonInterpreterFromRequest
 {
+    static final Logger logger = LogManager.getLogger(JsonInterpreterFromRequest.class.getName());
+
     static public JSONObject getJSONFromRequest(HttpServletRequest request, String servletName) {
         JSONObject jsonObj = null;
         StringBuilder jb = new StringBuilder();
@@ -25,7 +29,7 @@ public class JsonInterpreterFromRequest
             Object obj = parser.parse(test);
             jsonObj = (JSONObject) obj;
         } catch (Exception e) { //сообщение об ошибке
-            System.out.println("Error while getting the JSON in" + servletName);
+            logger.error("Error while getting the JSON in" + servletName);
         }
         return jsonObj;
     }

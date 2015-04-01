@@ -4,6 +4,8 @@ import Interface.AccountService;
 import main.Context;
 import main.MyValidator;
 import main.UserProfile;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import templater.PageGenerator;
 
@@ -17,6 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SignUpServlet extends HttpServlet {
+
+    final static private Logger logger = LogManager.getLogger(SignOutServlet.class.getName());
     final private AccountService accountService;
     final private Context context;
 
@@ -28,7 +32,7 @@ public class SignUpServlet extends HttpServlet {
     // Для демонстрации! Ну, и, отладки
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-
+        logger.info("doGet Start");
         HttpSession session = request.getSession();
         UserProfile profile = accountService.getSessions(session.getId());
 
@@ -39,23 +43,27 @@ public class SignUpServlet extends HttpServlet {
             if (profile == null) {
                 pageToReturn = "signUpForm.html";
                 message = "Fill all gaps, please:";
+                logger.info("Not enough arguments");
             } else {
                 pageToReturn = "signupstatus.html";
                 message = "You have to logout before signing up.";
+                logger.info("User is logged in");
             }
         } else {
             pageToReturn = "signupstatus.html";
             message = "Signing up is blocked.";
+            logger.info("Autherization is blocked");
         }
         pageVariables.put("signUpStatus", message);
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
         response.setStatus(HttpServletResponse.SC_OK);
+        logger.info("doGet Success");
     }
 
 
     public void doPost(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-
+        logger.info("doPost Start");
         String login = request.getParameter("login");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
@@ -77,20 +85,25 @@ public class SignUpServlet extends HttpServlet {
                     } else {
                         status = 400;
                         message = "Exist";
+                        logger.info("User with such login {} is already exist", login);
                     }
                 } else {
                     status = 400;
                     message = "Wrong";
+                    logger.info("Wrong login: {} or email: {} or password: {}", login, email, password);
                 }
             } else {
                 status = 400;
                 message = "Already";
+                logger.info("User is logged in");
             }
         } else {
+            logger.info("Autherization is blocked");
             status = 400;
             message = "Blocked";
         }
         createResponse(response, status, message, user);
+        logger.info("doPost Success");
     }
 
 

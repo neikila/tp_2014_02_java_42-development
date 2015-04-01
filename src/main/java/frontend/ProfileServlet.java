@@ -3,6 +3,8 @@ package frontend;
 import Interface.AccountService;
 import main.Context;
 import main.UserProfile;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
@@ -14,6 +16,7 @@ import java.io.IOException;
 
 public class ProfileServlet extends HttpServlet {
 
+    final static private Logger logger = LogManager.getLogger(ProfileServlet.class.getName());
     private AccountService accountService;
 
     public ProfileServlet(Context contextGlobal) {
@@ -23,6 +26,8 @@ public class ProfileServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
+        logger.info("doGet Start");
+
         HttpSession session = request.getSession();
 
         UserProfile user = accountService.getSessions(session.getId());
@@ -31,13 +36,16 @@ public class ProfileServlet extends HttpServlet {
         String message = "";
 
         if (user == null) {
+            logger.info("User is not authorised");
             status = 401;
             message = "Unauthorized";
         } else {
+            logger.info("User:" + user.getLogin() + " is authorised");
             status = 200;
         }
 
         createResponse(response, status, message, user);
+        logger.info("doGet Success");
     }
 
     private void createResponse(HttpServletResponse response, short status, String errorMessage, UserProfile user) throws IOException {
