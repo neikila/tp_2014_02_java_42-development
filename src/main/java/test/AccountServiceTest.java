@@ -1,4 +1,4 @@
-package Test;
+package test;
 
 import main.AccountServiceImpl;
 import Interface.AccountService;
@@ -7,14 +7,17 @@ import main.UserProfile;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import resource.Helper;
+import resource.ResourceFactory;
 
 import java.util.TreeSet;
 
 import static org.junit.Assert.*;
 
-// TODO Нужно проверить редирректы? какие редирректы?
+// TODO переделать взятие пользователей из класса Helper
 
 public class AccountServiceTest {
+    final private Helper helper = (Helper)(ResourceFactory.instance().getResource("helper"));
     AccountService accountService;
 
     @Before
@@ -172,7 +175,7 @@ public class AccountServiceTest {
         Dan.setScore(2);
         accountService.addUser(Dan.getLogin(), Dan);
 
-        TreeSet<UserProfile> resultTree = accountService.getFirstPlayersByScore(Helper.getLimit() - 1);
+        TreeSet<UserProfile> resultTree = accountService.getFirstPlayersByScore(helper.getLimit() - 1);
 
         assertEquals("GetFirstByScore", FirstFour, resultTree);
     }

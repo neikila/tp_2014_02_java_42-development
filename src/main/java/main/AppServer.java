@@ -10,16 +10,15 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.apache.logging.log4j.Logger;
 
-
 public class AppServer {
 
     static final Logger logger = LogManager.getLogger(AppServer.class.getName());
 
     private Server server;
 
-    public AppServer(Context contextGlobal) {
+    public AppServer(Context contextGlobal, int port) {
 
-        server = new Server(contextGlobal.getPort());
+        server = new Server(port);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
@@ -46,6 +45,7 @@ public class AppServer {
     public void start(){
         try {
             server.start();
+            logger.info("Start");
             server.join();
         } catch (Exception e) {
             logger.fatal("There is an error in Server.Start()");

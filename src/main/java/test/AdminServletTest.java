@@ -1,8 +1,7 @@
-package Test;
+package test;
 
 import Interface.AccountService;
 import frontend.AdminServlet;
-import frontend.ProfileServlet;
 import main.Context;
 import main.UserProfile;
 import org.junit.After;
@@ -38,11 +37,11 @@ public class AdminServletTest extends ServletTest {
 
     @Before
     public void setUp() throws Exception {
-        accountService = Helper.setUpAccountServices(false);
+        accountService = helper.setUpAccountServices(false);
         context.add(AccountService.class, accountService);
         servlet = new AdminServletTestExtension(context);
         stringWriter = new StringWriter();
-        response = Helper.getMockedResponse(stringWriter);
+        response = helper.getMockedResponse(stringWriter);
     }
 
     @After
@@ -52,10 +51,10 @@ public class AdminServletTest extends ServletTest {
 
     @Test
     public void testDoPost() throws Exception {
-        UserProfile admin = Helper.getAdmin();
+        UserProfile admin = helper.getAdmin();
         accountService.addUser(admin.getLogin(), admin);
-        accountService.addSessions(Helper.getSessionId(), admin);
-        request = Helper.getMockedRequest(Helper.getSessionId());
+        accountService.addSessions(helper.getSessionId(), admin);
+        request = helper.getMockedRequest(helper.getSessionId());
         when(request.getParameter("action")).thenReturn("stop");
 
         servlet.doPost(request, response);

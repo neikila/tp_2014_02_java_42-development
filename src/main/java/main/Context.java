@@ -8,12 +8,10 @@ import java.util.Map;
  */
 public class Context {
     private Map<Class<?>, Object> context = new HashMap<>();
-    private int port;
     private boolean block;
 
     public Context () {
         block = false;
-        port = 8080;
     }
 
     public void add(Class<?> clazz, Object object) {
@@ -36,14 +34,6 @@ public class Context {
 
     public void remove(Class<?> clazz) {
         context.remove(clazz);
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public int getPort() {
-        return port;
     }
 
     public void setBlock() {

@@ -1,7 +1,6 @@
-package Test;
+package test;
 
 import Interface.AccountService;
-import frontend.SignInServlet;
 import frontend.SignUpServlet;
 import org.junit.After;
 import org.junit.Before;
@@ -17,11 +16,11 @@ public class SignUpServletTest extends ServletTest {
 
     @Before
     public void setUp() throws Exception {
-        accountService = Helper.setUpAccountServices(false);
+        accountService = helper.setUpAccountServices(false);
         context.add(AccountService.class, accountService);
         servlet = new SignUpServlet(context);
         stringWriter = new StringWriter();
-        response = Helper.getMockedResponse(stringWriter);
+        response = helper.getMockedResponse(stringWriter);
     }
 
     @After
@@ -31,11 +30,11 @@ public class SignUpServletTest extends ServletTest {
 
     @Test
     public void testDoPost() throws Exception {
-        String login = Helper.getUser().getLogin();
-        String pass = Helper.getUser().getPassword();
-        String email = Helper.getUser().getEmail();
+        String login = helper.getUser().getLogin();
+        String pass = helper.getUser().getPassword();
+        String email = helper.getUser().getEmail();
 
-        request = Helper.getMockedRequest(Helper.getSessionId());
+        request = helper.getMockedRequest(helper.getSessionId());
         when(request.getParameter("password")).thenReturn(pass);
         when(request.getParameter("login")).thenReturn(login);
         when(request.getParameter("email")).thenReturn(email);
@@ -55,10 +54,10 @@ public class SignUpServletTest extends ServletTest {
     @Test
     public void testDoPostWrongLogin() throws Exception {
         String login = "test";
-        String pass = Helper.getUser().getPassword();
-        String email = Helper.getUser().getEmail();
+        String pass = helper.getUser().getPassword();
+        String email = helper.getUser().getEmail();
 
-        request = Helper.getMockedRequest(Helper.getSessionId());
+        request = helper.getMockedRequest(helper.getSessionId());
         when(request.getParameter("password")).thenReturn(pass);
         when(request.getParameter("login")).thenReturn(login);
         when(request.getParameter("email")).thenReturn(email);
@@ -72,11 +71,11 @@ public class SignUpServletTest extends ServletTest {
 
     @Test
     public void testDoPostWrongPassword() throws Exception {
-        String login = Helper.getUser().getLogin();
-        String pass = "test";
-        String email = Helper.getUser().getEmail();
+        String login = helper.getUser().getLogin();
+        String pass = "";
+        String email = helper.getUser().getEmail();
 
-        request = Helper.getMockedRequest(Helper.getSessionId());
+        request = helper.getMockedRequest(helper.getSessionId());
         when(request.getParameter("password")).thenReturn(pass);
         when(request.getParameter("login")).thenReturn(login);
         when(request.getParameter("email")).thenReturn(email);
@@ -85,16 +84,16 @@ public class SignUpServletTest extends ServletTest {
 
         servlet.doPost(request, response);
 
-        assertEquals("SignUpWrongLogin", CorrectResponse, stringWriter.toString());
+        assertEquals("SignUpWrongPassword", CorrectResponse, stringWriter.toString());
     }
 
     @Test
     public void testDoPostWrongEmail() throws Exception {
-        String login = Helper.getUser().getLogin();
-        String pass = Helper.getUser().getPassword();
+        String login = helper.getUser().getLogin();
+        String pass = helper.getUser().getPassword();
         String email = "test";
 
-        request = Helper.getMockedRequest(Helper.getSessionId());
+        request = helper.getMockedRequest(helper.getSessionId());
         when(request.getParameter("password")).thenReturn(pass);
         when(request.getParameter("login")).thenReturn(login);
         when(request.getParameter("email")).thenReturn(email);
@@ -103,18 +102,18 @@ public class SignUpServletTest extends ServletTest {
 
         servlet.doPost(request, response);
 
-        assertEquals("SignUpWrongLogin", CorrectResponse, stringWriter.toString());
+        assertEquals("SignUpWrongEmail", CorrectResponse, stringWriter.toString());
     }
 
     @Test
     public void testDoPostAlreadyExist() throws Exception {
-        String login = Helper.getUser().getLogin();
-        String pass = Helper.getUser().getPassword();
-        String email = Helper.getUser().getEmail();
+        String login = helper.getUser().getLogin();
+        String pass = helper.getUser().getPassword();
+        String email = helper.getUser().getEmail();
 
-        accountService.addUser(login, Helper.getUser());
+        accountService.addUser(login, helper.getUser());
 
-        request = Helper.getMockedRequest(Helper.getSessionId());
+        request = helper.getMockedRequest(helper.getSessionId());
         when(request.getParameter("password")).thenReturn(pass);
         when(request.getParameter("login")).thenReturn(login);
         when(request.getParameter("email")).thenReturn(email);
@@ -123,19 +122,19 @@ public class SignUpServletTest extends ServletTest {
 
         servlet.doPost(request, response);
 
-        assertEquals("SignUpWrongLogin", CorrectResponse, stringWriter.toString());
+        assertEquals("SignUpAlreadyExist", CorrectResponse, stringWriter.toString());
     }
 
     @Test
     public void testDoPostAlreadySignedIn() throws Exception {
-        String login = Helper.getUser().getLogin();
-        String pass = Helper.getUser().getPassword();
-        String email = Helper.getUser().getEmail();
+        String login = helper.getUser().getLogin();
+        String pass = helper.getUser().getPassword();
+        String email = helper.getUser().getEmail();
 
-        accountService.addUser(login, Helper.getUser());
-        accountService.addSessions(Helper.getSessionId(), Helper.getUser());
+        accountService.addUser(login, helper.getUser());
+        accountService.addSessions(helper.getSessionId(), helper.getUser());
 
-        request = Helper.getMockedRequest(Helper.getSessionId());
+        request = helper.getMockedRequest(helper.getSessionId());
         when(request.getParameter("password")).thenReturn(pass);
         when(request.getParameter("login")).thenReturn(login);
         when(request.getParameter("email")).thenReturn(email);
@@ -144,6 +143,6 @@ public class SignUpServletTest extends ServletTest {
 
         servlet.doPost(request, response);
 
-        assertEquals("SignUpWrongLogin", CorrectResponse, stringWriter.toString());
+        assertEquals("SignUpAlreadySignedIn", CorrectResponse, stringWriter.toString());
     }
 }

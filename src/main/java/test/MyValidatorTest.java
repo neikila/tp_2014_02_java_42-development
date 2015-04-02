@@ -1,4 +1,4 @@
-package Test;
+package test;
 
 import main.MyValidator;
 import org.junit.Test;
@@ -16,7 +16,7 @@ public class MyValidatorTest {
 
     @Test
     public void testIsUserNameValidShort() throws Exception {
-        String usernameShort = "Test";
+        String usernameShort = "test";
 
         assertEquals("Short", false, MyValidator.isUserNameValid(usernameShort));
     }
@@ -30,7 +30,7 @@ public class MyValidatorTest {
 
     @Test
     public void testIsUserNameValidWrongSym() throws Exception {
-        String usernameWrongSymbol = ";Test";
+        String usernameWrongSymbol = ";test";
 
         assertEquals("WrongSymbol", false, MyValidator.isUserNameValid(usernameWrongSymbol));
     }
@@ -44,7 +44,7 @@ public class MyValidatorTest {
 
     @Test
     public void testIsPasswordValidShort() throws Exception {
-        String passwordShort = "Test";
+        String passwordShort = "test";
 
         assertEquals("Short", false, MyValidator.isPasswordValid(passwordShort));
     }

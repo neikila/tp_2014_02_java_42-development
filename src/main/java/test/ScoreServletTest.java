@@ -1,9 +1,8 @@
-package Test;
+package test;
 
 import Interface.AccountService;
 import frontend.ScoreServlet;
 import main.AccountServiceImpl;
-import main.Context;
 import main.UserProfile;
 import org.junit.After;
 import org.junit.Before;
@@ -12,7 +11,6 @@ import org.junit.Test;
 import java.io.StringWriter;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.startsWith;
 import static org.mockito.Mockito.*;
 
 public class ScoreServletTest extends ServletTest {
@@ -40,7 +38,7 @@ public class ScoreServletTest extends ServletTest {
         context.add(AccountService.class, accountService);
         servlet = new ScoreServlet(context);
         stringWriter = new StringWriter();
-        response = Helper.getMockedResponse(stringWriter);
+        response = helper.getMockedResponse(stringWriter);
     }
 
     @After
@@ -51,8 +49,8 @@ public class ScoreServletTest extends ServletTest {
     @Test
     public void testDoGet() throws Exception {
         createUsers();
-        request = Helper.getMockedRequest(Helper.getSessionId());
-        when(request.getParameter("limit")).thenReturn(String.valueOf(Helper.getLimit()));
+        request = helper.getMockedRequest(helper.getSessionId());
+        when(request.getParameter("limit")).thenReturn(String.valueOf(helper.getLimit()));
         //final AccountService spyAccountService = spy(accountService);
         //doNothing().when(spyAccountService).getFirstPlayersByScore(Helper.getLimit());
         String correctAnswer = "{\"data\":" +
@@ -73,7 +71,7 @@ public class ScoreServletTest extends ServletTest {
     @Test
     public void testDoGetWithNoLimit() throws Exception {
         createUsers();
-        request = Helper.getMockedRequest(Helper.getSessionId());
+        request = helper.getMockedRequest(helper.getSessionId());
         when(request.getParameter("limit")).thenReturn(null);
         //final AccountService spyAccountService = spy(accountService);
         //doNothing().when(spyAccountService).getFirstPlayersByScore(Helper.getLimit());

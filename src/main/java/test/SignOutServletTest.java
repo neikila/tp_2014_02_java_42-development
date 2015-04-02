@@ -1,4 +1,4 @@
-package Test;
+package test;
 
 import Interface.AccountService;
 import frontend.SignOutServlet;
@@ -14,11 +14,11 @@ public class SignOutServletTest extends ServletTest{
 
     @Before
     public void setUp() throws Exception {
-        accountService = Helper.setUpAccountServices(true);
+        accountService = helper.setUpAccountServices(true);
         context.add(AccountService.class, accountService);
         servlet = new SignOutServlet(context);
         stringWriter = new StringWriter();
-        response = Helper.getMockedResponse(stringWriter);
+        response = helper.getMockedResponse(stringWriter);
     }
 
     @After
@@ -28,7 +28,7 @@ public class SignOutServletTest extends ServletTest{
 
     @Test
     public void testDoPost() throws Exception {
-        request = Helper.getMockedRequest(Helper.getSessionId());
+        request = helper.getMockedRequest(helper.getSessionId());
         String CorrectResponse = "{\"data\":{},\"status\":200}";
 
         servlet.doPost(request, response);
@@ -38,8 +38,8 @@ public class SignOutServletTest extends ServletTest{
 
     @Test
     public void testDoPostIfItIsNotExist() throws Exception {
-        String WrongSessionId = Helper.getSessionId() + "1";
-        request = Helper.getMockedRequest(WrongSessionId);
+        String WrongSessionId = helper.getSessionId() + "1";
+        request = helper.getMockedRequest(WrongSessionId);
         String CorrectResponse = "{\"data\":{\"message\":\"Unauthorized\"},\"status\":401}";
 
         servlet.doPost(request, response);

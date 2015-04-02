@@ -1,9 +1,7 @@
-package Test;
+package test;
 
 import Interface.AccountService;
 import frontend.ProfileServlet;
-import frontend.SignUpServlet;
-import main.Context;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,18 +9,17 @@ import org.junit.Test;
 import java.io.StringWriter;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
 
 public class ProfileServletTest extends ServletTest {
     private ProfileServlet servlet;
 
     @Before
     public void setUp() throws Exception {
-        accountService = Helper.setUpAccountServices(true);
+        accountService = helper.setUpAccountServices(true);
         context.add(AccountService.class, accountService);
         servlet = new ProfileServlet(context);
         stringWriter = new StringWriter();
-        response = Helper.getMockedResponse(stringWriter);
+        response = helper.getMockedResponse(stringWriter);
     }
 
     @After
@@ -32,13 +29,13 @@ public class ProfileServletTest extends ServletTest {
 
     @Test
     public void testDoGet() throws Exception {
-        String login = Helper.getUser().getLogin();
-        String pass = Helper.getUser().getPassword();
-        String email = Helper.getUser().getEmail();
-        int score = Helper.getUser().getScore();
-        String role = Helper.getUser().getRole();
+        String login = helper.getUser().getLogin();
+        String pass = helper.getUser().getPassword();
+        String email = helper.getUser().getEmail();
+        int score = helper.getUser().getScore();
+        String role = helper.getUser().getRole();
 
-        request = Helper.getMockedRequest(Helper.getSessionId());
+        request = helper.getMockedRequest(helper.getSessionId());
 
         String password = pass.substring(0, (pass.length() - 3)).replaceAll(".", "*")
                 + pass.substring((pass.length() - 3), pass.length());
@@ -57,8 +54,8 @@ public class ProfileServletTest extends ServletTest {
 
     @Test
     public void testDoGetIfNotSignedIn() throws Exception {
-        String WrongSessionId = Helper.getSessionId() + "1";
-        request = Helper.getMockedRequest(WrongSessionId);
+        String WrongSessionId = helper.getSessionId() + "1";
+        request = helper.getMockedRequest(WrongSessionId);
         String CorrectResponse = "{\"data\":{\"message\":\"Unauthorized\"},\"status\":401}";
 
         servlet.doGet(request, response);

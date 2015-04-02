@@ -3339,7 +3339,7 @@ jQuery.support = (function( support ) {
 
 	a.style.cssText = "top:1px;float:left;opacity:.5";
 
-	// Test setAttribute on camelCase class. If it works, we need attrFixes when doing get/setAttribute (ie6/7)
+	// test setAttribute on camelCase class. If it works, we need attrFixes when doing get/setAttribute (ie6/7)
 	support.getSetAttribute = div.className !== "t";
 
 	// IE strips leading whitespace when .innerHTML is used
@@ -3641,7 +3641,7 @@ function internalData( elem, name, data, pvt /* Internal Use Only */ ){
 		// First Try to find as-is property data
 		ret = thisCache[ name ];
 
-		// Test for null|undefined property data
+		// test for null|undefined property data
 		if ( ret == null ) {
 
 			// Try to find the camelCased property
