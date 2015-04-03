@@ -1,7 +1,7 @@
 package frontend.game;
 
 import Interface.AccountService;
-import main.UserProfile;
+import main.user.UserProfile;
 import utils.TimeHelper;
 
 import javax.servlet.ServletException;

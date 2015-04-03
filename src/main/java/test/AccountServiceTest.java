@@ -2,8 +2,8 @@ package test;
 
 import main.AccountServiceImpl;
 import Interface.AccountService;
-import main.UserComparatorByScore;
-import main.UserProfile;
+import main.user.UserComparatorByScore;
+import main.user.UserProfile;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

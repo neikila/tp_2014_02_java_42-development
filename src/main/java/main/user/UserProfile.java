@@ -1,4 +1,4 @@
-package main;
+package main.user;
 
 import java.io.Serializable;
 

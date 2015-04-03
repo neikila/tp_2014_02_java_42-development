@@ -3,7 +3,7 @@ package resource;
 import Interface.AccountService;
 import Interface.Resource;
 import main.AccountServiceImpl;
-import main.UserProfile;
+import main.user.UserProfile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,8 +50,6 @@ public class TestHelper implements Serializable, Resource{
     }
 
     public String getSessionId() { return sessionId; }
-
-    public void setSessionId(String sessionId) { this.sessionId = sessionId; }
 
     public UserProfile getUser() { return user; }
 

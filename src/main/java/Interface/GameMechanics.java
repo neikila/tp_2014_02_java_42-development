@@ -1,4 +1,4 @@
-package base;
+package Interface;
 
 public interface GameMechanics {
 

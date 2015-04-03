@@ -1,8 +1,8 @@
 package main;
 
 import Interface.AccountService;
-import base.GameMechanics;
-import base.WebSocketService;
+import Interface.GameMechanics;
+import Interface.WebSocketService;
 import frontend.*;
 import frontend.game.*;
 import mechanics.GameMechanicsImpl;
@@ -51,14 +51,6 @@ public class AppServer {
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[]{resource_handler, context});
         server.setHandler(handlers);
-        try {
-            server.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        logger.info("Start");
-        gameMechanics.run();
-        logger.info("Finish");
     }
 
     public void start(){

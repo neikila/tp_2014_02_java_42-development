@@ -1,6 +1,8 @@
 package frontend.game;
 
 import Interface.AccountService;
+import Interface.GameMechanics;
+import Interface.WebSocketService;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
@@ -8,12 +10,12 @@ import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 
 public class GameWebSocketCreator implements WebSocketCreator {
     private AccountService accountService;
-    private base.GameMechanics gameMechanics;
-    private base.WebSocketService webSocketService;
+    private GameMechanics gameMechanics;
+    private WebSocketService webSocketService;
 
     public GameWebSocketCreator(AccountService accountService,
-                                base.GameMechanics gameMechanics,
-                                base.WebSocketService webSocketService) {
+                                GameMechanics gameMechanics,
+                                WebSocketService webSocketService) {
         this.accountService = accountService;
         this.gameMechanics = gameMechanics;
         this.webSocketService = webSocketService;

@@ -3,7 +3,7 @@ package test;
 import Interface.AccountService;
 import frontend.ScoreServlet;
 import main.AccountServiceImpl;
-import main.UserProfile;
+import main.user.UserProfile;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,9 +1,7 @@
 package Interface;
 
-import main.UserProfile;
+import main.user.UserProfile;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TreeSet;
 
 public interface AccountService {

@@ -1,6 +1,8 @@
 package frontend.game;
 
 import Interface.AccountService;
+import Interface.GameMechanics;
+import Interface.WebSocketService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
@@ -18,12 +20,12 @@ public class WebSocketGameServlet extends WebSocketServlet {
 
     private final static int IDLE_TIME = 60 * 1000;
     private AccountService accountService;
-    private base.GameMechanics gameMechanics;
-    private base.WebSocketService webSocketService;
+    private GameMechanics gameMechanics;
+    private WebSocketService webSocketService;
 
     public WebSocketGameServlet(AccountService accountService,
-                                base.GameMechanics gameMechanics,
-                                base.WebSocketService webSocketService) {
+                                GameMechanics gameMechanics,
+                                WebSocketService webSocketService) {
         this.accountService = accountService;
         this.gameMechanics = gameMechanics;
         this.webSocketService = webSocketService;

@@ -1,10 +1,12 @@
 package mechanics;
 
-import base.GameMechanics;
-import base.GameUser;
-import base.WebSocketService;
+import Interface.GameMechanics;
+import Interface.Resource;
+import Interface.WebSocketService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import resource.GameMechanicsSettings;
+import resource.ResourceFactory;
 import utils.TimeHelper;
 
 import java.util.HashMap;
@@ -17,7 +19,7 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private static final int STEP_TIME = 100;
 
-    private static final int gameTime = 15 * 1000;
+    private static int gameTime;
 
     private WebSocketService webSocketService;
 
@@ -29,10 +31,13 @@ public class GameMechanicsImpl implements GameMechanics {
 
     public GameMechanicsImpl(WebSocketService webSocketService) {
         this.webSocketService = webSocketService;
+        gameTime = ((GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings")).getTimeLimit() * 1000;
     }
 
     public void addUser(String user) {
         if (waiter != null) {
+            logger.info("Second user");
+            logger.info("Start game");
             starGame(user);
             waiter = null;
         } else {

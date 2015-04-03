@@ -1,5 +1,6 @@
-package base;
+package Interface;
 
+import mechanics.GameUser;
 import frontend.game.GameWebSocket;
 
 /**

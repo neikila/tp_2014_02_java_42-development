@@ -2,8 +2,9 @@ package main;
 
 import java.util.*;
 
-import Interface.AccountService;
 import com.sun.istack.internal.NotNull;
+import main.user.UserComparatorByScore;
+import main.user.UserProfile;
 
 public class AccountServiceImpl implements Interface.AccountService{
     private Map<String, UserProfile> users = new HashMap<>();

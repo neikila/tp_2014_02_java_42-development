@@ -1,4 +1,4 @@
-package main;
+package utils;
 
 /**
  * Created by neikila on 31.03.15.

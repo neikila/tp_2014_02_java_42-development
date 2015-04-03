@@ -1,6 +1,5 @@
-package main;
+package main.user;
 
-import java.io.FileInputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.validator.EmailValidator;

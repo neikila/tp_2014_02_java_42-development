@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import Interface.AccountService;
-import main.UserProfile;
+import main.user.UserProfile;
 import utils.PageGenerator;
 
 import javax.servlet.ServletException;

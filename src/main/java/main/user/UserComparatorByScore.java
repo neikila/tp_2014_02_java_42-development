@@ -1,4 +1,6 @@
-package main;
+package main.user;
+
+import main.user.UserProfile;
 
 import java.util.Comparator;
 

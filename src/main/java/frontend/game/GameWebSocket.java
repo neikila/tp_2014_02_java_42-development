@@ -1,5 +1,8 @@
 package frontend.game;
 
+import Interface.GameMechanics;
+import Interface.WebSocketService;
+import mechanics.GameUser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
@@ -16,10 +19,10 @@ public class GameWebSocket {
 
     private String myName;
     private Session session;
-    private base.GameMechanics gameMechanics;
-    private base.WebSocketService webSocketService;
+    private GameMechanics gameMechanics;
+    private WebSocketService webSocketService;
 
-    public GameWebSocket(String myName, base.GameMechanics gameMechanics, base.WebSocketService webSocketService) {
+    public GameWebSocket(String myName, GameMechanics gameMechanics, WebSocketService webSocketService) {
         this.myName = myName;
         this.gameMechanics = gameMechanics;
         this.webSocketService = webSocketService;
@@ -29,7 +32,7 @@ public class GameWebSocket {
         return myName;
     }
 
-    public void startGame(base.GameUser user, String sequence) {
+    public void startGame(GameUser user, String sequence) {
         try {
             JSONObject jsonStart = new JSONObject();
             jsonStart.put("status", "start");
@@ -41,7 +44,7 @@ public class GameWebSocket {
         }
     }
 
-    public void gameOver(base.GameUser user, int result) {
+    public void gameOver(GameUser user, int result) {
         try {
             JSONObject jsonStart = new JSONObject();
             jsonStart.put("status", "finish");
@@ -67,7 +70,7 @@ public class GameWebSocket {
         gameMechanics.addUser(myName);
     }
 
-    public void setMyScore(base.GameUser user) {
+    public void setMyScore(GameUser user) {
         JSONObject jsonStart = new JSONObject();
         jsonStart.put("status", "increment");
         jsonStart.put("name", myName);
@@ -79,7 +82,7 @@ public class GameWebSocket {
         }
     }
 
-    public void setEnemyScore(base.GameUser user) {
+    public void setEnemyScore(GameUser user) {
         JSONObject jsonStart = new JSONObject();
         jsonStart.put("status", "increment");
         jsonStart.put("name", user.getEnemyName());

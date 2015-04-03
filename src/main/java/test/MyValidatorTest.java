@@ -1,6 +1,6 @@
 package test;
 
-import main.MyValidator;
+import main.user.MyValidator;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -22,10 +22,6 @@ public class ServerSettings implements Serializable, Resource {
         return port;
     }
 
-    public void setPort(int port) {
-        this.port = port;
-    }
-
     public String toString() {
         return "Port: " + port;
     }
