@@ -5,7 +5,10 @@ import main.Context;
 import main.user.UserProfile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import resource.LoggerMessages;
+import resource.ResourceFactory;
 import utils.PageGenerator;
+import utils.TimeHelper;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,17 +21,18 @@ import java.util.Map;
 
 public class AdminServlet extends HttpServlet{
 
-    static final private Logger logger = LogManager.getLogger(AdminServlet.class.getName());
-    private AccountService accountService;
+    final private Logger logger = LogManager.getLogger(AdminServlet.class.getName());
+    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
+    final private AccountService accountService;
 
     public AdminServlet(Context contextGlobal) {
         this.accountService = (AccountService)contextGlobal.get(AccountService.class);
+        //this.loggerMessages = (LoggerMessages) contextGlobal.get(LoggerMessages.class);
     }
 
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-
-        logger.info("doGet Start");
+        logger.info(loggerMessages.doGetStart());
 
         response.setStatus(HttpServletResponse.SC_OK);
 
@@ -40,22 +44,25 @@ public class AdminServlet extends HttpServlet{
         UserProfile user = accountService.getSessions(session.getId());
 
         if (user != null && user.isAdmin()) {
-            logger.info("User:" + user.getLogin() + " is admin");
+            logger.info(loggerMessages.isAdmin(), user.getLogin());
             pageToReturn = "adminPage.html";
             pageVariables.put("titleMessage", "Admin page");
         } else {
-            logger.info("User:" + user.getLogin() + " is not admin");
+            if (user != null)
+                logger.info(loggerMessages.isNotAdmin(), user.getLogin());
+            else
+                logger.info(loggerMessages.notAuthorised());
             pageVariables.put("errorMessage", "404: Not Found.");
             pageToReturn = "errorPage.html";
         }
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
-        logger.info("doGet Success");
+        logger.info(loggerMessages.doGetFinish());
     }
 
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
-        logger.info("doPost Start");
+        logger.info(loggerMessages.doPostStart());
         String action = request.getParameter("action");
 
         String pageToReturn;
@@ -66,18 +73,18 @@ public class AdminServlet extends HttpServlet{
 
         HttpSession session = request.getSession();
 
-        UserProfile profile = accountService.getSessions(session.getId());
-        if (profile != null && profile.isAdmin()) {
-            logger.info("User: {} is Admin", profile.getLogin());
+        UserProfile user = accountService.getSessions(session.getId());
+        if (user != null && user.isAdmin()) {
+            logger.info(loggerMessages.isAdmin(), user.getLogin());
             if(action != null)
             {
                 switch (action) {
                     case "stop":
-                        logger.info("Stopping server");
+                        logger.info(loggerMessages.stop());
                         StopServers();
                         break;
                     case "get":
-                        logger.info("Getting Statistic");
+                        logger.info(loggerMessages.statistic());
                         response.setStatus(HttpServletResponse.SC_OK);
                         pageVariables.put("topicMessage", "Statistic");
                         pageVariables.put("amountOfLoggedIn", accountService.getAmountOfSessions());
@@ -85,17 +92,18 @@ public class AdminServlet extends HttpServlet{
                         pageToReturn = "statistic.html";
                         break;
                     default:
-                        logger.warn("Wrong action");
+                        logger.warn(loggerMessages.wrongAction());
                 }
             }
         } else {
-            logger.info("User is not admin");
+            logger.info(loggerMessages.isNotAdmin(), user.getLogin());
         }
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
-        logger.info("doPost Success");
+        logger.info(loggerMessages.doPostFinish());
     }
 
     protected void StopServers() {
+        TimeHelper.sleep(100);
         System.exit(0);
     }
 }

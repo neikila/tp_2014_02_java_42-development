@@ -6,6 +6,8 @@ import main.user.UserProfile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
+import resource.LoggerMessages;
+import resource.ResourceFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,40 +18,35 @@ import java.io.IOException;
 
 public class SignOutServlet extends HttpServlet{
 
-    final static private Logger logger = LogManager.getLogger(SignOutServlet.class.getName());
-    private AccountService accountService;
+    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
+    final private Logger logger = LogManager.getLogger(SignOutServlet.class.getName());
+    final private AccountService accountService;
 
     public SignOutServlet(Context contextGlobal) {
         this.accountService = (AccountService)contextGlobal.get(AccountService.class);
     }
 
 
-    public void doGet(HttpServletRequest request,
-                       HttpServletResponse response) throws ServletException, IOException {
-        super.doGet(request, response);
-    }
-
-
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
 
-        logger.info("doPost Start");
+        logger.info(loggerMessages.doPostStart());
         HttpSession session = request.getSession();
 
-        UserProfile profile = accountService.getSessions(session.getId());
+        UserProfile user = accountService.getSessions(session.getId());
 
         short status;
 
-        if (profile != null) {
-            logger.info("User: {} logged out", profile.getLogin());
+        if (user != null) {
+            logger.info(loggerMessages.loggedOut(), user.getLogin());
             accountService.removeSession(session.getId());
             status = 200;
         } else {
-            logger.info("User is not authorized");
+            logger.info(loggerMessages.notAuthorised());
             status = 401;
         }
         createResponse(response, status);
-        logger.info("doPost Success");
+        logger.info(loggerMessages.doPostFinish());
     }
 
 

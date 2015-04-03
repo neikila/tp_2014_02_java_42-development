@@ -6,6 +6,8 @@ import main.user.UserProfile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
+import resource.LoggerMessages;
+import resource.ResourceFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +18,8 @@ import java.io.IOException;
 
 public class ProfileServlet extends HttpServlet {
 
-    final static private Logger logger = LogManager.getLogger(ProfileServlet.class.getName());
+    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
+    final private Logger logger = LogManager.getLogger(ProfileServlet.class.getName());
     private AccountService accountService;
 
     public ProfileServlet(Context contextGlobal) {
@@ -26,7 +29,7 @@ public class ProfileServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
-        logger.info("doGet Start");
+        logger.info(loggerMessages.doGetStart());
 
         HttpSession session = request.getSession();
 
@@ -36,16 +39,16 @@ public class ProfileServlet extends HttpServlet {
         String message = "";
 
         if (user == null) {
-            logger.info("User is not authorised");
+            logger.info(loggerMessages.notAuthorised());
             status = 401;
             message = "Unauthorized";
         } else {
-            logger.info("User:" + user.getLogin() + " is authorised");
+            logger.info(loggerMessages.hasAuthorised(), user.getLogin());
             status = 200;
         }
 
         createResponse(response, status, message, user);
-        logger.info("doGet Success");
+        logger.info(loggerMessages.doGetFinish());
     }
 
     private void createResponse(HttpServletResponse response, short status, String errorMessage, UserProfile user) throws IOException {

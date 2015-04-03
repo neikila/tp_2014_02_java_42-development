@@ -1,0 +1,28 @@
+<class type='resource.LoggerMessages'>
+    <doPostStart>doPost Start</doPostStart>
+    <doPostFinish>doPost Success</doPostFinish>
+    <doGetStart>doGet Start</doGetStart>
+    <doGetFinish>doGet Success</doGetFinish>
+    <isAdmin>User:{} is admin</isAdmin>
+    <isNotAdmin>User:{} is not admin</isNotAdmin>
+    <wrongAction>Wrong action</wrongAction>
+    <statistic>Getting Statistic</statistic>
+    <stop>Stopping server</stop>
+    <notAuthorised>Not Authorised</notAuthorised>
+    <authorised>User:{} is Authorised</authorised>
+    <hasAuthorised>User:{} has Authorised</hasAuthorised>
+    <lackOfParam>No param "{}" in request</lackOfParam>
+    <paramHasWrongType>Param:"{}" has wrong type</paramHasWrongType>
+    <signUp>New user is signing up</signUp>
+    <signIn>User is signing in</signIn>
+    <alreadyLoggedIn>User:{} is already Logged In</alreadyLoggedIn>
+    <block>Authorization and signing up is blocked</block>
+    <wrongPasOrLogin>Wrong password:"{}" or login:"{}"</wrongPasOrLogin>
+    <logedOut>User:{} logged out</logedOut>
+    <loginIsAlreadyExist>User with such login "{}" is already exist</loginIsAlreadyExist>
+    <wrongSignUpData>Wrong login:"{}" or email:"{}" or password:"{}"</wrongSignUpData>
+    <onMessage>User:{} has sent Message:{}</onMessage>
+    <onOpen>User:{} is opening connection</onOpen>
+    <onClose>User:{} has closed connection</onClose>
+    <configure>Configure</configure>
+</class>

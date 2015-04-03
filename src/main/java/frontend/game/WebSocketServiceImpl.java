@@ -6,9 +6,6 @@ import mechanics.GameUser;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author v.chibrikov
- */
 public class WebSocketServiceImpl implements WebSocketService {
     private Map<String, GameWebSocket> userSockets = new HashMap<>();
 

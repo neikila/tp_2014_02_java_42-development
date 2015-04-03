@@ -7,6 +7,8 @@ import org.json.simple.JSONObject;
 
 import Interface.AccountService;
 import main.user.UserProfile;
+import resource.LoggerMessages;
+import resource.ResourceFactory;
 import utils.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -20,7 +22,8 @@ import java.util.Map;
 
 public class SignInServlet extends HttpServlet {
 
-    final static private Logger logger = LogManager.getLogger(SignInServlet.class.getName());
+    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
+    final private Logger logger = LogManager.getLogger(SignInServlet.class.getName());
     final private AccountService accountService;
     final private Context context;
 
@@ -31,7 +34,8 @@ public class SignInServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-        logger.info("doGet Start");
+
+        logger.info(loggerMessages.doGetStart());
         response.setStatus(HttpServletResponse.SC_OK);
 
         String pageToReturn;
@@ -45,29 +49,29 @@ public class SignInServlet extends HttpServlet {
 
         if (!context.isBlocked()) {
             if (user == null) {
-                logger.info("Signing up");
+                logger.info(loggerMessages.signIn());
                 loginStatus = "Log In:";
                 pageToReturn = "signInForm.html";
             } else {
-                logger.info("User:" + user.getLogin() + " is already logged In");
+                logger.info(loggerMessages.alreadyLoggedIn(), user.getLogin());
                 loginStatus = "You have already logged in";
                 pageToReturn = "authstatus.html";
             }
         } else {
             loginStatus = "Auth is blocked";
-            logger.info(loginStatus);
+            logger.info(loggerMessages.block());
             pageToReturn = "authstatus.html";
         }
 
         pageVariables.put("loginStatus", loginStatus);
 
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
-        logger.info("doGet Success");
+        logger.info(loggerMessages.doGetFinish());
     }
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
-        logger.info("doPost Start");
+        logger.info(loggerMessages.doPostStart());
         String login = request.getParameter("login");
         String password = request.getParameter("password");
 
@@ -82,25 +86,25 @@ public class SignInServlet extends HttpServlet {
                 if (profile != null && profile.getPassword().equals(password)) {
                     accountService.addSessions(session.getId(), profile);
                     status = 200;
-                    logger.info("User: {} is logged in", profile.getLogin());
+                    logger.info(loggerMessages.hasAuthorised(), profile.getLogin());
                 } else {
                     status = 400;
-                    logger.info("Wrong password: {} or login: {}", password, login);
+                    logger.info(loggerMessages.wrongPasOrLogin(), password, login);
                     message = "Wrong";
                 }
             } else {
                 status = 400;
-                logger.info("Such User: {} is already logged in", login);
+                logger.info(loggerMessages.alreadyLoggedIn(), login);
                 message = "Already";
             }
         } else {
             status = 400;
-            logger.info("Signing in is Blocked");
+            logger.info(loggerMessages.block());
             message = "Blocked";
         }
 
         createResponse(response, status, message, login);
-        logger.info("doPost Success");
+        logger.info(loggerMessages.doPostFinish());
     }
 
     private void createResponse(HttpServletResponse response, short status, String errorMessage, String login) throws IOException {

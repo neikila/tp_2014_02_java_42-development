@@ -7,6 +7,8 @@ import main.user.UserProfile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
+import resource.LoggerMessages;
+import resource.ResourceFactory;
 import utils.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -20,7 +22,8 @@ import java.util.Map;
 
 public class SignUpServlet extends HttpServlet {
 
-    final static private Logger logger = LogManager.getLogger(SignOutServlet.class.getName());
+    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
+    final private Logger logger = LogManager.getLogger(SignOutServlet.class.getName());
     final private AccountService accountService;
     final private Context context;
 
@@ -32,44 +35,43 @@ public class SignUpServlet extends HttpServlet {
     // Для демонстрации! Ну, и, отладки
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-        logger.info("doGet Start");
+        logger.info(loggerMessages.doGetStart());
         HttpSession session = request.getSession();
-        UserProfile profile = accountService.getSessions(session.getId());
+        UserProfile user = accountService.getSessions(session.getId());
 
         String pageToReturn;
         String message;
         Map<String, Object> pageVariables = new HashMap<>();
         if (!context.isBlocked()) {
-            if (profile == null) {
+            if (user == null) {
                 pageToReturn = "signUpForm.html";
-                message = "Fill all gaps, please:";
-                logger.info("Not enough arguments");
+                message = "Fill all the gaps, please:";
+                logger.info(loggerMessages.signUp());
             } else {
                 pageToReturn = "signupstatus.html";
                 message = "You have to logout before signing up.";
-                logger.info("User is logged in");
+                logger.info(loggerMessages.alreadyLoggedIn(), user.getLogin());
             }
         } else {
             pageToReturn = "signupstatus.html";
             message = "Signing up is blocked.";
-            logger.info("Autherization is blocked");
+            logger.info(loggerMessages.block());
         }
         pageVariables.put("signUpStatus", message);
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
         response.setStatus(HttpServletResponse.SC_OK);
-        logger.info("doGet Success");
+        logger.info(loggerMessages.doGetFinish());
     }
 
 
     public void doPost(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-        logger.info("doPost Start");
+        logger.info(loggerMessages.doPostStart());
         String login = request.getParameter("login");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
 
-        //TODO заменить на прием JSON (пока не трогаю, чтобы было удобно показывать)
-
+        // TODO заменить на прием и парсинг json объекта
         UserProfile user = new UserProfile(login, password, email);
         HttpSession session = request.getSession();
 
@@ -82,28 +84,29 @@ public class SignUpServlet extends HttpServlet {
                     if (accountService.addUser(login, user)) {
                         accountService.addSessions(session.getId(), user);
                         status = 200;
+                        logger.info(loggerMessages.hasAuthorised(), user.getLogin());
                     } else {
                         status = 400;
                         message = "Exist";
-                        logger.info("User with such login {} is already exist", login);
+                        logger.info(loggerMessages.loginIsAlreadyExist(), login);
                     }
                 } else {
                     status = 400;
                     message = "Wrong";
-                    logger.info("Wrong login: {} or email: {} or password: {}", login, email, password);
+                    logger.info(loggerMessages.wrongSignUpData(), login, email, password);
                 }
             } else {
                 status = 400;
                 message = "Already";
-                logger.info("User is logged in");
+                logger.info(loggerMessages.alreadyLoggedIn());
             }
         } else {
-            logger.info("Autherization is blocked");
+            logger.info(loggerMessages.block());
             status = 400;
             message = "Blocked";
         }
         createResponse(response, status, message, user);
-        logger.info("doPost Success");
+        logger.info(loggerMessages.doPostFinish());
     }
 
 

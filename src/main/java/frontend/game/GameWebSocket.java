@@ -1,7 +1,9 @@
 package frontend.game;
 
+import Interface.AccountService;
 import Interface.GameMechanics;
 import Interface.WebSocketService;
+import main.Context;
 import mechanics.GameUser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,21 +13,24 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.json.simple.JSONObject;
+import resource.LoggerMessages;
+import resource.ResourceFactory;
 
 @WebSocket
 public class GameWebSocket {
 
-    static final Logger logger = LogManager.getLogger(GameWebSocket.class.getName());
+    final private Logger logger = LogManager.getLogger(GameWebSocket.class.getName());
+    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
 
-    private String myName;
+    final private String myName;
+    final private GameMechanics gameMechanics;
+    final private WebSocketService webSocketService;
     private Session session;
-    private GameMechanics gameMechanics;
-    private WebSocketService webSocketService;
 
-    public GameWebSocket(String myName, GameMechanics gameMechanics, WebSocketService webSocketService) {
-        this.myName = myName;
-        this.gameMechanics = gameMechanics;
-        this.webSocketService = webSocketService;
+    public GameWebSocket(String sessionId, Context context) {
+        this.gameMechanics = (GameMechanics) context.get(GameMechanics.class);
+        this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
+        this.myName = ((AccountService) context.get(AccountService.class)).getSessions(sessionId).getLogin();
     }
 
     public String getMyName() {
@@ -40,7 +45,7 @@ public class GameWebSocket {
             jsonStart.put("sequence", sequence);
             session.getRemote().sendString(jsonStart.toJSONString());
         } catch (Exception e) {
-            System.out.print(e.toString());
+            logger.error(e.toString());
         }
     }
 
@@ -51,20 +56,20 @@ public class GameWebSocket {
             jsonStart.put("result", result);
             session.getRemote().sendString(jsonStart.toJSONString());
         } catch (Exception e) {
-            System.out.print(e.toString());
+            logger.error(e.toString());
         }
     }
 
     @OnWebSocketMessage
     public void onMessage(String data) {
-        logger.info("Get Message: {}", data);
+        logger.info(loggerMessages.onMessage(), data);
         gameMechanics.checkSequence(myName, data);
         gameMechanics.incrementScore(myName);
     }
 
     @OnWebSocketConnect
     public void onOpen(Session session) {
-        logger.info("Open Connection");
+        logger.info(loggerMessages.onOpen(), myName);
         setSession(session);
         webSocketService.addUser(this);
         gameMechanics.addUser(myName);
@@ -78,7 +83,7 @@ public class GameWebSocket {
         try {
             session.getRemote().sendString(jsonStart.toJSONString());
         } catch (Exception e) {
-            System.out.print(e.toString());
+            logger.error(e.toString());
         }
     }
 
@@ -90,7 +95,7 @@ public class GameWebSocket {
         try {
             session.getRemote().sendString(jsonStart.toJSONString());
         } catch (Exception e) {
-            System.out.print(e.toString());
+            logger.error(e.toString());
         }
     }
 
@@ -101,7 +106,7 @@ public class GameWebSocket {
         try {
             session.getRemote().sendString(jsonStart.toJSONString());
         } catch (Exception e) {
-            System.out.print(e.toString());
+            logger.error(e.toString());
         }
     }
 
@@ -115,6 +120,6 @@ public class GameWebSocket {
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
-
+        logger.info(loggerMessages.onClose(), myName);
     }
 }

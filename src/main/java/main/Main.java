@@ -21,18 +21,22 @@ public class Main {
         ServerSettings serverSettings = (ServerSettings)resourceFactory.getResource("serverSettings");
         int port = serverSettings.getPort();
 
+        startMBean(context);
+
         AccountService accountService = new AccountServiceImpl();
         accountService.createAdmin();
         context.add(AccountService.class, accountService);
-
-        AccountServiceControllerMBean serverStatistics = new AccountServiceController(context);
-        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        ObjectName name = new ObjectName("ServerManager:type=AccountServiceController");
-        mbs.registerMBean(serverStatistics, name);
 
         logger.info("Starting at port: " + (String.valueOf(port)) + "\n");
 
         AppServer server = new AppServer(context, port);
         server.start();
+    }
+
+    private static void startMBean(Context context) throws Exception{
+        AccountServiceControllerMBean serverStatistics = new AccountServiceController(context);
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        ObjectName name = new ObjectName("ServerManager:type=AccountServiceController");
+        mbs.registerMBean(serverStatistics, name);
     }
 }

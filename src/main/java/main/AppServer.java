@@ -39,10 +39,13 @@ public class AppServer {
         context.addServlet(new ServletHolder(new ScoreServlet(contextGlobal)), url + "/score");
 
         WebSocketService webSocketService = new WebSocketServiceImpl();
+        contextGlobal.add(WebSocketService.class, webSocketService);
         gameMechanics = new GameMechanicsImpl(webSocketService);
+        contextGlobal.add(GameMechanics.class, gameMechanics);
 
-        context.addServlet(new ServletHolder(new WebSocketGameServlet((AccountService)contextGlobal.get(AccountService.class), gameMechanics, webSocketService)), "/gameplay");
-        context.addServlet(new ServletHolder(new GameServlet((AccountService)contextGlobal.get(AccountService.class))), "/game.html");
+        // TODO нужно ли добавлять в контекст, вот в чем вопрос?
+        context.addServlet(new ServletHolder(new WebSocketGameServlet(contextGlobal)), "/gameplay");
+        context.addServlet(new ServletHolder(new GameServlet(contextGlobal)), "/game.html");
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(false);

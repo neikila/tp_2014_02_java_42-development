@@ -7,6 +7,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import resource.LoggerMessages;
+import resource.ResourceFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +19,8 @@ import java.util.TreeSet;
 
 public class ScoreServlet extends HttpServlet {
 
-    final static private Logger logger = LogManager.getLogger(ScoreServlet.class.getName());
+    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
+    final private Logger logger = LogManager.getLogger(ScoreServlet.class.getName());
     private AccountService accountService;
 
     public ScoreServlet(Context contextGlobal) {
@@ -27,14 +30,14 @@ public class ScoreServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
-        logger.info("doGet Start");
+        logger.info(loggerMessages.doGetStart());
 
-        short status = 200; // Без базы ошибок нет;
+        short status = 200;
         String message = "";
         String limitInRequest = request.getParameter("limit");
         int limit;
         if (limitInRequest == null) {
-            logger.info("No param \"limit\" in request");
+            logger.info(loggerMessages.lackOfParam(), "limit");
             limit = 0;
             message = "WrongLimit";
             status = 400;
@@ -42,14 +45,14 @@ public class ScoreServlet extends HttpServlet {
             try {
                 limit = Integer.parseInt(request.getParameter("limit"));
             } catch (Exception e) {
-                logger.error("limit is not an integer");
+                logger.error(loggerMessages.paramHasWrongType(), "limit");
                 limit = 0;
                 message = "WrongLimit";
                 status = 400;
             }
         }
         createResponse(response, status, message, accountService.getFirstPlayersByScore(limit));
-        logger.info("doGet Success");
+        logger.info(loggerMessages.doGetFinish());
     }
 
     private void createResponse(HttpServletResponse response, short status, String errorMessage, TreeSet<UserProfile> FirstLimit) throws IOException {
