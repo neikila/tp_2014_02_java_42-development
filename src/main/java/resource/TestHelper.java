@@ -20,10 +20,10 @@ import static org.mockito.Mockito.when;
  * Created by neikila on 30.03.15.
  */
 public class TestHelper implements Serializable, Resource{
-    private int limit = 4;
-    private String sessionId = "1111";
-    private UserProfile user = new UserProfile("test_test", "test_test", "test@test.test");
-    private UserProfile admin = new UserProfile("admin", "admin", "admin@gmail.com");
+    private int limit;
+    private String sessionId;
+    private UserProfile user;
+    private UserProfile admin;
 
     public HttpServletResponse getMockedResponse(StringWriter stringWriter) throws IOException {
         HttpServletResponse response = mock(HttpServletResponse.class);
@@ -77,7 +77,8 @@ public class TestHelper implements Serializable, Resource{
     public TestHelper() {
         this.user = new UserProfile("test_test", "test_test", "test@test.test");;
         this.admin = new UserProfile("admin", "admin", "admin@gmail.com");
-        this.limit = 0;
+        admin.setAdmin(true);
+        this.limit = 4;
         this.sessionId = "";
     }
 

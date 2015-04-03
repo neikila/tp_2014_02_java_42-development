@@ -10,9 +10,9 @@ var enemyName = "";
 
 init = function () {
     ws = new WebSocket("ws://localhost:8080/gameplay");
-
+    console.log("Create");
     ws.onopen = function (event) {
-
+        console.log("open");
     };
 
     ws.onmessage = function (event) {
