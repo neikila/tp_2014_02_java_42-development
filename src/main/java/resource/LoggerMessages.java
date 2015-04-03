@@ -34,6 +34,13 @@ public class LoggerMessages implements Serializable, Resource {
     private String onOpen;
     private String onClose;
     private String configure;
+    private String setBlock;
+    private String unsetBlock;
+    static private String errorXML = "Error while reading XML";
+    static private String startXML = "Start Document";
+    static private String endXML = "End document";
+    static private String className = "Class name: {}";
+    static private String aEqualB = "{} = {}";
 
     public String doPostStart() { return doPostStart;}
     public String doPostFinish() { return doPostFinish;}
@@ -61,4 +68,11 @@ public class LoggerMessages implements Serializable, Resource {
     public String onOpen() {return onOpen; }
     public String onClose() {return onClose; }
     public String configure() {return configure; }
+    public String setBlock() {return setBlock; }
+    public String unsetBlock() {return unsetBlock; }
+    static public String errorXML() {return errorXML; }
+    static public String startXML() {return startXML; }
+    static public String endXML() {return endXML; }
+    static public String className() {return className; }
+    static public String aEqualB() {return aEqualB; }
 }

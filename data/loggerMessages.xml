@@ -25,4 +25,11 @@
     <onOpen>User:{} is opening connection</onOpen>
     <onClose>User:{} has closed connection</onClose>
     <configure>Configure</configure>
+    <setBlock>Signing in and Signing up are blocked</setBlock>
+    <unsetBlock>Signing in and Signing up are released</unsetBlock>
+    <errorXML>Error while reading XML</errorXML>
+    <startXML>Start Document</startXML>
+    <ensXML>End document</ensXML>
+    <className>Class name: {}</className>
+    <aEqualB>{} = {}</aEqualB>
 </class>

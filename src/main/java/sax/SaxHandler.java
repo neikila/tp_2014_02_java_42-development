@@ -6,10 +6,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import reflection.ReflectionHelper;
+import resource.LoggerMessages;
+import sun.rmi.runtime.Log;
 
 public class SaxHandler extends DefaultHandler {
 
-    static final Logger logger = LogManager.getLogger(SaxHandler.class.getName());
+    final private Logger logger = LogManager.getLogger(SaxHandler.class.getName());
     private static String CLASSNAME = "class";
     private String element = null;
     private Object object = null;
@@ -19,11 +21,11 @@ public class SaxHandler extends DefaultHandler {
     // Парсит файлы с одноуровневым вложением классов
 
     public void startDocument() throws SAXException {
-        logger.info("Start document");
+        logger.info(LoggerMessages.startXML());
     }
 
     public void endDocument() throws SAXException {
-        logger.info("End document ");
+        logger.info(LoggerMessages.endXML());
     }
 
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -35,7 +37,7 @@ public class SaxHandler extends DefaultHandler {
             }
         } else{
             String className = attributes.getValue(0);
-            logger.info("Class name: " + className);
+            logger.info(LoggerMessages.className(), className);
             if (object == null) {
                 object = ReflectionHelper.createInstance(className);;
             } else {
@@ -46,7 +48,7 @@ public class SaxHandler extends DefaultHandler {
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if(qName.equals(CLASSNAME) && object2 != null) {
-            logger.info(element + " = " + object2.toString());
+            logger.info(LoggerMessages.aEqualB(), element, object2.toString());
             ReflectionHelper.setFieldValue(object, element, object2);
             object2 = null;
         }
@@ -59,12 +61,12 @@ public class SaxHandler extends DefaultHandler {
     public void characters(char ch[], int start, int length) throws SAXException {
         if (element2 != null) {
             String value = new String(ch, start, length);
-            logger.info(element2 + " = " + value);
+            logger.info(LoggerMessages.aEqualB(), element2, value);
             ReflectionHelper.setFieldValue(object2, element2, value);
         } else {
             if (element != null) {
                 String value = new String(ch, start, length);
-                logger.info(element + " = " + value);
+                logger.info(LoggerMessages.aEqualB(), element, value);
                 ReflectionHelper.setFieldValue(object, element, value);
             }
         }
