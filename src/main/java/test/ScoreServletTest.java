@@ -38,7 +38,7 @@ public class ScoreServletTest extends ServletTest {
         context.add(AccountService.class, accountService);
         servlet = new ScoreServlet(context);
         stringWriter = new StringWriter();
-        response = helper.getMockedResponse(stringWriter);
+        response = testHelper.getMockedResponse(stringWriter);
     }
 
     @After
@@ -49,8 +49,8 @@ public class ScoreServletTest extends ServletTest {
     @Test
     public void testDoGet() throws Exception {
         createUsers();
-        request = helper.getMockedRequest(helper.getSessionId());
-        when(request.getParameter("limit")).thenReturn(String.valueOf(helper.getLimit()));
+        request = testHelper.getMockedRequest(testHelper.getSessionId());
+        when(request.getParameter("limit")).thenReturn(String.valueOf(testHelper.getLimit()));
         //final AccountService spyAccountService = spy(accountService);
         //doNothing().when(spyAccountService).getFirstPlayersByScore(Helper.getLimit());
         String correctAnswer = "{\"data\":" +
@@ -71,7 +71,7 @@ public class ScoreServletTest extends ServletTest {
     @Test
     public void testDoGetWithNoLimit() throws Exception {
         createUsers();
-        request = helper.getMockedRequest(helper.getSessionId());
+        request = testHelper.getMockedRequest(testHelper.getSessionId());
         when(request.getParameter("limit")).thenReturn(null);
         //final AccountService spyAccountService = spy(accountService);
         //doNothing().when(spyAccountService).getFirstPlayersByScore(Helper.getLimit());

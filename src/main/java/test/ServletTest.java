@@ -2,7 +2,7 @@ package test;
 
 import Interface.AccountService;
 import main.Context;
-import resource.Helper;
+import resource.TestHelper;
 import resource.ResourceFactory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,5 +18,5 @@ public class ServletTest {
     protected HttpServletRequest request;
     protected HttpServletResponse response;
     protected StringWriter stringWriter;
-    final protected Helper helper = (Helper)(ResourceFactory.instance().getResource("helper"));
+    final protected TestHelper testHelper = (TestHelper)(ResourceFactory.instance().getResource("helper"));
 }

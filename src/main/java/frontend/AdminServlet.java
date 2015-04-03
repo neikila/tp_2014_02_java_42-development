@@ -5,7 +5,7 @@ import main.Context;
 import main.UserProfile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import templater.PageGenerator;
+import utils.PageGenerator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -74,9 +74,6 @@ public class AdminServlet extends HttpServlet{
                 switch (action) {
                     case "stop":
                         logger.info("Stopping server");
-                        /*pageVariables.put("topicMessage", "Statistic");
-                        pageToReturn = "byeBye.html";
-                        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));*/
                         StopServers();
                         break;
                     case "get":
@@ -99,7 +96,6 @@ public class AdminServlet extends HttpServlet{
     }
 
     protected void StopServers() {
-        //TODO some logic here: logger for example
         System.exit(0);
     }
 }

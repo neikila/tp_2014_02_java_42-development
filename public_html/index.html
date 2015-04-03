@@ -1,46 +1,22 @@
-<!DOCTYPE  html>
-<html><head>
-    <meta charset="utf-8" />
-    <title><!-- TODO --></title>
-    <link rel="stylesheet" href="/css/main.css" />
-    <script src="/js/lib/jquery.js"></script>
-    <script src="/js/tmpl/main.js"></script>
-    <script src="/js/tmpl/scoreboard.js"></script>
-    <script src="/js/tmpl/game.js"></script>
-    <script src="/js/tmpl/login.js"></script>
-</head><body>
-    <div id="page">test</div>
-    <script>
-        var $page = $('#page');
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Auth</title>
+</head>
+<body>
+<div id="body">
+    SignUp or LogIn First!
+    <form name="auth" action="/api/v1/auth/signin" method="get">
+        <input type="submit" value="Login">
+    </form><br>
 
-        function showScoreboardScreen() {
-            // TODO
-        }
-        function hideScoreboardScreen() {
-            // TODO
-        }
+    <form name="auth" action="/api/v1/auth/signup" method="get">
+        <input type="submit" value="Signup">
+    </form>
 
-        function showGameScreen() {
-            // TODO
-        }
-        function hideGameScreen() {
-            // TODO
-        }
-
-        function showLoginScreen() {
-            // TODO
-        }
-        function hideLoginScreen() {
-            // TODO
-        }
-
-        function showMainScreen() {
-            // TODO
-        }
-        function hideMainScreen() {
-            // TODO
-        }
-
-        showMainScreen();
-    </script>
-</body></html>
+    <form name="auth" action="/game.html" method="post">
+        <input type="submit" value="Push the button!">
+    </form>
+</div>
+</body>
+</html>

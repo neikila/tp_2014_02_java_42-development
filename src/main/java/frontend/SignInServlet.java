@@ -7,7 +7,7 @@ import org.json.simple.JSONObject;
 
 import Interface.AccountService;
 import main.UserProfile;
-import templater.PageGenerator;
+import utils.PageGenerator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

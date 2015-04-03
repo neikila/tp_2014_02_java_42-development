@@ -1,5 +1,8 @@
 package main;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +10,8 @@ import java.util.Map;
  * Created by neikila on 31.03.15.
  */
 public class Context {
+
+    static final Logger logger = LogManager.getLogger(Context.class.getName());
     private Map<Class<?>, Object> context = new HashMap<>();
     private boolean block;
 
@@ -16,10 +21,9 @@ public class Context {
 
     public void add(Class<?> clazz, Object object) {
         if (context.containsKey(clazz)) {
-            // TODO logger say about already containing such class
+            logger.info("Class {} is already in context.", clazz.getName());
         } else {
             context.put(clazz, object);
-            // TODO what is @Flow
         }
     }
 
@@ -27,8 +31,9 @@ public class Context {
         if (context.containsKey(clazz)) {
             return context.get(clazz);
         } else {
-            // TODO logger say about no containing such class
+            logger.info("Class {} is not in context.", clazz.getName());
             return null;
+            // TODO пересмотреть на выброc exception
         }
     }
 

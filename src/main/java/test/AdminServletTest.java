@@ -37,11 +37,11 @@ public class AdminServletTest extends ServletTest {
 
     @Before
     public void setUp() throws Exception {
-        accountService = helper.setUpAccountServices(false);
+        accountService = testHelper.setUpAccountServices(false);
         context.add(AccountService.class, accountService);
         servlet = new AdminServletTestExtension(context);
         stringWriter = new StringWriter();
-        response = helper.getMockedResponse(stringWriter);
+        response = testHelper.getMockedResponse(stringWriter);
     }
 
     @After
@@ -51,10 +51,10 @@ public class AdminServletTest extends ServletTest {
 
     @Test
     public void testDoPost() throws Exception {
-        UserProfile admin = helper.getAdmin();
+        UserProfile admin = testHelper.getAdmin();
         accountService.addUser(admin.getLogin(), admin);
-        accountService.addSessions(helper.getSessionId(), admin);
-        request = helper.getMockedRequest(helper.getSessionId());
+        accountService.addSessions(testHelper.getSessionId(), admin);
+        request = testHelper.getMockedRequest(testHelper.getSessionId());
         when(request.getParameter("action")).thenReturn("stop");
 
         servlet.doPost(request, response);
