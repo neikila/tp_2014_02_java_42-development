@@ -58,7 +58,6 @@ public class TestHelper implements Serializable, Resource{
     }
 
     public UserProfile getAdmin() {
-        admin.setAdmin(true);
         return admin;
     }
 
@@ -82,5 +81,13 @@ public class TestHelper implements Serializable, Resource{
 
     public String toString() {
         return "Limit: " + limit + " SessionId: " + sessionId;
+    }
+
+    @Override
+    public void checkState() {
+        if (limit < 1)
+            limit = 1;
+        if (!admin.isAdmin())
+            admin.setAdmin(true);
     }
 }

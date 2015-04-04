@@ -25,4 +25,10 @@ public class ServerSettings implements Serializable, Resource {
     public String toString() {
         return "Port: " + port;
     }
+
+    @Override
+    public void checkState() {
+        if (port < 50 || port > 65000)
+            port = 8080;
+    }
 }

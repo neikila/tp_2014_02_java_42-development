@@ -7,9 +7,9 @@ import main.user.UserComparatorByScore;
 import main.user.UserProfile;
 
 public class AccountServiceImpl implements Interface.AccountService{
-    private Map<String, UserProfile> users = new HashMap<>();
-    private Map<String, UserProfile> sessions = new HashMap<>();
-    private Map<String, UserProfile> sessionsWithUserAsKey = new HashMap<>();
+    final private Map<String, UserProfile> users = new HashMap<>();
+    final private Map<String, UserProfile> sessions = new HashMap<>();
+    final private Map<String, UserProfile> sessionsWithUserAsKey = new HashMap<>();
 
     public boolean addUser(String userName, UserProfile userProfile) {
         return (!users.containsKey(userName) && (users.put(userName, userProfile) == null));

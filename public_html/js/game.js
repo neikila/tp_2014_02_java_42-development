@@ -5,7 +5,6 @@ var ws;
 var started = false;
 var finished = false;
 
-var myName = "${myName}";
 var enemyName = "";
 
 init = function () {
@@ -38,12 +37,12 @@ init = function () {
             }
         }
 
-        if(data.status == "increment" && data.name == "${myName}"){
-            document.getElementById("myScore").innerHTML = data.score;
-        }
-
-        if(data.status == "increment" && data.name == document.getElementById("enemyName").innerHTML){
-            document.getElementById("enemyScore").innerHTML = data.score;
+        if(data.status == "increment") {
+            if (data.name == document.getElementById("enemyName").innerHTML) {
+                document.getElementById("enemyScore").innerHTML = data.score;
+            } else {
+                document.getElementById("myScore").innerHTML = data.score;
+            }
         }
 
         if(data.status == "result"){

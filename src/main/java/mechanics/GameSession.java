@@ -12,13 +12,13 @@ public class GameSession {
     private final long startTime;
     private final GameUser first;
     private final GameUser second;
-    private String sequence;
     private int num;
+    private int numAmount;
     private String winner;
 
     private Map<String, GameUser> users = new HashMap<>();
 
-    public GameSession(String user1, String user2) {
+    public GameSession(String user1, String user2, int numAmount) {
         startTime = new Date().getTime();
         GameUser gameUser1 = new GameUser(user1);
         gameUser1.setEnemyName(user2);
@@ -29,10 +29,8 @@ public class GameSession {
         users.put(user1, gameUser1);
         users.put(user2, gameUser2);
 
-        // Hardcode, so hradcode =)
         Random rand = new Random();
-        num = 1000000 +rand.nextInt(9000000 - 1);
-        sequence = "{\"sequence\":\"" + num + "\"}";
+        num = (int) Math.pow(10, numAmount) + rand.nextInt(9 * (int) Math.pow(10, numAmount) - 1);
         winner = null;
 
         this.first = gameUser1;
@@ -75,7 +73,7 @@ public class GameSession {
     };
 
     public  boolean isCorrect(String login, String answer){
-        if (sequence.equals(answer)) {
+        if (answer.equals(String.valueOf(num))) {
             if (winner == null) {
                 winner = login;
             }

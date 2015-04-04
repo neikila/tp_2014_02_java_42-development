@@ -13,9 +13,15 @@
     <form name="auth" action="/api/v1/auth/signup" method="get">
         <input type="submit" value="Signup">
     </form>
-
+    If you have already done it then
     <form name="auth" action="/game.html" method="post">
-        <input type="submit" value="Push the button!">
+        <input type="submit" value="PUSH the button!">
+    </form>
+
+    Log Out?
+    <form action="/api/v1/auth/signout" method="POST">
+        <input type="submit" name="answer" value="Yes">
+        <input type="submit" name="answer" value="No">
     </form>
 </div>
 </body>

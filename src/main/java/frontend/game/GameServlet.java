@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import resource.LoggerMessages;
 import resource.ResourceFactory;
+import utils.PageGenerator;
 import utils.TimeHelper;
 
 import javax.servlet.ServletException;
@@ -50,8 +51,8 @@ public class GameServlet extends HttpServlet {
             //TimeHelper.sleep(1000);
         } else {
             logger.info(loggerMessages.notAuthorised());
-            // TODO переделать на нормальное сообщение об отсутсвие в базе
-            super.doPost(request, response);
+            pageVariables.put("loginStatus", "You haven't signed up yet. Please, do it.");
+            response.getWriter().println(PageGenerator.getPage("authstatus.html", pageVariables));
         }
         logger.info(loggerMessages.doPostFinish());
     }

@@ -42,7 +42,7 @@ public class GameWebSocket {
             JSONObject jsonStart = new JSONObject();
             jsonStart.put("status", "start");
             jsonStart.put("enemyName", user.getEnemyName());
-            jsonStart.put("sequence", sequence);
+            jsonStart.put("sequence", sequence.substring(0,sequence.length()-3) + "&#x200B;" + sequence.substring(sequence.length()-3, sequence.length()));
             session.getRemote().sendString(jsonStart.toJSONString());
         } catch (Exception e) {
             logger.error(e.toString());
@@ -62,9 +62,9 @@ public class GameWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) {
-        logger.info(loggerMessages.onMessage(), data);
-        gameMechanics.checkSequence(myName, data);
-        gameMechanics.incrementScore(myName);
+        logger.info(loggerMessages.onMessage(), myName, data);
+        if (gameMechanics.checkSequence(myName, data))
+            gameMechanics.incrementScore(myName);
     }
 
     @OnWebSocketConnect
@@ -78,7 +78,7 @@ public class GameWebSocket {
     public void setMyScore(GameUser user) {
         JSONObject jsonStart = new JSONObject();
         jsonStart.put("status", "increment");
-        jsonStart.put("name", myName);
+        jsonStart.put("name", user.getMyName());
         jsonStart.put("score", user.getMyScore());
         try {
             session.getRemote().sendString(jsonStart.toJSONString());
@@ -114,7 +114,7 @@ public class GameWebSocket {
         return session;
     }
 
-    public void setSession(Session session) {
+    private void setSession(Session session) {
         this.session = session;
     }
 

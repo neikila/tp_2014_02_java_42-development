@@ -7,7 +7,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import reflection.ReflectionHelper;
 import resource.LoggerMessages;
-import sun.rmi.runtime.Log;
 
 public class SaxHandler extends DefaultHandler {
 

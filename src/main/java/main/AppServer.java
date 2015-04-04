@@ -40,7 +40,7 @@ public class AppServer {
 
         WebSocketService webSocketService = new WebSocketServiceImpl();
         contextGlobal.add(WebSocketService.class, webSocketService);
-        gameMechanics = new GameMechanicsImpl(webSocketService);
+        gameMechanics = new GameMechanicsImpl(contextGlobal);
         contextGlobal.add(GameMechanics.class, gameMechanics);
 
         // TODO нужно ли добавлять в контекст, вот в чем вопрос?

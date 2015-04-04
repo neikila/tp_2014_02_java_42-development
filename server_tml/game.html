@@ -31,6 +31,11 @@
 
     <div id="gameOver" style="display: none">
         <p>Game over! You are <span id="win"></span></p>
+
+        <form action="/api/v1/score" method="GET">
+            <input type="hidden" name="limit" value="4">
+            <input type="submit" id="goHome" value="Score Table">
+        </form>
     </div>
 
 </div>

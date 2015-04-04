@@ -25,7 +25,7 @@ public class ReadXMLFileSAX {
 
         } catch (Exception e) {
             logger.fatal(LoggerMessages.errorXML());
-            logger.fatal(e);
+            logger.fatal(e.toString());
             TimeHelper.sleep(1000);
             // TODO заменить все system.out на enum
             System.exit(-2);

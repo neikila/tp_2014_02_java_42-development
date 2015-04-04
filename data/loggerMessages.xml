@@ -18,7 +18,7 @@
     <alreadyLoggedIn>User:{} is already Logged In</alreadyLoggedIn>
     <block>Authorization and signing up is blocked</block>
     <wrongPasOrLogin>Wrong password:"{}" or login:"{}"</wrongPasOrLogin>
-    <logedOut>User:{} logged out</logedOut>
+    <loggedOut>User:{} logged out</loggedOut>
     <loginIsAlreadyExist>User with such login "{}" is already exist</loginIsAlreadyExist>
     <wrongSignUpData>Wrong login:"{}" or email:"{}" or password:"{}"</wrongSignUpData>
     <onMessage>User:{} has sent Message:{}</onMessage>
@@ -27,9 +27,16 @@
     <configure>Configure</configure>
     <setBlock>Signing in and Signing up are blocked</setBlock>
     <unsetBlock>Signing in and Signing up are released</unsetBlock>
+    <startGame>Start game</startGame>
+    <firstPlayer>First player</firstPlayer>
+    <secondPlayer>Second player</secondPlayer>
+    <sessionFinished>Session finished</sessionFinished>
+    <draw>Draw between {}, {}</draw>
+    <isWinner>{} is winner</isWinner>
+    <isLoser>{} is loser</isLoser>
     <errorXML>Error while reading XML</errorXML>
     <startXML>Start Document</startXML>
-    <ensXML>End document</ensXML>
+    <endXML>End document</endXML>
     <className>Class name: {}</className>
     <aEqualB>{} = {}</aEqualB>
 </class>

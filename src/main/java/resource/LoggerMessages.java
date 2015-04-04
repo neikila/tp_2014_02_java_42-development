@@ -3,6 +3,7 @@ package resource;
 import Interface.Resource;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 
 /**
  * Created by neikila on 03.04.15.
@@ -36,6 +37,13 @@ public class LoggerMessages implements Serializable, Resource {
     private String configure;
     private String setBlock;
     private String unsetBlock;
+    private String startGame;
+    private String sessionFinished;
+    private String firstPlayer;
+    private String secondPlayer;
+    private String draw;
+    private String isWinner;
+    private String isLoser;
     static private String errorXML = "Error while reading XML";
     static private String startXML = "Start Document";
     static private String endXML = "End document";
@@ -70,9 +78,20 @@ public class LoggerMessages implements Serializable, Resource {
     public String configure() {return configure; }
     public String setBlock() {return setBlock; }
     public String unsetBlock() {return unsetBlock; }
+    public String startGame() { return startGame;}
+    public String sessionFinished() { return sessionFinished;}
+    public String firstPlayer() { return firstPlayer;}
+    public String secondPlayer() { return secondPlayer;}
+    public String draw() { return draw;}
+    public String isWinner() { return isWinner;}
+    public String isLoser() { return isLoser;}
     static public String errorXML() {return errorXML; }
     static public String startXML() {return startXML; }
     static public String endXML() {return endXML; }
     static public String className() {return className; }
     static public String aEqualB() {return aEqualB; }
+
+    @Override
+    public void checkState() {
+    }
 }

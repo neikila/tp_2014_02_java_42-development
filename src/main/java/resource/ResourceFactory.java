@@ -33,6 +33,7 @@ public class ResourceFactory {
         Resource object;
         if(!resources.containsKey(resourceWay)) {
             object = (Resource) ReadXMLFileSAX.readXML("data/" + resourceWay + ".xml");
+            object.checkState();
             resources.put(resourceWay, object);
             logger.info("Resource {} was parsed.", resourceWay);
         } else {

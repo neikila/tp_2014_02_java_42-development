@@ -3,10 +3,10 @@ package main.user;
 import java.io.Serializable;
 
 public class UserProfile implements Serializable {
-    // TODO переделать в final
-    private String login;
-    private String password;
-    private String email;
+
+    final private String login;
+    final private String password;
+    final private String email;
     private boolean isSuperUser;
     private int score;
 
@@ -29,6 +29,8 @@ public class UserProfile implements Serializable {
     public int getScore() { return score; }
 
     public void setScore(int value) { score = value; }
+
+    public void increaseScoreOnValue(int value) { score += value; }
 
     public void setAdmin(boolean value) {
         isSuperUser = value;
