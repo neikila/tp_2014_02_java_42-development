@@ -38,7 +38,7 @@ public class TestHelper implements Serializable, Resource{
         return request;
     }
 
-    public AccountService setUpAccountServices(boolean havingUserIn) throws Exception {
+    public AccountService setUpAccountServices(boolean havingUserIn)  {
         AccountService accountService = new AccountServiceImpl();
         if (havingUserIn) {
             accountService.addUser(user.getLogin(), user);

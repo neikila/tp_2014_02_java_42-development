@@ -17,23 +17,25 @@ import java.io.StringWriter;
  */
 //TODO TestHelper
 public class ServletTest {
-    final protected Context context;
+    final private TestHelper testHelper;
     protected AccountService accountService;
     protected HttpServletRequest request;
     protected HttpServletResponse response;
     protected StringWriter stringWriter;
-    final protected TestHelper testHelper;
 
     public ServletTest() {
-        context = new Context();
         testHelper = (TestHelper)(ResourceFactory.instance().getResource("helper"));
+    }
+
+    public AccountService getAccountService(boolean havingUserIn) {
+        return testHelper.setUpAccountServices(havingUserIn);
     }
 
     public HttpServletRequest getRequest(String sessionId) {
         return testHelper.getMockedRequest(sessionId);
     }
 
-    public HttpServletResponse getRequest(StringWriter stringWriter) throws IOException{
+    public HttpServletResponse getResponse(StringWriter stringWriter) throws IOException{
         return testHelper.getMockedResponse(stringWriter);
     }
 

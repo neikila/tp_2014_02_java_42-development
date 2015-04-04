@@ -2,6 +2,7 @@ package test;
 
 import Interface.AccountService;
 import frontend.ProfileServlet;
+import main.Context;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,27 +17,23 @@ public class ProfileServletTest extends ServletTest {
 
     @Before
     public void setUp() throws Exception {
-        accountService = testHelper.setUpAccountServices(true);
+        accountService = getAccountService(true);
+        Context context = new Context();
         context.add(AccountService.class, accountService);
         servlet = new ProfileServlet(context);
         stringWriter = new StringWriter();
-        response = testHelper.getMockedResponse(stringWriter);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        context.remove(AccountService.class);
+        response = getResponse(stringWriter);
     }
 
     @Test
     public void testDoGet() throws Exception {
-        String login = testHelper.getUser().getLogin();
-        String pass = testHelper.getUser().getPassword();
-        String email = testHelper.getUser().getEmail();
-        int score = testHelper.getUser().getScore();
-        String role = testHelper.getUser().getRole();
+        String login = getUser().getLogin();
+        String pass = getUser().getPassword();
+        String email = getUser().getEmail();
+        int score = getUser().getScore();
+        String role = getUser().getRole();
 
-        request = testHelper.getMockedRequest(testHelper.getSessionId());
+        request = getRequest(null);
 
         String password = pass.substring(0, (pass.length() - 3)).replaceAll(".", "*")
                 + pass.substring((pass.length() - 3), pass.length());
@@ -55,8 +52,8 @@ public class ProfileServletTest extends ServletTest {
 
     @Test
     public void testDoGetIfNotSignedIn() throws Exception {
-        String WrongSessionId = testHelper.getSessionId() + "1";
-        request = testHelper.getMockedRequest(WrongSessionId);
+        String WrongSessionId = "";
+        request = getRequest(WrongSessionId);
         String CorrectResponse = "{\"data\":{\"message\":\"Unauthorized\"},\"status\":401}";
 
         servlet.doGet(request, response);
