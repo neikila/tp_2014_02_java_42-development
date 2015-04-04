@@ -39,4 +39,5 @@
     <endXML>End document</endXML>
     <className>Class name: {}</className>
     <aEqualB>{} = {}</aEqualB>
+    <resourceWasParsed>Resource {} was parsed</resourceWasParsed>
 </class>

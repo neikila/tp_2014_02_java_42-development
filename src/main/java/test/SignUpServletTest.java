@@ -145,4 +145,25 @@ public class SignUpServletTest extends ServletTest {
 
         assertEquals("SignUpAlreadySignedIn", CorrectResponse, stringWriter.toString());
     }
+
+    @Test
+    public void testDoPostIfBlocked() throws Exception {
+        String login = testHelper.getUser().getLogin();
+        String pass = testHelper.getUser().getPassword();
+        String email = testHelper.getUser().getEmail();
+
+        request = testHelper.getMockedRequest(testHelper.getSessionId());
+        when(request.getParameter("password")).thenReturn(pass);
+        when(request.getParameter("login")).thenReturn(login);
+        when(request.getParameter("email")).thenReturn(email);
+
+        context.setBlock();
+
+        String CorrectResponse = "{\"data\":{\"message\":\"Blocked\"},\"status\":400}";
+
+        servlet.doPost(request, response);
+
+        assertEquals("SignUpWrongEmail", CorrectResponse, stringWriter.toString());
+    }
+
 }

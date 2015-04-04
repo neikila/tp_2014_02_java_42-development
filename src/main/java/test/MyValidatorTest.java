@@ -7,6 +7,15 @@ import static org.junit.Assert.*;
 
 public class MyValidatorTest {
 
+
+    @Test
+    public void testIsSingletone() throws Exception {
+
+        MyValidator temp = MyValidator.instance();
+
+        assertNotNull("isSingletone", temp);
+    }
+
     @Test
     public void testIsUserNameValid() throws Exception {
         String usernameOK = "Test1";

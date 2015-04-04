@@ -27,7 +27,6 @@ public class AdminServlet extends HttpServlet{
 
     public AdminServlet(Context contextGlobal) {
         this.accountService = (AccountService)contextGlobal.get(AccountService.class);
-        //this.loggerMessages = (LoggerMessages) contextGlobal.get(LoggerMessages.class);
     }
 
     public void doGet(HttpServletRequest request,

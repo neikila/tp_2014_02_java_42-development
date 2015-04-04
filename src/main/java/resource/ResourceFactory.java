@@ -21,7 +21,7 @@ public class ResourceFactory {
     public static ResourceFactory instance() {
         if (resourceFactory == null) {
             resourceFactory = new ResourceFactory();
-            logger.info("Instance");
+            logger.info(LoggerMessages.resourceFactoryWasCreated());
         }
         return resourceFactory;
     }
@@ -35,7 +35,7 @@ public class ResourceFactory {
             object = (Resource) ReadXMLFileSAX.readXML("data/" + resourceWay + ".xml");
             object.checkState();
             resources.put(resourceWay, object);
-            logger.info("Resource {} was parsed.", resourceWay);
+            logger.info(LoggerMessages.resourceWasParsed(), resourceWay);
         } else {
             object = resources.get(resourceWay);
         }

@@ -101,4 +101,20 @@ public class SignInServletTest extends ServletTest {
 
         assertEquals("SignIn", CorrectResponse, stringWriter.toString());
     }
+
+    @Test
+    public void testDoPostIfBlocked() throws Exception {
+        accountService.removeSession(testHelper.getSessionId());
+        String login = testHelper.getUser().getLogin();
+        String password = testHelper.getUser().getPassword();
+        request = testHelper.getMockedRequest(testHelper.getSessionId());
+        when(request.getParameter("password")).thenReturn(password);
+        when(request.getParameter("login")).thenReturn(login);
+        context.setBlock();
+        String CorrectResponse = "{\"data\":{\"message\":\"Blocked\"},\"status\":400}";
+
+        servlet.doPost(request, response);
+
+        assertEquals("SignIn", CorrectResponse, stringWriter.toString());
+    }
 }

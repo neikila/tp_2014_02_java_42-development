@@ -49,6 +49,8 @@ public class LoggerMessages implements Serializable, Resource {
     static private String endXML = "End document";
     static private String className = "Class name: {}";
     static private String aEqualB = "{} = {}";
+    static private String resourceWasParsed = "Resource {} was parsed";
+    static private String resourceFactoryWasCreated = "ResourceFactory was created";
 
     public String doPostStart() { return doPostStart;}
     public String doPostFinish() { return doPostFinish;}
@@ -90,6 +92,8 @@ public class LoggerMessages implements Serializable, Resource {
     static public String endXML() {return endXML; }
     static public String className() {return className; }
     static public String aEqualB() {return aEqualB; }
+    static public String resourceWasParsed() {return resourceWasParsed; }
+    static public String resourceFactoryWasCreated() {return  resourceFactoryWasCreated; }
 
     @Override
     public void checkState() {

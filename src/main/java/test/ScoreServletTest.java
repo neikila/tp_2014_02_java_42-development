@@ -51,8 +51,6 @@ public class ScoreServletTest extends ServletTest {
         createUsers();
         request = testHelper.getMockedRequest(testHelper.getSessionId());
         when(request.getParameter("limit")).thenReturn(String.valueOf(testHelper.getLimit()));
-        //final AccountService spyAccountService = spy(accountService);
-        //doNothing().when(spyAccountService).getFirstPlayersByScore(Helper.getLimit());
         String correctAnswer = "{\"data\":" +
                 "{\"scoreList\":[" +
                                     "{\"score\":14,\"login\":\"Vasya\"}," +
@@ -65,7 +63,18 @@ public class ScoreServletTest extends ServletTest {
         servlet.doGet(request, response);
 
         assertEquals("GetScore", correctAnswer, stringWriter.toString());
-        //verify(spyAccountService, times(1)).getFirstPlayersByScore(Helper.getLimit());
+    }
+
+    @Test
+    public void testDoGetWithWrongLimit() throws Exception {
+        createUsers();
+        request = testHelper.getMockedRequest(testHelper.getSessionId());
+        when(request.getParameter("limit")).thenReturn("asd");
+        String correctAnswer = "{\"data\":{\"message\":\"WrongLimit\"},\"status\":400}";
+
+        servlet.doGet(request, response);
+
+        assertEquals("GetScore", correctAnswer, stringWriter.toString());
     }
 
     @Test
