@@ -31,6 +31,7 @@ public class ResourceFactory {
             return null;
         }
         Resource object;
+        // TODO можно делать в одной действие. object == null после get дает понять что ресурса там нет
         if(!resources.containsKey(resourceWay)) {
             object = (Resource) ReadXMLFileSAX.readXML("data/" + resourceWay + ".xml");
             object.checkState();

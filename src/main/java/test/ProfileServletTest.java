@@ -11,6 +11,7 @@ import java.io.StringWriter;
 import static org.junit.Assert.*;
 
 public class ProfileServletTest extends ServletTest {
+
     private ProfileServlet servlet;
 
     @Before

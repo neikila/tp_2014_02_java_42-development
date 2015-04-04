@@ -46,11 +46,12 @@ public class ScoreServletTest extends ServletTest {
         context.remove(AccountService.class);
     }
 
+    //TODO вынести в исходны файл
     @Test
     public void testDoGet() throws Exception {
         createUsers();
         request = testHelper.getMockedRequest(testHelper.getSessionId());
-        when(request.getParameter("limit")).thenReturn(String.valueOf(testHelper.getLimit()));
+        when(request.getParameter("limit")).thenReturn(String.valueOf(4));
         String correctAnswer = "{\"data\":" +
                 "{\"scoreList\":[" +
                                     "{\"score\":14,\"login\":\"Vasya\"}," +

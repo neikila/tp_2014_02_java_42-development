@@ -20,8 +20,6 @@ import static org.mockito.Mockito.when;
  * Created by neikila on 30.03.15.
  */
 public class TestHelper implements Serializable, Resource{
-    private int limit;
-    private String sessionId;
     private UserProfile user;
     private UserProfile admin;
 
@@ -44,49 +42,24 @@ public class TestHelper implements Serializable, Resource{
         AccountService accountService = new AccountServiceImpl();
         if (havingUserIn) {
             accountService.addUser(user.getLogin(), user);
-            accountService.addSessions(sessionId, user);
+            accountService.addSessions(null, user);
         }
         return accountService;
     }
 
-    public String getSessionId() { return sessionId; }
+    public String getSessionId() { return null; }
 
     public UserProfile getUser() { return user; }
-
-    public void setUser(UserProfile user) {
-        this.user = user;
-    }
 
     public UserProfile getAdmin() {
         return admin;
     }
 
-
-    public int getLimit() { return limit; }
-
-    public TestHelper(int limit, UserProfile user, UserProfile admin, String sessionId) {
-        this.admin = admin;
-        this.user = user;
-        this.limit = limit;
-        this.sessionId = sessionId;
-    }
-
     public TestHelper() {
-        this.user = new UserProfile("test_test", "test_test", "test@test.test");;
-        this.admin = new UserProfile("admin", "admin", "admin@gmail.com");
-        admin.setAdmin(true);
-        this.limit = 4;
-        this.sessionId = "";
-    }
-
-    public String toString() {
-        return "Limit: " + limit + " SessionId: " + sessionId;
     }
 
     @Override
     public void checkState() {
-        if (limit < 1)
-            limit = 1;
         if (!admin.isAdmin())
             admin.setAdmin(true);
     }

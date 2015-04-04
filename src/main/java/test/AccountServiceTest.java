@@ -175,7 +175,7 @@ public class AccountServiceTest {
         Dan.setScore(2);
         accountService.addUser(Dan.getLogin(), Dan);
 
-        TreeSet<UserProfile> resultTree = accountService.getFirstPlayersByScore(testHelper.getLimit() - 1);
+        TreeSet<UserProfile> resultTree = accountService.getFirstPlayersByScore(4 - 1);
 
         assertEquals("GetFirstByScore", FirstFour, resultTree);
     }
