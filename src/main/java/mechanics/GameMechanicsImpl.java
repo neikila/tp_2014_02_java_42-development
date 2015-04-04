@@ -2,9 +2,7 @@ package mechanics;
 
 import Interface.AccountService;
 import Interface.GameMechanics;
-import Interface.Resource;
 import Interface.WebSocketService;
-import MBean.AccountServiceController;
 import main.Context;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +25,8 @@ public class GameMechanicsImpl implements GameMechanics {
 
     final private int gameTime;
     final private int numAmount;
+    final private int weight;
+    final private int minDelta;
 
     final private WebSocketService webSocketService;
     final private AccountService accountService;
@@ -41,7 +41,9 @@ public class GameMechanicsImpl implements GameMechanics {
         this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
         this.accountService = (AccountService) context.get(AccountService.class);
         gameTime = ((GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings")).getTimeLimit() * 1000;
+        weight = ((GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings")).getWeight();
         numAmount = ((GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings")).getNumAmount();
+        minDelta = ((GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings")).getMinDelta();
     }
 
     public void addUser(String user) {
@@ -102,7 +104,7 @@ public class GameMechanicsImpl implements GameMechanics {
             logger.info(loggerMessages.isWinner(), firstResult > 0 ? firstName : secondName);
             logger.info(loggerMessages.isLoser(), firstResult < 0 ? firstName : secondName);
         }
-        int deltaScore = firstResult * (7 + Math.abs(session.getFirst().getMyScore() - session.getFirst().getEnemyScore() ) );
+        int deltaScore = firstResult * (minDelta + weight * Math.abs(session.getFirst().getMyScore() - session.getFirst().getEnemyScore() ) );
         accountService.getUser(firstName).increaseScoreOnValue(deltaScore);
         accountService.getUser(secondName).increaseScoreOnValue(-1 * deltaScore);
         webSocketService.notifyGameOver(session.getFirst(), firstResult);

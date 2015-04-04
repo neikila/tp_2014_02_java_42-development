@@ -21,11 +21,11 @@ public class Main {
         ServerSettings serverSettings = (ServerSettings)resourceFactory.getResource("serverSettings");
         int port = serverSettings.getPort();
 
-        startMBean(context);
-
         AccountService accountService = new AccountServiceImpl();
         accountService.createAdmin();
         context.add(AccountService.class, accountService);
+
+        startMBean(context);
 
         logger.info("Starting at port: " + (String.valueOf(port)) + "\n");
 
