@@ -37,7 +37,7 @@ public class AdminServletTest extends ServletTest {
 
     @Before
     public void setUp() throws Exception {
-        accountService = getAccountService(false);
+        accountService = getAccountServiceWithSession(getAdmin());
         Context context = new Context();
         context.add(AccountService.class, accountService);
         servlet = new AdminServletTestExtension(context);
@@ -47,9 +47,6 @@ public class AdminServletTest extends ServletTest {
 
     @Test
     public void testDoPost() throws Exception {
-        UserProfile admin = getAdmin();
-        accountService.addUser(admin.getLogin(), admin);
-        accountService.addSessions(null, admin);
         request = getRequest(null);
         when(request.getParameter("action")).thenReturn("stop");
 
@@ -57,4 +54,29 @@ public class AdminServletTest extends ServletTest {
 
         assertEquals("StopServer", true, servlet.wasExecute());
     }
+
+    @Test
+    public void testDoPostIfNotAdmin() throws Exception {
+        String sessionId = "";
+        request = getRequest(sessionId);
+        when(request.getParameter("action")).thenReturn("stop");
+        accountService.addUser(getUser().getLogin(), getUser());
+        accountService.addSessions(sessionId, getUser());
+
+        servlet.doPost(request, response);
+
+        assertEquals("DoPostIfNotAdmin", false, servlet.wasExecute());
+    }
+
+    @Test
+    public void testDoPostIfNotAuthorized() throws Exception {
+        request = getRequest(null);
+        when(request.getParameter("action")).thenReturn("stop");
+        accountService.removeSession(null);
+
+        servlet.doPost(request, response);
+
+        assertEquals("DoPostIfNotAuthorized", false, servlet.wasExecute());
+    }
+
 }

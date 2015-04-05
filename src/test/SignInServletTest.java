@@ -26,7 +26,7 @@ public class SignInServletTest extends ServletTest {
 
     @Before
     public void setUp() throws Exception {
-        accountService = getAccountService(true);
+        accountService = getAccountService(getUser());
         context = new Context();
         context.add(AccountService.class, accountService);
         servlet = new SignInServlet(context);
@@ -36,7 +36,6 @@ public class SignInServletTest extends ServletTest {
 
     @Test
     public void testDoPost() throws Exception {
-        accountService.removeSession(null);
         String login = getUser().getLogin();
         request = getRequest(null);
         String CorrectResponse = "{\"data\":{\"login\":\""+ login +"\"},\"status\":200}";
@@ -49,7 +48,6 @@ public class SignInServletTest extends ServletTest {
 
     @Test
     public void testDoPostIfNoLogin() throws Exception {
-        accountService.removeSession(null);
         String login = "";
         request = getRequest(null);
         String CorrectResponse = "{\"data\":{\"message\":\"Wrong\"},\"status\":400}";
@@ -62,7 +60,6 @@ public class SignInServletTest extends ServletTest {
 
     @Test
     public void testDoPostIfNoPassword() throws Exception {
-        accountService.removeSession(null);
         String password = "";
         request = getRequest(null);
         String CorrectResponse = "{\"data\":{\"message\":\"Wrong\"},\"status\":400}";
@@ -75,7 +72,6 @@ public class SignInServletTest extends ServletTest {
 
     @Test
     public void testDoPostIfNotExist() throws Exception {
-        accountService.removeSession(null);
         request = getRequest(null);
         String CorrectResponse = "{\"data\":{\"message\":\"Wrong\"},\"status\":400}";
         setRequestReader(getUser().getLogin() + "0", getUser().getLogin());
@@ -90,6 +86,7 @@ public class SignInServletTest extends ServletTest {
         request = getRequest(null);
         String CorrectResponse = "{\"data\":{\"message\":\"Already\"},\"status\":400}";
         setRequestReader(getUser().getLogin(), getUser().getPassword());
+        accountService.addSessions(null, getUser());
 
         servlet.doPost(request, response);
 
@@ -98,7 +95,6 @@ public class SignInServletTest extends ServletTest {
 
     @Test
     public void testDoPostIfBlocked() throws Exception {
-        accountService.removeSession(null);
         request = getRequest(null);
         context.setBlock();
         String CorrectResponse = "{\"data\":{\"message\":\"Blocked\"},\"status\":400}";

@@ -33,7 +33,7 @@ public class ScoreServletTest extends ServletTest {
 
     @Before
     public void setUp() throws Exception {
-        accountService = getAccountService(false);
+        accountService = getAccountService();
         Context context = new Context();
         context.add(AccountService.class, accountService);
         servlet = new ScoreServlet(context);

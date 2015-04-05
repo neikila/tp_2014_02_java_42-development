@@ -28,7 +28,7 @@ public class SignUpServletTest extends ServletTest {
 
     @Before
     public void setUp() throws Exception {
-        accountService = getAccountService(false);
+        accountService = getAccountService();
         context = new Context();
         context.add(AccountService.class, accountService);
         servlet = new SignUpServlet(context);

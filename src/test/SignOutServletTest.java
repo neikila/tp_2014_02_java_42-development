@@ -13,7 +13,7 @@ public class SignOutServletTest extends ServletTest{
 
     @Before
     public void setUp() throws Exception {
-        accountService = getAccountService(true);
+        accountService = getAccountServiceWithSession(getUser());
         Context context = new Context();
         context.add(AccountService.class, accountService);
         servlet = new SignOutServlet(context);

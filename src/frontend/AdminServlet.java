@@ -73,29 +73,33 @@ public class AdminServlet extends HttpServlet{
         HttpSession session = request.getSession();
 
         UserProfile user = accountService.getSessions(session.getId());
-        if (user != null && user.isAdmin()) {
-            logger.info(loggerMessages.isAdmin(), user.getLogin());
-            if(action != null)
-            {
-                switch (action) {
-                    case "stop":
-                        logger.info(loggerMessages.stop());
-                        StopServers();
-                        break;
-                    case "get":
-                        logger.info(loggerMessages.statistic());
-                        response.setStatus(HttpServletResponse.SC_OK);
-                        pageVariables.put("topicMessage", "Statistic");
-                        pageVariables.put("amountOfLoggedIn", accountService.getAmountOfSessions());
-                        pageVariables.put("amountOfSignedUp", accountService.getAmountOfUsers());
-                        pageToReturn = "statistic.html";
-                        break;
-                    default:
-                        logger.warn(loggerMessages.wrongAction());
+        if (user != null) {
+            if (user.isAdmin()) {
+                logger.info(loggerMessages.isAdmin(), user.getLogin());
+                if (action != null) {
+                    switch (action) {
+                        case "stop":
+                            logger.info(loggerMessages.stop());
+                            StopServers();
+                            break;
+                        case "get":
+                            logger.info(loggerMessages.statistic());
+                            // TODO переделать в json
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            pageVariables.put("topicMessage", "Statistic");
+                            pageVariables.put("amountOfLoggedIn", accountService.getAmountOfSessions());
+                            pageVariables.put("amountOfSignedUp", accountService.getAmountOfUsers());
+                            pageToReturn = "statistic.html";
+                            break;
+                        default:
+                            logger.warn(loggerMessages.wrongAction());
+                    }
                 }
+            } else {
+                logger.info(loggerMessages.isNotAdmin(), user.getLogin());
             }
         } else {
-            logger.info(loggerMessages.isNotAdmin(), user.getLogin());
+            logger.info(loggerMessages.notAuthorised());
         }
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
         logger.info(loggerMessages.doPostFinish());
