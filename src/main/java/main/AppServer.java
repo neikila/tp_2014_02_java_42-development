@@ -43,7 +43,6 @@ public class AppServer {
         gameMechanics = new GameMechanicsImpl(contextGlobal);
         contextGlobal.add(GameMechanics.class, gameMechanics);
 
-        // TODO нужно ли добавлять в контекст, вот в чем вопрос?
         context.addServlet(new ServletHolder(new WebSocketGameServlet(contextGlobal)), "/gameplay");
         context.addServlet(new ServletHolder(new GameServlet(contextGlobal)), "/game.html");
 

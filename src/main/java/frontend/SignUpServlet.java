@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import resource.LoggerMessages;
 import resource.ResourceFactory;
+import utils.JsonInterpreterFromRequest;
 import utils.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -67,11 +68,11 @@ public class SignUpServlet extends HttpServlet {
     public void doPost(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         logger.info(loggerMessages.doPostStart());
-        String login = request.getParameter("login");
-        String password = request.getParameter("password");
-        String email = request.getParameter("email");
+        JSONObject jsonObject = JsonInterpreterFromRequest.getJSONFromRequest(request);
+        String login = (String) jsonObject.get("login");
+        String password = (String) jsonObject.get("password");
+        String email = (String) jsonObject.get("email");
 
-        // TODO заменить на прием и парсинг json объекта
         UserProfile user = new UserProfile(login, password, email);
         HttpSession session = request.getSession();
 

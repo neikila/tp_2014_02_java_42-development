@@ -18,7 +18,7 @@ public class JsonInterpreterFromRequest
 {
     static final Logger logger = LogManager.getLogger(JsonInterpreterFromRequest.class.getName());
 
-    static public JSONObject getJSONFromRequest(HttpServletRequest request, String servletName) {
+    static public JSONObject getJSONFromRequest(HttpServletRequest request) {
         JSONObject jsonObj = null;
         StringBuilder jb = new StringBuilder();
         String line;
@@ -31,7 +31,8 @@ public class JsonInterpreterFromRequest
             Object obj = parser.parse(test);
             jsonObj = (JSONObject) obj;
         } catch (Exception e) { //сообщение об ошибке
-            logger.error("Error while getting the JSON in {}", servletName);
+            logger.error(e.toString());
+            logger.error("Error while getting the JSON");
         }
         return jsonObj;
     }
