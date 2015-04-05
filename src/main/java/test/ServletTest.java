@@ -15,7 +15,7 @@ import java.io.StringWriter;
  * Created by neikila on 30.03.15.
  *
  */
-//TODO TestHelper
+
 public class ServletTest {
     final private TestHelper testHelper;
     protected AccountService accountService;
