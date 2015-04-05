@@ -5,7 +5,6 @@ import frontend.AdminServlet;
 import frontend.ProfileServlet;
 import main.Context;
 import main.user.UserProfile;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 

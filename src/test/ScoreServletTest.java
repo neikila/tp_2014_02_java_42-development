@@ -1,17 +1,15 @@
 package test;
 
+import static org.junit.Assert.*;
 import Interface.AccountService;
 import frontend.ScoreServlet;
-import main.AccountServiceImpl;
 import main.Context;
 import main.user.UserProfile;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.StringWriter;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class ScoreServletTest extends ServletTest {

@@ -1,14 +1,12 @@
 package test;
 
+import static org.junit.Assert.*;
 import Interface.AccountService;
 import frontend.SignOutServlet;
 import main.Context;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import java.io.StringWriter;
-
-import static org.junit.Assert.*;
 
 public class SignOutServletTest extends ServletTest{
     private SignOutServlet servlet;

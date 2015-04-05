@@ -11,7 +11,7 @@
             $('#goHome').click(function () {
                 var data = {"login": $('#login').val(),
                     "password": $('#password').val(),
-                    "login": $('#email').val()};
+                    "email": $('#email').val()};
                 $.ajax({
                     data: JSON.stringify(data),
                     url: "/api/v1/auth/signup",

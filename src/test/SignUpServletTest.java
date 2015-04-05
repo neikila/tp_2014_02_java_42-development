@@ -1,21 +1,30 @@
 package test;
 
+import static org.junit.Assert.*;
 import Interface.AccountService;
-import frontend.SignOutServlet;
 import frontend.SignUpServlet;
 import main.Context;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.io.StringWriter;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class SignUpServletTest extends ServletTest {
     private SignUpServlet servlet;
     Context context;
+
+    private void setRequestReader(String login, String password, String email) throws Exception {
+        when(request.getReader()).thenReturn(new BufferedReader(
+                new StringReader(
+                        "{\"login\":\"" + login + "\"," +
+                        "\"password\":\"" + password + "\"," +
+                        "\"email\":\"" + email+  "\"}")));
+    }
+
 
     @Before
     public void setUp() throws Exception {
@@ -33,11 +42,8 @@ public class SignUpServletTest extends ServletTest {
         String login = getUser().getLogin();
         String pass = getUser().getPassword();
         String email = getUser().getEmail();
-
         request = getRequest(null);
-        when(request.getParameter("password")).thenReturn(pass);
-        when(request.getParameter("login")).thenReturn(login);
-        when(request.getParameter("email")).thenReturn(email);
+        setRequestReader(login, pass, email);
         String password = pass.substring(0, (pass.length() - 3)).replaceAll(".", "*")
                 + pass.substring((pass.length() - 3), pass.length());
         String CorrectResponse = "{\"data\":" +
@@ -53,14 +59,11 @@ public class SignUpServletTest extends ServletTest {
 
     @Test
     public void testDoPostWrongLogin() throws Exception {
-        String login = "test";
+        String login = "";
         String pass = getUser().getPassword();
         String email = getUser().getEmail();
-
         request = getRequest(null);
-        when(request.getParameter("password")).thenReturn(pass);
-        when(request.getParameter("login")).thenReturn(login);
-        when(request.getParameter("email")).thenReturn(email);
+        setRequestReader(login, pass, email);
 
         String CorrectResponse = "{\"data\":{\"message\":\"Wrong\"},\"status\":400}";
 
@@ -74,12 +77,8 @@ public class SignUpServletTest extends ServletTest {
         String login = getUser().getLogin();
         String pass = "";
         String email = getUser().getEmail();
-
         request = getRequest(null);
-        when(request.getParameter("password")).thenReturn(pass);
-        when(request.getParameter("login")).thenReturn(login);
-        when(request.getParameter("email")).thenReturn(email);
-
+        setRequestReader(login, pass, email);
         String CorrectResponse = "{\"data\":{\"message\":\"Wrong\"},\"status\":400}";
 
         servlet.doPost(request, response);
@@ -91,13 +90,10 @@ public class SignUpServletTest extends ServletTest {
     public void testDoPostWrongEmail() throws Exception {
         String login = getUser().getLogin();
         String pass = getUser().getPassword();
-        String email = "test";
+        String email = "";
 
         request = getRequest(null);
-        when(request.getParameter("password")).thenReturn(pass);
-        when(request.getParameter("login")).thenReturn(login);
-        when(request.getParameter("email")).thenReturn(email);
-
+        setRequestReader(login, pass, email);
         String CorrectResponse = "{\"data\":{\"message\":\"Wrong\"},\"status\":400}";
 
         servlet.doPost(request, response);
@@ -110,14 +106,9 @@ public class SignUpServletTest extends ServletTest {
         String login = getUser().getLogin();
         String pass = getUser().getPassword();
         String email = getUser().getEmail();
-
         accountService.addUser(login, getUser());
-
         request = getRequest(null);
-        when(request.getParameter("password")).thenReturn(pass);
-        when(request.getParameter("login")).thenReturn(login);
-        when(request.getParameter("email")).thenReturn(email);
-
+        setRequestReader(login, pass, email);
         String CorrectResponse = "{\"data\":{\"message\":\"Exist\"},\"status\":400}";
 
         servlet.doPost(request, response);
@@ -130,15 +121,10 @@ public class SignUpServletTest extends ServletTest {
         String login = getUser().getLogin();
         String pass = getUser().getPassword();
         String email = getUser().getEmail();
-
         accountService.addUser(login, getUser());
         accountService.addSessions(null, getUser());
-
         request = getRequest(null);
-        when(request.getParameter("password")).thenReturn(pass);
-        when(request.getParameter("login")).thenReturn(login);
-        when(request.getParameter("email")).thenReturn(email);
-
+        setRequestReader(login, pass, email);
         String CorrectResponse = "{\"data\":{\"message\":\"Already\"},\"status\":400}";
 
         servlet.doPost(request, response);
@@ -151,12 +137,8 @@ public class SignUpServletTest extends ServletTest {
         String login = getUser().getLogin();
         String pass = getUser().getPassword();
         String email = getUser().getEmail();
-
         request = getRequest(null);
-        when(request.getParameter("password")).thenReturn(pass);
-        when(request.getParameter("login")).thenReturn(login);
-        when(request.getParameter("email")).thenReturn(email);
-
+        setRequestReader(login, pass, email);
         context.setBlock();
 
         String CorrectResponse = "{\"data\":{\"message\":\"Blocked\"},\"status\":400}";
@@ -165,5 +147,4 @@ public class SignUpServletTest extends ServletTest {
 
         assertEquals("SignUpWrongEmail", CorrectResponse, stringWriter.toString());
     }
-
 }

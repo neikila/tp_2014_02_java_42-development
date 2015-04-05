@@ -1,7 +1,6 @@
 package test;
 
 import Interface.AccountService;
-import main.Context;
 import main.user.UserProfile;
 import resource.TestHelper;
 import resource.ResourceFactory;

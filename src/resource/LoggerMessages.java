@@ -3,7 +3,6 @@ package resource;
 import Interface.Resource;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 
 /**
  * Created by neikila on 03.04.15.

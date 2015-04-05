@@ -1,21 +1,28 @@
 package test;
 
+import static org.junit.Assert.*;
 import Interface.AccountService;
-import frontend.ProfileServlet;
 import frontend.SignInServlet;
 import main.Context;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.io.StringWriter;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class SignInServletTest extends ServletTest {
     private SignInServlet servlet;
     private Context context;
+
+    private void setRequestReader(String login, String password) throws Exception {
+        when(request.getReader()).thenReturn(new BufferedReader(
+                new StringReader(
+                        "{\"login\":\"" + login + "\"," +
+                        "\"password\":\"" + password + "\"}")));
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -27,16 +34,13 @@ public class SignInServletTest extends ServletTest {
         response = getResponse(stringWriter);
     }
 
-
     @Test
     public void testDoPost() throws Exception {
         accountService.removeSession(null);
         String login = getUser().getLogin();
-        String password = getUser().getPassword();
         request = getRequest(null);
-        when(request.getParameter("password")).thenReturn(password);
-        when(request.getParameter("login")).thenReturn(login);
         String CorrectResponse = "{\"data\":{\"login\":\""+ login +"\"},\"status\":200}";
+        setRequestReader(login, getUser().getPassword());
 
         servlet.doPost(request, response);
 
@@ -47,11 +51,9 @@ public class SignInServletTest extends ServletTest {
     public void testDoPostIfNoLogin() throws Exception {
         accountService.removeSession(null);
         String login = "";
-        String password = getUser().getPassword();
         request = getRequest(null);
-        when(request.getParameter("password")).thenReturn(password);
-        when(request.getParameter("login")).thenReturn(login);
         String CorrectResponse = "{\"data\":{\"message\":\"Wrong\"},\"status\":400}";
+        setRequestReader(login, getUser().getPassword());
 
         servlet.doPost(request, response);
 
@@ -61,12 +63,10 @@ public class SignInServletTest extends ServletTest {
     @Test
     public void testDoPostIfNoPassword() throws Exception {
         accountService.removeSession(null);
-        String login = getUser().getLogin();
         String password = "";
         request = getRequest(null);
-        when(request.getParameter("password")).thenReturn(password);
-        when(request.getParameter("login")).thenReturn(login);
         String CorrectResponse = "{\"data\":{\"message\":\"Wrong\"},\"status\":400}";
+        setRequestReader(getUser().getLogin(), password);
 
         servlet.doPost(request, response);
 
@@ -76,12 +76,9 @@ public class SignInServletTest extends ServletTest {
     @Test
     public void testDoPostIfNotExist() throws Exception {
         accountService.removeSession(null);
-        String login = "testWrong";
-        String password = "testWrong";
         request = getRequest(null);
-        when(request.getParameter("password")).thenReturn(password);
-        when(request.getParameter("login")).thenReturn(login);
         String CorrectResponse = "{\"data\":{\"message\":\"Wrong\"},\"status\":400}";
+        setRequestReader(getUser().getLogin() + "0", getUser().getLogin());
 
         servlet.doPost(request, response);
 
@@ -90,12 +87,9 @@ public class SignInServletTest extends ServletTest {
 
     @Test
     public void testDoPostIfAlreadySignedIn() throws Exception {
-        String login = getUser().getLogin();
-        String password = getUser().getPassword();
         request = getRequest(null);
-        when(request.getParameter("password")).thenReturn(password);
-        when(request.getParameter("login")).thenReturn(login);
         String CorrectResponse = "{\"data\":{\"message\":\"Already\"},\"status\":400}";
+        setRequestReader(getUser().getLogin(), getUser().getPassword());
 
         servlet.doPost(request, response);
 
@@ -105,13 +99,10 @@ public class SignInServletTest extends ServletTest {
     @Test
     public void testDoPostIfBlocked() throws Exception {
         accountService.removeSession(null);
-        String login = getUser().getLogin();
-        String password = getUser().getPassword();
         request = getRequest(null);
-        when(request.getParameter("password")).thenReturn(password);
-        when(request.getParameter("login")).thenReturn(login);
         context.setBlock();
         String CorrectResponse = "{\"data\":{\"message\":\"Blocked\"},\"status\":400}";
+        setRequestReader(getUser().getLogin(), getUser().getPassword());
 
         servlet.doPost(request, response);
 
