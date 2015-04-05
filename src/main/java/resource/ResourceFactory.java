@@ -27,18 +27,12 @@ public class ResourceFactory {
     }
 
     public Resource getResource(String resourceWay) {
-        if (resourceWay == null) {
-            return null;
-        }
         Resource object;
-        // TODO можно делать в одной действие. object == null после get дает понять что ресурса там нет
-        if(!resources.containsKey(resourceWay)) {
+        if((object = resources.get(resourceWay)) == null) {
             object = (Resource) ReadXMLFileSAX.readXML("data/" + resourceWay + ".xml");
             object.checkState();
             resources.put(resourceWay, object);
             logger.info(LoggerMessages.resourceWasParsed(), resourceWay);
-        } else {
-            object = resources.get(resourceWay);
         }
         return object;
     }
