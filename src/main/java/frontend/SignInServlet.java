@@ -9,6 +9,7 @@ import Interface.AccountService;
 import main.user.UserProfile;
 import resource.LoggerMessages;
 import resource.ResourceFactory;
+import utils.JsonInterpreterFromRequest;
 import utils.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -72,8 +73,11 @@ public class SignInServlet extends HttpServlet {
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
         logger.info(loggerMessages.doPostStart());
-        String login = request.getParameter("login");
-        String password = request.getParameter("password");
+
+        JSONObject jsonObject = JsonInterpreterFromRequest.getJSONFromRequest(request);
+
+        String login = (String) jsonObject.get("login");
+        String password = (String) jsonObject.get("password");
 
         HttpSession session = request.getSession();
 
