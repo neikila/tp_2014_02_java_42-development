@@ -1,10 +1,9 @@
 package sax;
 
+import exception.ReadXMLFileException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import resource.LoggerMessages;
-import resource.ResourceFactory;
-import utils.TimeHelper;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -25,11 +24,8 @@ public class ReadXMLFileSAX {
 
         } catch (Exception e) {
             logger.fatal(LoggerMessages.errorXML());
-            logger.fatal(e.toString());
-            TimeHelper.sleep(1000);
-            // TODO заменить все system.out на enum
-            System.exit(-2);
+            logger.fatal(e);
+            throw new ReadXMLFileException(e);
         }
-        return null;
     }
 }
