@@ -92,6 +92,8 @@ public class AdminServlet extends HttpServlet{
                             pageToReturn = "statistic.html";
                             break;
                         default:
+                            pageVariables.put("errorMessage", "Wrong 'action'");
+                            pageToReturn = "errorPage.html";
                             logger.warn(loggerMessages.wrongAction());
                     }
                 }

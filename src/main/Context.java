@@ -1,5 +1,6 @@
 package main;
 
+import com.sun.istack.internal.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,13 +28,14 @@ public class Context {
         }
     }
 
+    @Nullable
     public Object get(Class<?> clazz) {
         if (context.containsKey(clazz)) {
             return context.get(clazz);
         } else {
             logger.info("Class {} is not in context.", clazz.getName());
             return null;
-            // TODO пересмотреть на выброc exception
+            // TODO добавить проверки при вызове
         }
     }
 
