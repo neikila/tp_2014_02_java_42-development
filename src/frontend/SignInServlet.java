@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 import Interface.AccountService;
 import main.user.UserProfile;
 import resource.LoggerMessages;
+import resource.Messages;
 import resource.ResourceFactory;
 import utils.JsonInterpreterFromRequest;
 import utils.PageGenerator;
@@ -25,6 +26,7 @@ public class SignInServlet extends HttpServlet {
 
     final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
     final private Logger logger = LogManager.getLogger(SignInServlet.class.getName());
+    final private Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
     final private AccountService accountService;
     final private Context context;
 
@@ -51,15 +53,15 @@ public class SignInServlet extends HttpServlet {
         if (!context.isBlocked()) {
             if (user == null) {
                 logger.info(loggerMessages.signIn());
-                loginStatus = "Log In:";
+                loginStatus = messages.logInStatus();
                 pageToReturn = "signInForm.html";
             } else {
                 logger.info(loggerMessages.alreadyLoggedIn(), user.getLogin());
-                loginStatus = "You have already logged in";
+                loginStatus = messages.alreadyLoggedIn();
                 pageToReturn = "authstatus.html";
             }
         } else {
-            loginStatus = "Auth is blocked";
+            loginStatus = messages.block();
             logger.info(loggerMessages.block());
             pageToReturn = "authstatus.html";
         }
@@ -94,17 +96,17 @@ public class SignInServlet extends HttpServlet {
                 } else {
                     status = 400;
                     logger.info(loggerMessages.wrongPasOrLogin(), password, login);
-                    message = "Wrong";
+                    message = messages.wrongPasOrLogin();
                 }
             } else {
                 status = 400;
                 logger.info(loggerMessages.alreadyLoggedIn(), login);
-                message = "Already";
+                message = messages.alreadyLoggedIn();
             }
         } else {
             status = 400;
             logger.info(loggerMessages.block());
-            message = "Blocked";
+            message = messages.block();
         }
 
         createResponse(response, status, message, login);
@@ -115,14 +117,13 @@ public class SignInServlet extends HttpServlet {
 
         response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
+        response.setStatus(HttpServletResponse.SC_OK);
 
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();
         if (status != 200) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             data.put("message", errorMessage);
         } else {
-            response.setStatus(HttpServletResponse.SC_OK);
             data.put("login", login);
         }
         obj.put("data", data);

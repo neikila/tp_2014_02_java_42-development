@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import resource.LoggerMessages;
+import resource.Messages;
 import resource.ResourceFactory;
 import utils.JsonInterpreterFromRequest;
 import utils.PageGenerator;
@@ -25,6 +26,7 @@ public class SignUpServlet extends HttpServlet {
 
     final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
     final private Logger logger = LogManager.getLogger(SignOutServlet.class.getName());
+    final private Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
     final private AccountService accountService;
     final private Context context;
 
@@ -46,16 +48,16 @@ public class SignUpServlet extends HttpServlet {
         if (!context.isBlocked()) {
             if (user == null) {
                 pageToReturn = "signUpForm.html";
-                message = "Fill all the gaps, please:";
+                message = messages.fillAllTheGaps();
                 logger.info(loggerMessages.signUp());
             } else {
                 pageToReturn = "signupstatus.html";
-                message = "You have to logout before signing up.";
+                message = messages.logOutFirst();
                 logger.info(loggerMessages.alreadyLoggedIn(), user.getLogin());
             }
         } else {
             pageToReturn = "signupstatus.html";
-            message = "Signing up is blocked.";
+            message = messages.block();
             logger.info(loggerMessages.block());
         }
         pageVariables.put("signUpStatus", message);
@@ -88,23 +90,23 @@ public class SignUpServlet extends HttpServlet {
                         logger.info(loggerMessages.hasAuthorised(), user.getLogin());
                     } else {
                         status = 400;
-                        message = "Exist";
+                        message = messages.exist();
                         logger.info(loggerMessages.loginIsAlreadyExist(), login);
                     }
                 } else {
                     status = 400;
-                    message = "Wrong";
+                    message = messages.wrongSignUpData();
                     logger.info(loggerMessages.wrongSignUpData(), login, email, password);
                 }
             } else {
                 status = 400;
-                message = "Already";
+                message = messages.alreadyLoggedIn();
                 logger.info(loggerMessages.alreadyLoggedIn());
             }
         } else {
             logger.info(loggerMessages.block());
             status = 400;
-            message = "Blocked";
+            message = messages.block();
         }
         createResponse(response, status, message, user);
         logger.info(loggerMessages.doPostFinish());
@@ -114,14 +116,13 @@ public class SignUpServlet extends HttpServlet {
     private void createResponse (HttpServletResponse response, short status, String message, UserProfile user) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
+        response.setStatus(HttpServletResponse.SC_OK);
 
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();
         if (status != 200) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             data.put("message", message);
         } else {
-            response.setStatus(HttpServletResponse.SC_OK);
             String pass = user.getPassword();
             data.put("password", pass.substring(0, (pass.length() - 3)).replaceAll(".", "*") + pass.substring((pass.length() - 3), pass.length()));
             data.put("login", user.getLogin());

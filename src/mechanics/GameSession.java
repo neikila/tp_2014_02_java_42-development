@@ -70,7 +70,7 @@ public class GameSession {
                 return -1;
             }
         }
-    };
+    }
 
     public  boolean isCorrect(String login, String answer){
         if (answer.equals(String.valueOf(num))) {

@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import resource.LoggerMessages;
+import resource.Messages;
 import resource.ResourceFactory;
 
 import javax.servlet.ServletException;
@@ -21,7 +22,8 @@ public class ScoreServlet extends HttpServlet {
 
     final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
     final private Logger logger = LogManager.getLogger(ScoreServlet.class.getName());
-    private AccountService accountService;
+    final private Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
+    final private AccountService accountService;
 
     public ScoreServlet(Context contextGlobal) {
         this.accountService = (AccountService)contextGlobal.get(AccountService.class);
@@ -39,7 +41,7 @@ public class ScoreServlet extends HttpServlet {
         if (limitInRequest == null) {
             logger.info(loggerMessages.lackOfParam(), "limit");
             limit = 0;
-            message = "WrongLimit";
+            message = messages.wrongLimit();
             status = 400;
         } else {
             try {
@@ -47,7 +49,7 @@ public class ScoreServlet extends HttpServlet {
             } catch (Exception e) {
                 logger.error(loggerMessages.paramHasWrongType(), "limit");
                 limit = 0;
-                message = "WrongLimit";
+                message = messages.wrongLimit();
                 status = 400;
             }
         }

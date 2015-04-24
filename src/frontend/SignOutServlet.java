@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import resource.LoggerMessages;
+import resource.Messages;
 import resource.ResourceFactory;
 
 import javax.servlet.ServletException;
@@ -20,6 +21,7 @@ public class SignOutServlet extends HttpServlet{
 
     final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
     final private Logger logger = LogManager.getLogger(SignOutServlet.class.getName());
+    final private Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
     final private AccountService accountService;
 
     public SignOutServlet(Context contextGlobal) {
@@ -50,20 +52,19 @@ public class SignOutServlet extends HttpServlet{
     }
 
 
+    @SuppressWarnings("unchecked")
     private void createResponse(HttpServletResponse response, short status) throws IOException {
 
         response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
+        response.setStatus(HttpServletResponse.SC_OK);
 
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();
-        if (status != 200) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            data.put("message", "Unauthorized");
-        } else {
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
         obj.put("data", data);
+        if (status != 200) {
+            data.put("message", messages.notAuthorised());
+        }
         obj.put("status", status);
         response.getWriter().write(obj.toString());
     }

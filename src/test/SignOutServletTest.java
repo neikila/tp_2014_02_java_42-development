@@ -1,12 +1,14 @@
 package test;
 
-import static org.junit.Assert.*;
 import Interface.AccountService;
 import frontend.SignOutServlet;
 import main.Context;
 import org.junit.Before;
 import org.junit.Test;
+
 import java.io.StringWriter;
+
+import static org.junit.Assert.assertEquals;
 
 public class SignOutServletTest extends ServletTest{
     private SignOutServlet servlet;
@@ -36,7 +38,7 @@ public class SignOutServletTest extends ServletTest{
     public void testDoPostIfItIsNotExist() throws Exception {
         String WrongSessionId = "";
         request = getRequest(WrongSessionId);
-        String CorrectResponse = "{\"data\":{\"message\":\"Unauthorized\"},\"status\":401}";
+        String CorrectResponse = "{\"data\":{\"message\":\"" + messages.notAuthorised() + "\"},\"status\":401}";
 
         servlet.doPost(request, response);
 

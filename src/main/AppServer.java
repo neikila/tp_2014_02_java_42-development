@@ -1,6 +1,5 @@
 package main;
 
-import Interface.AccountService;
 import Interface.GameMechanics;
 import Interface.WebSocketService;
 import frontend.*;
@@ -63,6 +62,8 @@ public class AppServer {
             //server.join();
         } catch (Exception e) {
             logger.fatal("There is an error in Server.Start()");
+            logger.fatal(e);
+            e.printStackTrace();
             System.exit(1);
         }
     }
@@ -72,6 +73,8 @@ public class AppServer {
             System.exit(0);
         } catch (Exception e) {
             logger.fatal("There is an error in Server.Stop()");
+            logger.fatal(e);
+            e.printStackTrace();
             System.exit(1);
         }
     }

@@ -52,7 +52,7 @@ public class ProfileServletTest extends ServletTest {
     public void testDoGetIfNotSignedIn() throws Exception {
         String WrongSessionId = "";
         request = getRequest(WrongSessionId);
-        String CorrectResponse = "{\"data\":{\"message\":\"Unauthorized\"},\"status\":401}";
+        String CorrectResponse = "{\"data\":{\"message\":\"Not Authorised\"},\"status\":401}";
 
         servlet.doGet(request, response);
 

@@ -2,15 +2,13 @@ package test;
 
 import Interface.AccountService;
 import frontend.AdminServlet;
-import frontend.ProfileServlet;
 import main.Context;
-import main.user.UserProfile;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.StringWriter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 public class AdminServletTest extends ServletTest {

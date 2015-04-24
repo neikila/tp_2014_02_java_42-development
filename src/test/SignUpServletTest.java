@@ -1,6 +1,5 @@
 package test;
 
-import static org.junit.Assert.*;
 import Interface.AccountService;
 import frontend.SignUpServlet;
 import main.Context;
@@ -11,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 public class SignUpServletTest extends ServletTest {
@@ -65,7 +65,7 @@ public class SignUpServletTest extends ServletTest {
         request = getRequest(null);
         setRequestReader(login, pass, email);
 
-        String CorrectResponse = "{\"data\":{\"message\":\"Wrong\"},\"status\":400}";
+        String CorrectResponse = "{\"data\":{\"message\":\"" + messages.wrongSignUpData() + "\"},\"status\":400}";
 
         servlet.doPost(request, response);
 
@@ -79,7 +79,7 @@ public class SignUpServletTest extends ServletTest {
         String email = getUser().getEmail();
         request = getRequest(null);
         setRequestReader(login, pass, email);
-        String CorrectResponse = "{\"data\":{\"message\":\"Wrong\"},\"status\":400}";
+        String CorrectResponse = "{\"data\":{\"message\":\"" + messages.wrongSignUpData() + "\"},\"status\":400}";
 
         servlet.doPost(request, response);
 
@@ -94,7 +94,7 @@ public class SignUpServletTest extends ServletTest {
 
         request = getRequest(null);
         setRequestReader(login, pass, email);
-        String CorrectResponse = "{\"data\":{\"message\":\"Wrong\"},\"status\":400}";
+        String CorrectResponse = "{\"data\":{\"message\":\"" + messages.wrongSignUpData() + "\"},\"status\":400}";
 
         servlet.doPost(request, response);
 
@@ -109,7 +109,7 @@ public class SignUpServletTest extends ServletTest {
         accountService.addUser(login, getUser());
         request = getRequest(null);
         setRequestReader(login, pass, email);
-        String CorrectResponse = "{\"data\":{\"message\":\"Exist\"},\"status\":400}";
+        String CorrectResponse = "{\"data\":{\"message\":\"" + messages.exist() + "\"},\"status\":400}";
 
         servlet.doPost(request, response);
 
@@ -125,7 +125,7 @@ public class SignUpServletTest extends ServletTest {
         accountService.addSessions(null, getUser());
         request = getRequest(null);
         setRequestReader(login, pass, email);
-        String CorrectResponse = "{\"data\":{\"message\":\"Already\"},\"status\":400}";
+        String CorrectResponse = "{\"data\":{\"message\":\"" + messages.alreadyLoggedIn() + "\"},\"status\":400}";
 
         servlet.doPost(request, response);
 
@@ -141,7 +141,7 @@ public class SignUpServletTest extends ServletTest {
         setRequestReader(login, pass, email);
         context.setBlock();
 
-        String CorrectResponse = "{\"data\":{\"message\":\"Blocked\"},\"status\":400}";
+        String CorrectResponse = "{\"data\":{\"message\":\"" + messages.block() + "\"},\"status\":400}";
 
         servlet.doPost(request, response);
 

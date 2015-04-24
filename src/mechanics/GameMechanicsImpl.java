@@ -87,10 +87,11 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private void gmStep() {
         for (GameSession session : allSessions) {
-            if (session.getSessionTime() > gameTime) {
+            if(session.getSessionTime() > gameTime) {
                 finishGame(session);
             }
         }
+        // !! Не поддавайтесь искушению, не соглашайтесь с IntelliJ IDEA. Замените, и будет отсюда exception прилетать!
     }
 
     private void finishGame(GameSession session) {

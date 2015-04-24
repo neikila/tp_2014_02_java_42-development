@@ -38,9 +38,9 @@ public class SaxHandler extends DefaultHandler {
             String className = attributes.getValue(0);
             logger.info(LoggerMessages.className(), className);
             if (object == null) {
-                object = ReflectionHelper.createInstance(className);;
+                object = ReflectionHelper.createInstance(className);
             } else {
-                object2 = ReflectionHelper.createInstance(className);;
+                object2 = ReflectionHelper.createInstance(className);
             }
         }
     }

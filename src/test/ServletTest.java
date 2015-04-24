@@ -3,6 +3,7 @@ package test;
 import Interface.AccountService;
 import main.AccountServiceImpl;
 import main.user.UserProfile;
+import resource.Messages;
 import resource.TestHelper;
 import resource.ResourceFactory;
 
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.when;
  */
 
 public class ServletTest {
+    final protected Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
     final private TestHelper testHelper;
     protected AccountService accountService;
     protected HttpServletRequest request;

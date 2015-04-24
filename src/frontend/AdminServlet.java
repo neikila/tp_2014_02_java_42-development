@@ -6,6 +6,7 @@ import main.user.UserProfile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import resource.LoggerMessages;
+import resource.Messages;
 import resource.ResourceFactory;
 import utils.PageGenerator;
 import utils.TimeHelper;
@@ -23,6 +24,7 @@ public class AdminServlet extends HttpServlet{
 
     final private Logger logger = LogManager.getLogger(AdminServlet.class.getName());
     final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
+    final private Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
     final private AccountService accountService;
 
     public AdminServlet(Context contextGlobal) {
@@ -45,13 +47,13 @@ public class AdminServlet extends HttpServlet{
         if (user != null && user.isAdmin()) {
             logger.info(loggerMessages.isAdmin(), user.getLogin());
             pageToReturn = "adminPage.html";
-            pageVariables.put("titleMessage", "Admin page");
+            pageVariables.put("titleMessage", messages.adminPage());
         } else {
             if (user != null)
                 logger.info(loggerMessages.isNotAdmin(), user.getLogin());
             else
                 logger.info(loggerMessages.notAuthorised());
-            pageVariables.put("errorMessage", "404: Not Found.");
+            pageVariables.put("errorMessage", messages.notFound());
             pageToReturn = "errorPage.html";
         }
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
@@ -67,7 +69,7 @@ public class AdminServlet extends HttpServlet{
         String pageToReturn;
         Map<String, Object> pageVariables = new HashMap<>();
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        pageVariables.put("errorMessage", "404: Not Found.");
+        pageVariables.put("errorMessage", messages.notFound());
         pageToReturn = "errorPage.html";
 
         HttpSession session = request.getSession();
@@ -92,7 +94,7 @@ public class AdminServlet extends HttpServlet{
                             pageToReturn = "statistic.html";
                             break;
                         default:
-                            pageVariables.put("errorMessage", "Wrong 'action'");
+                            pageVariables.put("errorMessage", messages.wrongParamAction());
                             pageToReturn = "errorPage.html";
                             logger.warn(loggerMessages.wrongAction());
                     }

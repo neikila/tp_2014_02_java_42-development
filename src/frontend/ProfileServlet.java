@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import resource.LoggerMessages;
+import resource.Messages;
 import resource.ResourceFactory;
 
 import javax.servlet.ServletException;
@@ -20,7 +21,8 @@ public class ProfileServlet extends HttpServlet {
 
     final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
     final private Logger logger = LogManager.getLogger(ProfileServlet.class.getName());
-    private AccountService accountService;
+    final private AccountService accountService;
+    final private Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
 
     public ProfileServlet(Context contextGlobal) {
         this.accountService = (AccountService)contextGlobal.get(AccountService.class);
@@ -41,7 +43,7 @@ public class ProfileServlet extends HttpServlet {
         if (user == null) {
             logger.info(loggerMessages.notAuthorised());
             status = 401;
-            message = "Unauthorized";
+            message = messages.notAuthorised();
         } else {
             logger.info(loggerMessages.hasAuthorised(), user.getLogin());
             status = 200;
@@ -63,7 +65,8 @@ public class ProfileServlet extends HttpServlet {
         } else {
             response.setStatus(HttpServletResponse.SC_OK);
             String pass = user.getPassword();
-            data.put("password", pass.substring(0, (pass.length() - 3)).replaceAll(".", "*") + pass.substring((pass.length() - 3), pass.length()));
+            final String newPass = pass.substring(0, (pass.length() - 3)).replaceAll(".", "*") + pass.substring((pass.length() - 3), pass.length());
+            data.put("password", newPass);
             data.put("login", user.getLogin());
             data.put("email", user.getEmail());
             data.put("role", user.getRole());

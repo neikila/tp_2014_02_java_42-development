@@ -37,5 +37,5 @@ public class ResourceFactory {
         return object;
     }
 
-    private ResourceFactory () {};
+    private ResourceFactory () {}
 }
