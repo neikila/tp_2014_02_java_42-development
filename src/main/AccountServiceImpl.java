@@ -1,10 +1,9 @@
 package main;
 
-import java.util.*;
-
-import com.sun.istack.internal.NotNull;
 import main.user.UserComparatorByScore;
 import main.user.UserProfile;
+
+import java.util.*;
 
 public class AccountServiceImpl implements Interface.AccountService{
     final private Map<String, UserProfile> users = new HashMap<>();
@@ -65,7 +64,6 @@ public class AccountServiceImpl implements Interface.AccountService{
         addUser(login, profile);
     }
 
-    @NotNull
     public TreeSet <UserProfile> getFirstPlayersByScore(int limit) {
         UserComparatorByScore comp = new UserComparatorByScore();
         TreeSet <UserProfile> FirstFour = new TreeSet<>(comp);

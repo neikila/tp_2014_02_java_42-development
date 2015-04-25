@@ -61,13 +61,13 @@ public class Messages implements Serializable, Resource {
     public String fillAllTheGaps() { return fillAllTheGaps;}
     public String logOutFirst() {return logOutFirst;}
     public String exist() { return exist; }
+    public String wrongSignUpData() { return wrongSignUpData; }
     public String lackOfParam() { return lackOfParam; }
     public String paramHasWrongType() { return  paramHasWrongType; }
     public String signUp() { return  signUp; }
     public String signIn() { return  signIn; }
     public String loggedOut() { return loggedOut; }
     public String loginIsAlreadyExist() { return loginIsAlreadyExist; }
-    public String wrongSignUpData() { return wrongSignUpData; }
     public String authorised() { return authorised;}
     public String onMessage() {return onMessage; }
     public String onOpen() {return onOpen; }
