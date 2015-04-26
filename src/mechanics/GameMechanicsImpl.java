@@ -68,14 +68,14 @@ public class GameMechanicsImpl implements GameMechanics {
         webSocketService.notifyEnemyNewScore(enemyUser);
     }
 
-    public boolean checkSequence(String userName, String sequence) {
+ /*   public boolean checkSequence(String userName, String sequence) {
         GameSession myGameSession = nameToGame.get(userName);
         GameUser myUser = myGameSession.getSelf(userName);
         boolean result = myGameSession.isCorrect(userName, JsonInterpreterFromRequest.getJsonFromString(sequence).get("sequence").toString());
         String resultStr = result ? "Correct" : "Failed";
         webSocketService.notifyResult(myUser, resultStr);
         return result;
-    }
+    }*/
 
     @Override
     public void run() {
