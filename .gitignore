@@ -6,7 +6,8 @@
 **/out/*
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
-**/target/maven-status/*
+**/target/*
+**/server/*
 # Package Files #
 *.jar
 *.war
