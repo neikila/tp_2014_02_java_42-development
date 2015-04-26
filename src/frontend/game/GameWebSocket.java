@@ -66,8 +66,8 @@ public class GameWebSocket {
     @OnWebSocketMessage
     public void onMessage(String data) {
         logger.info(loggerMessages.onMessage(), myName, data);
-        if (gameMechanics.checkSequence(myName, data))
-            gameMechanics.incrementScore(myName);
+//        if (gameMechanics.checkSequence(myName, data))
+//            gameMechanics.incrementScore(myName);
     }
 
     @OnWebSocketConnect
