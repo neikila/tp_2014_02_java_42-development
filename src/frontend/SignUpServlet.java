@@ -25,7 +25,7 @@ import java.util.Map;
 public class SignUpServlet extends HttpServlet {
 
     final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
-    final private Logger logger = LogManager.getLogger(SignOutServlet.class.getName());
+    final private Logger logger = LogManager.getLogger(SignUpServlet.class.getName());
     final private Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
     final private AccountService accountService;
     final private Context context;
@@ -39,6 +39,7 @@ public class SignUpServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         logger.info(loggerMessages.doGetStart());
+        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
         HttpSession session = request.getSession();
         UserProfile user = accountService.getSessions(session.getId());
 
@@ -70,6 +71,7 @@ public class SignUpServlet extends HttpServlet {
     public void doPost(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         logger.info(loggerMessages.doPostStart());
+        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
         JSONObject jsonObject = JsonInterpreterFromRequest.getJSONFromRequest(request);
         String login = (String) jsonObject.get("login");
         String password = (String) jsonObject.get("password");
@@ -85,8 +87,9 @@ public class SignUpServlet extends HttpServlet {
             if (accountService.getSessions(session.getId()) == null) {
                 if (MyValidator.isUserNameValid(login) && MyValidator.isPasswordValid(password) && MyValidator.isEmailValid(email)) {
                     if (accountService.addUser(login, user)) {
-                        accountService.addSessions(session.getId(), user);
                         status = 200;
+                        logger.info(loggerMessages.signUpSuccess(), user.getLogin());
+                        accountService.addSessions(session.getId(), user);
                         logger.info(loggerMessages.hasAuthorised(), user.getLogin());
                     } else {
                         status = 400;

@@ -34,6 +34,7 @@ public class AdminServlet extends HttpServlet{
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         logger.info(loggerMessages.doGetStart());
+        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
 
         response.setStatus(HttpServletResponse.SC_OK);
 
@@ -64,6 +65,7 @@ public class AdminServlet extends HttpServlet{
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
         logger.info(loggerMessages.doPostStart());
+        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
         String action = request.getParameter("action");
 
         String pageToReturn;

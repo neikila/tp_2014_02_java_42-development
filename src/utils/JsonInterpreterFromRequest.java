@@ -9,12 +9,15 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import resource.LoggerMessages;
+import resource.ResourceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 
 public class JsonInterpreterFromRequest
 {
+    static final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
     static final Logger logger = LogManager.getLogger(JsonInterpreterFromRequest.class.getName());
 
     static public JSONObject getJSONFromRequest(HttpServletRequest request) {
@@ -29,6 +32,7 @@ public class JsonInterpreterFromRequest
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(test);
             jsonObj = (JSONObject) obj;
+            logger.info(loggerMessages.jsonGotFromRequest(), jsonObj.toString());
         } catch (Exception e) { //сообщение об ошибке
             logger.error(e.toString());
             logger.error("Error while getting the JSON");

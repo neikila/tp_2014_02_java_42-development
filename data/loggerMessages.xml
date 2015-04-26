@@ -34,6 +34,11 @@
     <draw>Draw between {}, {}</draw>
     <isWinner>{} is winner</isWinner>
     <isLoser>{} is loser</isLoser>
+    <signUpSuccess>User {} was successfully signed up</signUpSuccess>
+    <newSocket>Start creating New socket </newSocket>
+    <newSocketSuccess>New Socket Successfully constructed</newSocketSuccess>
+    <requestGetParams>Request params {}</requestGetParams>
+    <jsonGotFromRequest>JSON from request: {}</jsonGotFromRequest>
     <errorXML>Error while reading XML</errorXML>
     <startXML>Start Document</startXML>
     <endXML>End document</endXML>

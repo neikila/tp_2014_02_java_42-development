@@ -32,7 +32,7 @@ public class ProfileServlet extends HttpServlet {
                       HttpServletResponse response) throws ServletException, IOException {
 
         logger.info(loggerMessages.doGetStart());
-
+        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
         HttpSession session = request.getSession();
 
         UserProfile user = accountService.getSessions(session.getId());

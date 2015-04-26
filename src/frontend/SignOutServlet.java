@@ -31,8 +31,8 @@ public class SignOutServlet extends HttpServlet{
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
-
         logger.info(loggerMessages.doPostStart());
+        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
         HttpSession session = request.getSession();
 
         UserProfile user = accountService.getSessions(session.getId());

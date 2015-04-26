@@ -33,7 +33,7 @@ public class ScoreServlet extends HttpServlet {
                       HttpServletResponse response) throws ServletException, IOException {
 
         logger.info(loggerMessages.doGetStart());
-
+        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
         short status = 200;
         String message = "";
         String limitInRequest = request.getParameter("limit");
@@ -47,6 +47,7 @@ public class ScoreServlet extends HttpServlet {
             try {
                 limit = Integer.parseInt(request.getParameter("limit"));
             } catch (Exception e) {
+                logger.error(e);
                 logger.error(loggerMessages.paramHasWrongType(), "limit");
                 limit = 0;
                 message = messages.wrongLimit();

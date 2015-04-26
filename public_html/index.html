@@ -2,8 +2,30 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Auth</title>
+    <script type="text/javascript">
+        console.log("Hello");
+        init = function () {
+            console.log("Created");
+            ws = new WebSocket("ws://localhost:8080/gameplay");
+            console.log("Create");
+            ws.onopen = function (event) {
+                console.log("open");
+            };
+
+            ws.onmessage = function (event) {
+                var data = JSON.parse(event.data);
+                console.log(data.stringify());
+                console.log(data);
+            };
+
+            ws.onclose = function (event) {
+
+            }
+
+        };
+    </script>
 </head>
-<body>
+<body onload="init();">
 <div id="body">
     SignUp or LogIn First!
     <form name="auth" action="/api/v1/auth/signin" method="get">

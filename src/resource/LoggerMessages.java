@@ -43,6 +43,11 @@ public class LoggerMessages implements Serializable, Resource {
     private String draw;
     private String isWinner;
     private String isLoser;
+    private String signUpSuccess;
+    private String newSocket;
+    private String newSocketSuccess;
+    private String requestGetParams;
+    static private String jsonGotFromRequest = "JSON from request: {}";
     static private String errorXML = "Error while reading XML";
     static private String startXML = "Start Document";
     static private String endXML = "End document";
@@ -86,6 +91,11 @@ public class LoggerMessages implements Serializable, Resource {
     public String draw() { return draw;}
     public String isWinner() { return isWinner;}
     public String isLoser() { return isLoser;}
+    public String signUpSuccess() { return signUpSuccess;}
+    public String newSocket() {return newSocket;}
+    public String requestGetParams() { return requestGetParams;}
+    public String newSocketSuccess() { return newSocketSuccess;}
+    static public String jsonGotFromRequest() { return jsonGotFromRequest;}
     static public String errorXML() {return errorXML; }
     static public String startXML() {return startXML; }
     static public String endXML() {return endXML; }

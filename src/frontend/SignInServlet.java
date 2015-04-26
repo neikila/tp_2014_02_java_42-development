@@ -37,8 +37,8 @@ public class SignInServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-
         logger.info(loggerMessages.doGetStart());
+        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
         response.setStatus(HttpServletResponse.SC_OK);
 
         String pageToReturn;
@@ -75,7 +75,7 @@ public class SignInServlet extends HttpServlet {
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
         logger.info(loggerMessages.doPostStart());
-
+        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
         JSONObject jsonObject = JsonInterpreterFromRequest.getJSONFromRequest(request);
 
         String login = (String) jsonObject.get("login");

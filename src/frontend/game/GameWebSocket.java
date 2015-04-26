@@ -28,9 +28,11 @@ public class GameWebSocket {
     private Session session;
 
     public GameWebSocket(String sessionId, Context context) {
+        logger.info(loggerMessages.newSocket());
         this.gameMechanics = (GameMechanics) context.get(GameMechanics.class);
         this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
         this.myName = ((AccountService) context.get(AccountService.class)).getSessions(sessionId).getLogin();
+        logger.info(loggerMessages.newSocketSuccess());
     }
 
     public String getMyName() {
