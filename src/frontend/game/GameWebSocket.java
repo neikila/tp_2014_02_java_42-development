@@ -15,6 +15,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.json.simple.JSONObject;
 import resource.LoggerMessages;
 import resource.ResourceFactory;
+import utils.JsonInterpreterFromRequest;
 
 @WebSocket
 public class GameWebSocket {
@@ -59,15 +60,25 @@ public class GameWebSocket {
             jsonStart.put("result", result);
             session.getRemote().sendString(jsonStart.toJSONString());
         } catch (Exception e) {
-            logger.error(e.toString());
+            logger.error(e);
+            e.printStackTrace();
+        }
+    }
+
+    public void sendAction(JSONObject action) {
+        try {
+            session.getRemote().sendString(action.toJSONString());
+        } catch (Exception e) {
+            logger.error(e);
+            e.printStackTrace();
         }
     }
 
     @OnWebSocketMessage
     public void onMessage(String data) {
         logger.info(loggerMessages.onMessage(), myName, data);
-        if (gameMechanics.checkSequence(myName, data))
-            gameMechanics.incrementScore(myName);
+        JSONObject message = JsonInterpreterFromRequest.getJsonFromString(data);
+        gameMechanics.analyzeMessage(myName, message);
     }
 
     @OnWebSocketConnect

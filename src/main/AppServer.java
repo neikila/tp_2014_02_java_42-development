@@ -58,6 +58,7 @@ public class AppServer {
         try {
             server.start();
             logger.info("Start");
+            logger.info("With resending actions");
             gameMechanics.run();
             //server.join();
         } catch (Exception e) {

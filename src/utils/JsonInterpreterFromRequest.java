@@ -47,8 +47,11 @@ public class JsonInterpreterFromRequest
         Object obj = null;
         try {
             obj = parser.parse(request);
+            logger.info(loggerMessages.jsonGotFromRequest(), obj.toString());
         } catch (ParseException e) {
-            logger.error(e.toString());
+            e.printStackTrace();
+            logger.error(e);
+            logger.error(loggerMessages.errorInReadingJSON());
         }
         return (JSONObject) obj;
     }

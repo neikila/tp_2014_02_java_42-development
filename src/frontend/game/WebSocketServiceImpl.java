@@ -2,6 +2,7 @@ package frontend.game;
 
 import Interface.WebSocketService;
 import mechanics.GameUser;
+import org.json.simple.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,11 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     public void notifyMyNewScore(GameUser user) {
         userSockets.get(user.getMyName()).setMyScore(user);
+    }
+
+    public void notifyAction(GameUser user, JSONObject action) {
+        GameWebSocket gameWebSocket = userSockets.get(user.getMyName());
+        gameWebSocket.sendAction(action);
     }
 
     public void notifyEnemyNewScore(GameUser user) {
