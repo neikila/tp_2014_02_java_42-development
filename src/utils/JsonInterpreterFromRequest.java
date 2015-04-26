@@ -34,8 +34,9 @@ public class JsonInterpreterFromRequest
             jsonObj = (JSONObject) obj;
             logger.info(loggerMessages.jsonGotFromRequest(), jsonObj.toString());
         } catch (Exception e) { //сообщение об ошибке
-            logger.error(e.toString());
-            logger.error("Error while getting the JSON");
+            e.printStackTrace();
+            logger.error(e);
+            logger.error(loggerMessages.errorInReadingJSON());
         }
         return jsonObj;
     }

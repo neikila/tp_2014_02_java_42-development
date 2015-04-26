@@ -43,6 +43,7 @@ public class GameWebSocket {
         try {
             JSONObject jsonStart = new JSONObject();
             jsonStart.put("status", "start");
+            jsonStart.put("position", user.getMyPosition());
             jsonStart.put("enemyName", user.getEnemyName());
             jsonStart.put("sequence", sequence.substring(0,sequence.length()-3) + "&#x200B;" + sequence.substring(sequence.length()-3, sequence.length()));
             session.getRemote().sendString(jsonStart.toJSONString());

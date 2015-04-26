@@ -8,10 +8,15 @@ public class GameUser {
     private String enemyName;
     private int myScore = 0;
     private int enemyScore = 0;
+    private int position; // It is needed for left or right position on the screen
 
     public GameUser(String myName) {
         this.myName = myName;
     }
+
+    public void setMyPosition(int myPos) { position = myPos; }
+
+    public int getMyPosition() { return position; }
 
     public String getMyName() {
         return myName;

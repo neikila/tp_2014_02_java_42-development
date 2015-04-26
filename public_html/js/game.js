@@ -17,6 +17,8 @@ init = function () {
     ws.onmessage = function (event) {
         var data = JSON.parse(event.data);
         if(data.status == "start"){
+            console.log("MyPosition = " + data.position);
+            console.log(data);
             document.getElementById("wait").style.display = "none";
             document.getElementById("gameplay").style.display = "block";
             document.getElementById("enemyName").innerHTML = data.enemyName;

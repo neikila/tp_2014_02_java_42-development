@@ -114,9 +114,13 @@ public class GameMechanicsImpl implements GameMechanics {
         logger.info(loggerMessages.sessionFinished());
     }
 
-    private void starGame(String first) {
-        String second = waiter;
+    private void starGame(String second) {
+        String first = waiter;
         GameSession gameSession = new GameSession(first, second, numAmount);
+        logger.info(loggerMessages.gameUserPosition(),
+                gameSession.getFirst().getMyName(), gameSession.getFirst().getMyPosition());
+        logger.info(loggerMessages.gameUserPosition(),
+                gameSession.getSecond().getMyName(), gameSession.getSecond().getMyPosition());
         allSessions.add(gameSession);
         nameToGame.put(first, gameSession);
         nameToGame.put(second, gameSession);

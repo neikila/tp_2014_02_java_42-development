@@ -21,9 +21,11 @@ public class GameSession {
     public GameSession(String user1, String user2, int numAmount) {
         startTime = new Date().getTime();
         GameUser gameUser1 = new GameUser(user1);
+        gameUser1.setMyPosition(1);
         gameUser1.setEnemyName(user2);
 
         GameUser gameUser2 = new GameUser(user2);
+        gameUser2.setMyPosition(2);
         gameUser2.setEnemyName(user1);
 
         users.put(user1, gameUser1);
