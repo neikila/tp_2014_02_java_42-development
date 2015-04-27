@@ -78,7 +78,6 @@ public class GameWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) {
-        logger.info(loggerMessages.onMessage(), myName, data);
         JSONObject message = JsonInterpreterFromRequest.getJsonFromString(data);
         gameMechanics.analyzeMessage(myName, message);
     }

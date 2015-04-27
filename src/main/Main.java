@@ -25,6 +25,10 @@ public class Main {
 
         AccountService accountService = new AccountServiceImpl();
         accountService.createAdmin();
+
+        // TODO Убрать при production
+        accountService.createTestAccount();
+
         context.add(AccountService.class, accountService);
 
         startMBean(context);

@@ -31,7 +31,7 @@
     <firstPlayer>First player</firstPlayer>
     <secondPlayer>Second player</secondPlayer>
     <sessionFinished>Session finished</sessionFinished>
-    <errorInReadingJSON>Error while getting the JSON</errorInReadingJSON>
+    <errorInReadingJSON>Error while getting the JSON: {}</errorInReadingJSON>
     <draw>Draw between {}, {}</draw>
     <isWinner>{} is winner</isWinner>
     <isLoser>{} is loser</isLoser>

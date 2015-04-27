@@ -32,9 +32,7 @@ public class JsonInterpreterFromRequest
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(test);
             jsonObj = (JSONObject) obj;
-//            logger.info(loggerMessages.jsonGotFromRequest(), jsonObj.toString());
         } catch (Exception e) { //сообщение об ошибке
-            e.printStackTrace();
             logger.error(e);
             logger.error(loggerMessages.errorInReadingJSON());
         }
@@ -47,11 +45,9 @@ public class JsonInterpreterFromRequest
         Object obj = null;
         try {
             obj = parser.parse(request);
-            logger.info(loggerMessages.jsonGotFromRequest(), obj.toString());
         } catch (ParseException e) {
-            e.printStackTrace();
             logger.error(e);
-            logger.error(loggerMessages.errorInReadingJSON());
+            logger.error(loggerMessages.errorInReadingJSON(), request);
         }
         return (JSONObject) obj;
     }

@@ -57,10 +57,10 @@ public class AppServer {
     public void start(){
         try {
             server.start();
+            // TODO перенести в xml
             logger.info("Start");
-            logger.info("With resending actions");
+            logger.info("Tuesday night version");
             gameMechanics.run();
-            //server.join();
         } catch (Exception e) {
             logger.fatal("There is an error in Server.Start()");
             logger.fatal(e);

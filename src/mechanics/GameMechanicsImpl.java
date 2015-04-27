@@ -78,6 +78,8 @@ public class GameMechanicsImpl implements GameMechanics {
 
             webSocketService.notifyAction(myUser, message);
             webSocketService.notifyAction(opponent, message);
+        } else {
+            logger.info(loggerMessages.onMessage(), userName, message.toString());
         }
     }
 

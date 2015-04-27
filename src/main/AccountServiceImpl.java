@@ -64,6 +64,17 @@ public class AccountServiceImpl implements Interface.AccountService{
         addUser(login, profile);
     }
 
+    public void createTestAccount() {
+        // Создание в базе пользователей по дефолту. Имитация бд ввиду её отстсвия.
+        String login = "qwerty";
+        String password = "qwerty";
+        String email = "qwerty@mail.ru";
+        UserProfile profile = new UserProfile(login, password, email);
+        profile.setAdmin(false);
+        profile.setScore(500);
+        addUser(login, profile);
+    }
+
     public TreeSet <UserProfile> getFirstPlayersByScore(int limit) {
         UserComparatorByScore comp = new UserComparatorByScore();
         TreeSet <UserProfile> FirstFour = new TreeSet<>(comp);

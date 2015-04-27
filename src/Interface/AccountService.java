@@ -28,5 +28,7 @@ public interface AccountService {
 
     public void createAdmin();
 
+    public void createTestAccount();
+
     public TreeSet <UserProfile> getFirstPlayersByScore(int limit);
 }
