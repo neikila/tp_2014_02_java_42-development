@@ -1,6 +1,5 @@
 package frontend.game;
 
-import Interface.AccountService;
 import Interface.GameMechanics;
 import Interface.WebSocketService;
 import main.Context;
@@ -27,12 +26,13 @@ public class GameWebSocket {
     final private GameMechanics gameMechanics;
     final private WebSocketService webSocketService;
     private Session session;
+    private boolean closed;
 
-    public GameWebSocket(String sessionId, Context context) {
-        logger.info(loggerMessages.newSocket());
+    public GameWebSocket(String myName, Context context) {
         this.gameMechanics = (GameMechanics) context.get(GameMechanics.class);
         this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
-        this.myName = ((AccountService) context.get(AccountService.class)).getSessions(sessionId).getLogin();
+        this.myName = myName;
+        closed = false;
         logger.info(loggerMessages.newSocketSuccess());
     }
 
@@ -40,17 +40,24 @@ public class GameWebSocket {
         return myName;
     }
 
-    public void startGame(GameUser user, String sequence) {
-        try {
-            JSONObject jsonStart = new JSONObject();
-            jsonStart.put("status", "start");
-            jsonStart.put("position", user.getMyPosition());
-            jsonStart.put("enemyName", user.getEnemyName());
-            jsonStart.put("sequence", sequence.substring(0,sequence.length()-3) + "&#x200B;" + sequence.substring(sequence.length()-3, sequence.length()));
-            session.getRemote().sendString(jsonStart.toJSONString());
-        } catch (Exception e) {
-            logger.error(e.toString());
+    private void sendJSON(JSONObject jsonObject) {
+        if (!closed) {
+            try {
+                session.getRemote().sendString(jsonObject.toJSONString());
+            } catch (Exception e) {
+                logger.error(e);
+                e.printStackTrace();
+            }
         }
+    }
+
+    public void startGame(GameUser user, String sequence) {
+        JSONObject jsonStart = new JSONObject();
+        jsonStart.put("status", "start");
+        jsonStart.put("position", user.getMyPosition());
+        jsonStart.put("enemyName", user.getEnemyName());
+        jsonStart.put("sequence", sequence.substring(0, sequence.length() - 3) + "&#x200B;" + sequence.substring(sequence.length() - 3, sequence.length()));
+        sendJSON(jsonStart);
     }
 
     public void gameOver(GameUser user, int result) {

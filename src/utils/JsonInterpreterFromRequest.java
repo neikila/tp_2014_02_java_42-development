@@ -32,7 +32,7 @@ public class JsonInterpreterFromRequest
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(test);
             jsonObj = (JSONObject) obj;
-            logger.info(loggerMessages.jsonGotFromRequest(), jsonObj.toString());
+//            logger.info(loggerMessages.jsonGotFromRequest(), jsonObj.toString());
         } catch (Exception e) { //сообщение об ошибке
             e.printStackTrace();
             logger.error(e);

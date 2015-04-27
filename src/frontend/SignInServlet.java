@@ -77,7 +77,7 @@ public class SignInServlet extends HttpServlet {
         logger.info(loggerMessages.doPostStart());
         logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
         JSONObject jsonObject = JsonInterpreterFromRequest.getJSONFromRequest(request);
-
+        logger.info(loggerMessages.jsonGotFromRequest(), jsonObject.toString());
         String login = (String) jsonObject.get("login");
         String password = (String) jsonObject.get("password");
 

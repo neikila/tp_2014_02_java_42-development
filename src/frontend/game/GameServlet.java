@@ -38,17 +38,16 @@ public class GameServlet extends HttpServlet {
 
         Map<String, Object> pageVariables = new HashMap<>();
         UserProfile user = accountService.getSessions(request.getSession().getId());
-        if(user != null) {
-            logger.info(loggerMessages.authorised(), user.getLogin());
-            String name = user.getLogin();
-            pageVariables.put("myName", name);
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("text/html;charset=utf-8");
+
+        if(user != null || true) {
+            logger.info(loggerMessages.authorised(), "test");
+            pageVariables.put("myName", "test");
 
             response.getWriter().println(utils.PageGenerator.getPage("game.html", pageVariables));
-
-            response.setContentType("text/html;charset=utf-8");
-            response.setStatus(HttpServletResponse.SC_OK);
-            //TimeHelper.sleep(1000);
         } else {
+            // TODO перенести в xml
             logger.info(loggerMessages.notAuthorised());
             pageVariables.put("loginStatus", "You haven't signed up yet. Please, do it.");
             response.getWriter().println(PageGenerator.getPage("authstatus.html", pageVariables));
