@@ -73,12 +73,11 @@ public class GameMechanicsImpl implements GameMechanics {
             GameSession myGameSession = nameToGame.get(userName);
             GameUser myUser = myGameSession.getSelf(userName);
             GameUser opponent = myGameSession.getEnemy(userName);
-            JSONObject opponentMessage = (JSONObject) message.clone();
 
-            message.put("Player", myUser.getMyPosition());
+            message.put("player", myUser.getMyPosition());
+
             webSocketService.notifyAction(myUser, message);
-            opponentMessage.put("Player", opponent.getMyPosition());
-            webSocketService.notifyAction(opponent, opponentMessage);
+            webSocketService.notifyAction(opponent, message);
         }
     }
 
@@ -96,7 +95,6 @@ public class GameMechanicsImpl implements GameMechanics {
                 finishGame(session);
             }
         }
-        // !! Не поддавайтесь искушению, не соглашайтесь с IntelliJ IDEA. Замените, и будет отсюда exception прилетать!
     }
 
     private void finishGame(GameSession session) {

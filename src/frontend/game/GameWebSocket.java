@@ -48,11 +48,15 @@ public class GameWebSocket {
                 logger.error(e);
                 e.printStackTrace();
             }
+        } else {
+            // TODO перенести в xml
+            logger.error("Socket has been already closed");
         }
     }
 
     public void startGame(GameUser user, String sequence) {
         JSONObject jsonStart = new JSONObject();
+        //TODO перенести в xml
         jsonStart.put("status", "start");
         jsonStart.put("position", user.getMyPosition());
         jsonStart.put("enemyName", user.getEnemyName());
@@ -61,24 +65,15 @@ public class GameWebSocket {
     }
 
     public void gameOver(GameUser user, int result) {
-        try {
-            JSONObject jsonStart = new JSONObject();
-            jsonStart.put("status", "finish");
-            jsonStart.put("result", result);
-            session.getRemote().sendString(jsonStart.toJSONString());
-        } catch (Exception e) {
-            logger.error(e);
-            e.printStackTrace();
-        }
+        JSONObject jsonEnd = new JSONObject();
+        //TODO перенести в xml
+        jsonEnd.put("status", "finish");
+        jsonEnd.put("result", result);
+        sendJSON(jsonEnd);
     }
 
     public void sendAction(JSONObject action) {
-        try {
-            session.getRemote().sendString(action.toJSONString());
-        } catch (Exception e) {
-            logger.error(e);
-            e.printStackTrace();
-        }
+        sendJSON(action);
     }
 
     @OnWebSocketMessage
@@ -98,37 +93,27 @@ public class GameWebSocket {
 
     public void setMyScore(GameUser user) {
         JSONObject jsonStart = new JSONObject();
+        //TODO перенести в xml
         jsonStart.put("status", "increment");
         jsonStart.put("name", user.getMyName());
         jsonStart.put("score", user.getMyScore());
-        try {
-            session.getRemote().sendString(jsonStart.toJSONString());
-        } catch (Exception e) {
-            logger.error(e.toString());
-        }
+        sendJSON(jsonStart);
     }
 
     public void setEnemyScore(GameUser user) {
         JSONObject jsonStart = new JSONObject();
+        //TODO перенести в xml
         jsonStart.put("status", "increment");
         jsonStart.put("name", user.getEnemyName());
         jsonStart.put("score", user.getEnemyScore());
-        try {
-            session.getRemote().sendString(jsonStart.toJSONString());
-        } catch (Exception e) {
-            logger.error(e.toString());
-        }
+        sendJSON(jsonStart);
     }
 
     public void setMyResult(String result) {
         JSONObject jsonStart = new JSONObject();
         jsonStart.put("status", "result");
         jsonStart.put("result", result);
-        try {
-            session.getRemote().sendString(jsonStart.toJSONString());
-        } catch (Exception e) {
-            logger.error(e.toString());
-        }
+        sendJSON(jsonStart);
     }
 
     public Session getSession() {
@@ -141,6 +126,7 @@ public class GameWebSocket {
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
+        closed = true;
         logger.info(loggerMessages.onClose(), myName);
     }
 }

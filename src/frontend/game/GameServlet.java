@@ -41,7 +41,7 @@ public class GameServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("text/html;charset=utf-8");
 
-        if(user != null || true) {
+        if(user != null) {
             logger.info(loggerMessages.authorised(), "test");
             pageVariables.put("myName", "test");
 
