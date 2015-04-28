@@ -6,6 +6,7 @@ import main.user.UserProfile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import resource.LoggerMessages;
+import resource.Messages;
 import resource.ResourceFactory;
 import utils.PageGenerator;
 
@@ -21,14 +22,11 @@ public class GameServlet extends HttpServlet {
 
     final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
     final private Logger logger = LogManager.getLogger(GameServlet.class.getName());
+    final private Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
     final private AccountService accountService;
 
     public GameServlet(Context context) {
         this.accountService = (AccountService) context.get(AccountService.class);
-    }
-
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
     }
 
     public void doPost(HttpServletRequest request,
@@ -42,14 +40,12 @@ public class GameServlet extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
 
         if(user != null) {
-            logger.info(loggerMessages.authorised(), "test");
-            pageVariables.put("myName", "test");
-
+            logger.info(loggerMessages.authorised(), user.getLogin());
+            pageVariables.put("myName", user.getLogin());
             response.getWriter().println(utils.PageGenerator.getPage("game.html", pageVariables));
         } else {
-            // TODO перенести в xml
             logger.info(loggerMessages.notAuthorised());
-            pageVariables.put("loginStatus", "You haven't signed up yet. Please, do it.");
+            pageVariables.put("loginStatus", messages.askToSignIn());
             response.getWriter().println(PageGenerator.getPage("authstatus.html", pageVariables));
         }
         logger.info(loggerMessages.doPostFinish());

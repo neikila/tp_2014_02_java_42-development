@@ -12,4 +12,9 @@
     <exist>Such user already exists</exist>
     <wrongSignUpData>Wrong sign Up data</wrongSignUpData>
     <wrongLimit>WrongLimit</wrongLimit>
+    <askToSignIn>You haven't signed up yet. Please, do it.</askToSignIn>
+    <JSONStatusIncrement>increment</JSONStatusIncrement>
+    <JSONStatusFinish>finish</JSONStatusFinish>
+    <JSONStatusResult>result</JSONStatusResult>
+    <JSONStatusStart>start</JSONStatusStart>
 </class>

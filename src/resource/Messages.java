@@ -41,13 +41,11 @@ public class Messages implements Serializable, Resource {
     private String draw;
     private String isWinner;
     private String isLoser;
-    static private String errorXML = "Error while reading XML";
-    static private String startXML = "Start Document";
-    static private String endXML = "End document";
-    static private String className = "Class name: {}";
-    static private String aEqualB = "{} = {}";
-    static private String resourceWasParsed = "Resource {} was parsed";
-    static private String resourceFactoryWasCreated = "ResourceFactory was created";
+    private String askToSignIn;
+    private String JSONStatusIncrement;
+    private String JSONStatusStart;
+    private String JSONStatusFinish;
+    private String JSONStatusResult;
 
     public String adminPage() { return adminPage;}
     public String notFound() { return notFound;}
@@ -62,33 +60,11 @@ public class Messages implements Serializable, Resource {
     public String logOutFirst() {return logOutFirst;}
     public String exist() { return exist; }
     public String wrongSignUpData() { return wrongSignUpData; }
-    public String lackOfParam() { return lackOfParam; }
-    public String paramHasWrongType() { return  paramHasWrongType; }
-    public String signUp() { return  signUp; }
-    public String signIn() { return  signIn; }
-    public String loggedOut() { return loggedOut; }
-    public String loginIsAlreadyExist() { return loginIsAlreadyExist; }
-    public String authorised() { return authorised;}
-    public String onMessage() {return onMessage; }
-    public String onOpen() {return onOpen; }
-    public String onClose() {return onClose; }
-    public String configure() {return configure; }
-    public String setBlock() {return setBlock; }
-    public String unsetBlock() {return unsetBlock; }
-    public String startGame() { return startGame;}
-    public String sessionFinished() { return sessionFinished;}
-    public String firstPlayer() { return firstPlayer;}
-    public String secondPlayer() { return secondPlayer;}
-    public String draw() { return draw;}
-    public String isWinner() { return isWinner;}
-    public String isLoser() { return isLoser;}
-    static public String errorXML() {return errorXML; }
-    static public String startXML() {return startXML; }
-    static public String endXML() {return endXML; }
-    static public String className() {return className; }
-    static public String aEqualB() {return aEqualB; }
-    static public String resourceWasParsed() {return resourceWasParsed; }
-    static public String resourceFactoryWasCreated() {return  resourceFactoryWasCreated; }
+    public String askToSignIn() { return askToSignIn; }
+    public String JSONStatusIncrement() { return JSONStatusIncrement; };
+    public String JSONStatusStart() { return JSONStatusStart; };
+    public String JSONStatusFinish() { return JSONStatusFinish; };
+    public String JSONStatusResult() { return JSONStatusResult; };
 
     @Override
     public void checkState() {

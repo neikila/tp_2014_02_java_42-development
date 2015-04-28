@@ -100,6 +100,8 @@ public class GameMechanicsImpl implements GameMechanics {
     }
 
     private void finishGame(GameSession session) {
+        GameUser first = session.getFirst();
+        GameUser second = session.getSecond();
         String firstName = session.getFirst().getMyName();
         String secondName = session.getSecond().getMyName();
         int firstResult = session.getWinner();
