@@ -1,13 +1,31 @@
 package main.user;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
+@Entity
+@Table(name = "user")
 public class UserProfile implements Serializable {
+    private static final long serialVersionUID = -8706689714326132798L;
 
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name = "login")
     final private String login;
+
+    @Column(name = "password")
     final private String password;
+
+    @Column(name = "email")
     final private String email;
+
+    @Column(name = "isSuperUser")
     private boolean isSuperUser;
+
+    @Column(name = "score")
     private int score;
 
     public UserProfile(String login, String password, String email) {
@@ -16,14 +34,32 @@ public class UserProfile implements Serializable {
         this.email = email;
         this.isSuperUser = false;
         this.score = 0;
+        this.id = -1;
     }
 
-    public UserProfile() {
-        this.login = "";
-        this.password = "";
-        this.email = "";
+    public UserProfile(long id, String login, String password, String email) {
+        this.id = id;
+        this.login = login;
+        this.password = password;
+        this.email = email;
         this.isSuperUser = false;
         this.score = 0;
+    }
+
+
+    //Important to Hibernate!
+    public UserProfile() {
+        email = null;
+        password = null;
+        login = null;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getScore() { return score; }
@@ -54,7 +90,7 @@ public class UserProfile implements Serializable {
         return true;
     }
 
-    public String getRole() { return isSuperUser?"Admin":"User"; }
+    public String getRole() { return isSuperUser? "Admin": "User"; }
 
     public String getLogin() {
         return login;
@@ -68,5 +104,12 @@ public class UserProfile implements Serializable {
         return email;
     }
 
-    public String toString() { return "Login: " + login + " Password: " + password + " Email: " + email + " Role: " + getRole(); }
+    @Override
+    public String toString() {
+        return "Id: " + id +
+                " Login: " + login +
+                " Password: " + password +
+                " Email: " + email +
+                " Role: " + getRole();
+    }
 }
