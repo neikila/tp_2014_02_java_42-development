@@ -1,8 +1,10 @@
 package main;
 
 import Interface.AccountService;
+import Interface.DBService;
 import MBean.AccountServiceController;
 import MBean.AccountServiceControllerMBean;
+import dbService.DBServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import resource.ResourceFactory;
@@ -19,6 +21,9 @@ public class Main {
     public static void main(String[] args) throws Exception {
         ResourceFactory resourceFactory = ResourceFactory.instance();
         Context context = new Context();
+
+        DBService dbService = new DBServiceImpl();
+        context.add(DBService.class, dbService);
 
         ServerSettings serverSettings = (ServerSettings)resourceFactory.getResource("serverSettings");
         int port = serverSettings.getPort();
