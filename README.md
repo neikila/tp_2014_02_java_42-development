@@ -13,4 +13,4 @@
 Семенов Иван, https://github.com/annoyingbutters.
 
 Подробное о проекте можно прочесть на сайте [Технопарка] [1]
-[1]: tp.mail.ru
+[1]: /tp.mail.ru

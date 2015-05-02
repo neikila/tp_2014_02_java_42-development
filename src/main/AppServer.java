@@ -59,7 +59,7 @@ public class AppServer {
             server.start();
             // TODO перенести в xml
             logger.info("Start");
-            logger.info("Tuesday night version");
+            logger.info("MySQL version");
             gameMechanics.run();
         } catch (Exception e) {
             logger.fatal("There is an error in Server.Start()");
