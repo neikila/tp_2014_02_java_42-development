@@ -1,5 +1,7 @@
 package dbService;
 
+import Interface.DBAction;
+import Interface.DBActionVoid;
 import Interface.DBService;
 import dbService.dao.UserProfileDAO;
 import main.user.UserProfile;
@@ -30,6 +32,21 @@ public class DBServiceImpl implements DBService {
         sessionFactory = createSessionFactory(configuration);
     }
 
+    private <T, M> T actionUserProfileDAO(DBAction<T, M, UserProfileDAO> action, M param){
+        Session session = sessionFactory.openSession();
+        UserProfileDAO dao = new UserProfileDAO(session);
+        T value = action.action(dao, param);
+        return value;
+    }
+
+    private <M> void actionUserProfileDAOVoid(DBActionVoid<M, UserProfileDAO> action, M param){
+        Session session = sessionFactory.openSession();
+        UserProfileDAO dao = new UserProfileDAO(session);
+        Transaction transaction = session.beginTransaction();
+        action.action(dao, param);
+        transaction.commit();
+    }
+
     public String getLocalStatus() {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
@@ -39,57 +56,35 @@ public class DBServiceImpl implements DBService {
     }
 
     public void vipe() {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        UserProfileDAO dao = new UserProfileDAO(session);
-        dao.vipe();
-        transaction.commit();
+        actionUserProfileDAOVoid((dao, temp) -> dao.vipe(), null);
     }
 
     public void deleteAllUsers() {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        UserProfileDAO dao = new UserProfileDAO(session);
-        dao.deleteAll();
-        transaction.commit();
+        actionUserProfileDAOVoid((dao, temp) -> dao.deleteAll(), null);
     }
 
     public void save(UserProfile dataSet) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        UserProfileDAO dao = new UserProfileDAO(session);
-        dao.save(dataSet);
-        transaction.commit();
+        actionUserProfileDAOVoid((dao, temp) -> dao.save(temp), dataSet);
     }
 
     public UserProfile readUser(long id) {
-        Session session = sessionFactory.openSession();
-        UserProfileDAO dao = new UserProfileDAO(session);
-        return dao.read(id);
+        return actionUserProfileDAO((dao, temp) -> dao.read(temp), id);
     }
 
     public UserProfile readUserByName(String name) {
-        Session session = sessionFactory.openSession();
-        UserProfileDAO dao = new UserProfileDAO(session);
-        return dao.readByName(name);
+        return actionUserProfileDAO((dao, temp) -> dao.readByName(temp), name);
     }
 
     public List<UserProfile> readAll() {
-        Session session = sessionFactory.openSession();
-        UserProfileDAO dao = new UserProfileDAO(session);
-        return dao.readAll();
+        return actionUserProfileDAO((dao, temp) -> dao.readAll(), null);
     }
 
     public long countAllUsers() {
-        Session session = sessionFactory.openSession();
-        UserProfileDAO dao = new UserProfileDAO(session);
-        return dao.countAll();
+        return actionUserProfileDAO((dao, temp) -> dao.countAll(), null);
     }
 
     public List<UserProfile> readLimitOrder(int limit) {
-        Session session = sessionFactory.openSession();
-        UserProfileDAO dao = new UserProfileDAO(session);
-        return dao.readLimitOrder(limit);
+        return actionUserProfileDAO((dao, temp) -> dao.readLimitOrder(temp), limit);
     }
 
     public void shutdown(){

@@ -28,7 +28,7 @@ public class Main {
         ServerSettings serverSettings = (ServerSettings)resourceFactory.getResource("serverSettings");
         int port = serverSettings.getPort();
 
-        AccountService accountService = new AccountServiceImpl();
+        AccountService accountService = new AccountServiceMySQLImpl(context);
         accountService.createAdmin();
 
         // TODO Убрать при production
@@ -38,6 +38,7 @@ public class Main {
 
         startMBean(context);
 
+        // TODO перенести в xml
         logger.info("Starting at port: " + (String.valueOf(port)) + "\n");
 
         AppServer server = new AppServer(context, port);

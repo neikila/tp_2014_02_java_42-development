@@ -5,6 +5,7 @@ import main.Context;
 import main.user.UserProfile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
 import resource.LoggerMessages;
 import resource.Messages;
 import resource.ResourceFactory;
@@ -66,13 +67,15 @@ public class AdminServlet extends HttpServlet{
                        HttpServletResponse response) throws ServletException, IOException {
         logger.info(loggerMessages.doPostStart());
         logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
+        response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setStatus(HttpServletResponse.SC_OK);
+
         String action = request.getParameter("action");
 
-        String pageToReturn;
         Map<String, Object> pageVariables = new HashMap<>();
-        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         pageVariables.put("errorMessage", messages.notFound());
-        pageToReturn = "errorPage.html";
+        String pageToReturn = "errorPage.html";
 
         HttpSession session = request.getSession();
 
@@ -88,26 +91,25 @@ public class AdminServlet extends HttpServlet{
                             break;
                         case "get":
                             logger.info(loggerMessages.statistic());
-                            // TODO переделать в json
-                            response.setStatus(HttpServletResponse.SC_OK);
-                            pageVariables.put("topicMessage", "Statistic");
-                            pageVariables.put("amountOfLoggedIn", accountService.getAmountOfSessions());
-                            pageVariables.put("amountOfSignedUp", accountService.getAmountOfUsers());
-                            pageToReturn = "statistic.html";
+                            JSONObject data = new JSONObject();
+                            data.put("amountOfLoggedIn", accountService.getAmountOfSessions());
+                            data.put("amountOfSignedUp", accountService.getAmountOfUsers());
+                            logger.info(data.toString());
+                            response.getWriter().write(data.toString());
                             break;
                         default:
                             pageVariables.put("errorMessage", messages.wrongParamAction());
-                            pageToReturn = "errorPage.html";
                             logger.warn(loggerMessages.wrongAction());
                     }
                 }
             } else {
+                response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
                 logger.info(loggerMessages.isNotAdmin(), user.getLogin());
             }
         } else {
+            response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
             logger.info(loggerMessages.notAuthorised());
         }
-        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
         logger.info(loggerMessages.doPostFinish());
     }
 
