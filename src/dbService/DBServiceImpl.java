@@ -38,6 +38,22 @@ public class DBServiceImpl implements DBService {
         return status;
     }
 
+    public void vipe() {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        UserProfileDAO dao = new UserProfileDAO(session);
+        dao.vipe();
+        transaction.commit();
+    }
+
+    public void deleteAllUsers() {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        UserProfileDAO dao = new UserProfileDAO(session);
+        dao.deleteAll();
+        transaction.commit();
+    }
+
     public void save(UserProfile dataSet) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
@@ -64,10 +80,16 @@ public class DBServiceImpl implements DBService {
         return dao.readAll();
     }
 
-    public List<UserProfile> readLimitOrder() {
+    public long countAllUsers() {
         Session session = sessionFactory.openSession();
         UserProfileDAO dao = new UserProfileDAO(session);
-        return dao.readAll();
+        return dao.countAll();
+    }
+
+    public List<UserProfile> readLimitOrder(int limit) {
+        Session session = sessionFactory.openSession();
+        UserProfileDAO dao = new UserProfileDAO(session);
+        return dao.readLimitOrder(limit);
     }
 
     public void shutdown(){

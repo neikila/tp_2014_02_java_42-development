@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class UserProfile implements Serializable {
     private static final long serialVersionUID = -8706689714326132798L;
 
@@ -45,7 +45,6 @@ public class UserProfile implements Serializable {
         this.isSuperUser = false;
         this.score = 0;
     }
-
 
     //Important to Hibernate!
     public UserProfile() {
@@ -110,6 +109,7 @@ public class UserProfile implements Serializable {
                 " Login: " + login +
                 " Password: " + password +
                 " Email: " + email +
-                " Role: " + getRole();
+                " Role: " + getRole() +
+                " Score: " + score;
     }
 }

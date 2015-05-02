@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.TreeSet;
+import java.util.List;
 
 public class ScoreServlet extends HttpServlet {
 
@@ -58,7 +58,7 @@ public class ScoreServlet extends HttpServlet {
         logger.info(loggerMessages.doGetFinish());
     }
 
-    private void createResponse(HttpServletResponse response, short status, String errorMessage, TreeSet<UserProfile> FirstLimit) throws IOException {
+    private void createResponse(HttpServletResponse response, short status, String errorMessage, List<UserProfile> FirstLimit) throws IOException {
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json;charset=UTF-8");
@@ -72,11 +72,10 @@ public class ScoreServlet extends HttpServlet {
         if (status != 200) {
             data.put("message", errorMessage);
         } else {
-            while (!FirstLimit.isEmpty()) {
+            for (UserProfile aFirstLimit : FirstLimit) {
                 scoreItem = new JSONObject();
-                UserProfile temp = FirstLimit.pollFirst();
-                scoreItem.put("login", temp.getLogin());
-                scoreItem.put("score", temp.getScore());
+                scoreItem.put("login", aFirstLimit.getLogin());
+                scoreItem.put("score", aFirstLimit.getScore());
                 scoreList.add(scoreItem);
             }
             data.put("scoreList", scoreList);

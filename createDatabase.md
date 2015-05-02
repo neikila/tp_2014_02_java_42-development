@@ -1,6 +1,6 @@
 use gameDB;
 
-create table user(
+create table users(
     id bigint unsigned auto_increment not null,
     email varchar(255) not null unique,
     login varchar(255) not null,

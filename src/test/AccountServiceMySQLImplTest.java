@@ -1,7 +1,10 @@
 package test;
 
 import Interface.AccountService;
-import main.AccountServiceImpl;
+import Interface.DBService;
+import dbService.DBServiceImpl;
+import main.AccountServiceMySQLImpl;
+import main.Context;
 import main.user.UserComparatorByScore;
 import main.user.UserProfile;
 import org.junit.After;
@@ -17,16 +20,21 @@ import static org.junit.Assert.assertNotEquals;
 
 // TODO переделать взятие пользователей из класса Helper
 
-public class AccountServiceTest {
+public class AccountServiceMySQLImplTest {
     AccountService accountService;
+    DBService dbService;
 
     @Before
     public void setUp() throws Exception {
-        accountService = new AccountServiceImpl();
+        dbService = new DBServiceImpl();
+        Context context = new Context();
+        context.add(DBService.class, dbService);
+        accountService = new AccountServiceMySQLImpl(context);
     }
 
     @After
     public void tearDown() throws Exception {
+        dbService.deleteAllUsers();
     }
 
     @Test

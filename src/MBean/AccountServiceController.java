@@ -22,7 +22,7 @@ public class AccountServiceController implements AccountServiceControllerMBean {
     }
 
     @Override
-    public int getUsers() {
+    public long getUsers() {
         return accountServer.getAmountOfUsers();
     }
 

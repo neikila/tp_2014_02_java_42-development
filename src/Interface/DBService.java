@@ -18,5 +18,13 @@ public interface DBService {
 
     List<UserProfile> readAll();
 
+    long countAllUsers();
+
+    void vipe();
+
+    void deleteAllUsers();
+
+    List<UserProfile> readLimitOrder(int limit);
+
     void shutdown();
 }

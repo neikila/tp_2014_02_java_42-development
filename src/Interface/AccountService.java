@@ -2,7 +2,7 @@ package Interface;
 
 import main.user.UserProfile;
 
-import java.util.TreeSet;
+import java.util.List;
 
 public interface AccountService {
 
@@ -14,7 +14,7 @@ public interface AccountService {
 
     public int getAmountOfSessionsWitUserAsKey();
 
-    public int getAmountOfUsers();
+    public long getAmountOfUsers();
 
     public boolean isSessionWithSuchLoginExist(String userName);
 
@@ -30,5 +30,5 @@ public interface AccountService {
 
     public void createTestAccount();
 
-    public TreeSet <UserProfile> getFirstPlayersByScore(int limit);
+    public List<UserProfile> getFirstPlayersByScore(int limit);
 }

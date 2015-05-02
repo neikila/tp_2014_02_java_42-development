@@ -1,17 +1,26 @@
 package main;
 
-import main.user.UserComparatorByScore;
+import Interface.DBService;
 import main.user.UserProfile;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class AccountServiceImpl implements Interface.AccountService{
-    final private Map<String, UserProfile> users = new HashMap<>();
+public class AccountServiceMySQLImpl implements Interface.AccountService{
+    final private DBService dbService;
     final private Map<String, UserProfile> sessions = new HashMap<>();
     final private Map<String, UserProfile> sessionsWithUserAsKey = new HashMap<>();
 
+    public AccountServiceMySQLImpl(Context context) {
+        dbService = (DBService) context.get(DBService.class);
+    }
+
     public boolean addUser(String userName, UserProfile userProfile) {
-        return (!users.containsKey(userName) && (users.put(userName, userProfile) == null));
+        if (dbService.readUserByName(userName) != null)
+            return false;
+        dbService.save(userProfile);
+        return true;
     }
 
     public boolean addSessions(String sessionId, UserProfile userProfile) {
@@ -28,16 +37,14 @@ public class AccountServiceImpl implements Interface.AccountService{
 
     public int getAmountOfSessionsWitUserAsKey() {return sessionsWithUserAsKey.size();}
 
-
-    public long getAmountOfUsers() {return (long)users.size();}
+    public long getAmountOfUsers() {return dbService.countAllUsers();}
 
     public boolean isSessionWithSuchLoginExist(String userName) {
-
         return sessionsWithUserAsKey.containsKey(userName);
     }
 
     public UserProfile getUser(String userName) {
-        return users.get(userName);
+        return dbService.readUserByName(userName);
     }
 
     public UserProfile getSessions(String sessionId) {
@@ -75,25 +82,7 @@ public class AccountServiceImpl implements Interface.AccountService{
         addUser(login, profile);
     }
 
-    public List <UserProfile> getFirstPlayersByScore(int limit) {
-        UserComparatorByScore comp = new UserComparatorByScore();
-        TreeSet <UserProfile> FirstFour = new TreeSet<>(comp);
-        Collection<UserProfile> collection = users.values();
-        Iterator<UserProfile> iterator = collection.iterator();
-        UserProfile temp;
-
-        while (iterator.hasNext()) {
-            temp = iterator.next();
-            if (FirstFour.size() < limit) {
-                FirstFour.add(temp);
-            } else {
-                if (FirstFour.size() > 0 && comp.compare(FirstFour.last(), temp) > 0) {
-                    FirstFour.pollLast();
-                    FirstFour.add(temp);
-                }
-            }
-        }
-        List <UserProfile> list = new ArrayList<>(FirstFour);
-        return list;
+    public List<UserProfile> getFirstPlayersByScore(int limit) {
+        return dbService.readLimitOrder(limit);
     }
 }
