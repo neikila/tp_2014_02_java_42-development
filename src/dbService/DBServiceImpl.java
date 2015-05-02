@@ -1,9 +1,6 @@
 package dbService;
 
-import Interface.DBAction;
-import Interface.DBActionVoid;
-import Interface.DBService;
-import dbService.dao.UserProfileDAO;
+import dbService.controller.TExecutor;
 import main.user.UserProfile;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,6 +13,7 @@ import java.util.List;
 
 public class DBServiceImpl implements DBService {
     private SessionFactory sessionFactory;
+    private TExecutor tExecutor;
 
     public DBServiceImpl() {
         Configuration configuration = new Configuration();
@@ -30,21 +28,8 @@ public class DBServiceImpl implements DBService {
         configuration.setProperty("hibernate.hbm2ddl.auto", "validate");
 
         sessionFactory = createSessionFactory(configuration);
-    }
 
-    private <T, M> T actionUserProfileDAO(DBAction<T, M, UserProfileDAO> action, M param){
-        Session session = sessionFactory.openSession();
-        UserProfileDAO dao = new UserProfileDAO(session);
-        T value = action.action(dao, param);
-        return value;
-    }
-
-    private <M> void actionUserProfileDAOVoid(DBActionVoid<M, UserProfileDAO> action, M param){
-        Session session = sessionFactory.openSession();
-        UserProfileDAO dao = new UserProfileDAO(session);
-        Transaction transaction = session.beginTransaction();
-        action.action(dao, param);
-        transaction.commit();
+        tExecutor = new TExecutor(sessionFactory);
     }
 
     public String getLocalStatus() {
@@ -56,35 +41,35 @@ public class DBServiceImpl implements DBService {
     }
 
     public void vipe() {
-        actionUserProfileDAOVoid((dao, temp) -> dao.vipe(), null);
+        tExecutor.actionUserProfileDAOVoid((dao, temp) -> dao.vipe(), null);
     }
 
     public void deleteAllUsers() {
-        actionUserProfileDAOVoid((dao, temp) -> dao.deleteAll(), null);
+        tExecutor.actionUserProfileDAOVoid((dao, temp) -> dao.deleteAll(), null);
     }
 
     public void save(UserProfile dataSet) {
-        actionUserProfileDAOVoid((dao, temp) -> dao.save(temp), dataSet);
+        tExecutor.actionUserProfileDAOVoid((dao, temp) -> dao.save(temp), dataSet);
     }
 
     public UserProfile readUser(long id) {
-        return actionUserProfileDAO((dao, temp) -> dao.read(temp), id);
+        return tExecutor.actionUserProfileDAO((dao, temp) -> dao.read(temp), id);
     }
 
     public UserProfile readUserByName(String name) {
-        return actionUserProfileDAO((dao, temp) -> dao.readByName(temp), name);
+        return tExecutor.actionUserProfileDAO((dao, temp) -> dao.readByName(temp), name);
     }
 
     public List<UserProfile> readAll() {
-        return actionUserProfileDAO((dao, temp) -> dao.readAll(), null);
+        return tExecutor.actionUserProfileDAO((dao, temp) -> dao.readAll(), null);
     }
 
     public long countAllUsers() {
-        return actionUserProfileDAO((dao, temp) -> dao.countAll(), null);
+        return tExecutor.actionUserProfileDAO((dao, temp) -> dao.countAll(), null);
     }
 
     public List<UserProfile> readLimitOrder(int limit) {
-        return actionUserProfileDAO((dao, temp) -> dao.readLimitOrder(temp), limit);
+        return tExecutor.actionUserProfileDAO((dao, temp) -> dao.readLimitOrder(temp), limit);
     }
 
     public void shutdown(){

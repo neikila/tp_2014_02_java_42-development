@@ -1,7 +1,5 @@
 package resource;
 
-import Interface.Resource;
-
 import java.io.Serializable;
 
 /**

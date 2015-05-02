@@ -1,4 +1,4 @@
-package Interface;
+package dbService;
 
 import main.user.UserProfile;
 

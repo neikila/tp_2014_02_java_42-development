@@ -1,7 +1,6 @@
 package frontend.game;
 
-import Interface.GameMechanics;
-import Interface.WebSocketService;
+import mechanics.GameMechanics;
 import main.Context;
 import mechanics.GameUser;
 import org.apache.logging.log4j.LogManager;

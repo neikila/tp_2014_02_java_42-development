@@ -1,8 +1,7 @@
 package mechanics;
 
-import Interface.AccountService;
-import Interface.GameMechanics;
-import Interface.WebSocketService;
+import main.accountService.AccountService;
+import frontend.game.WebSocketService;
 import main.Context;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

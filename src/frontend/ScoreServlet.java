@@ -1,6 +1,6 @@
 package frontend;
 
-import Interface.AccountService;
+import main.accountService.AccountService;
 import main.Context;
 import main.user.UserProfile;
 import org.apache.logging.log4j.LogManager;

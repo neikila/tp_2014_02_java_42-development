@@ -1,7 +1,7 @@
 package test;
 
 import static org.junit.Assert.*;
-import Interface.AccountService;
+import main.accountService.AccountService;
 import frontend.ScoreServlet;
 import main.Context;
 import main.user.UserProfile;

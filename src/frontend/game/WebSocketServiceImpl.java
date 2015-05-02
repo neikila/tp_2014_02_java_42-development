@@ -1,6 +1,5 @@
 package frontend.game;
 
-import Interface.WebSocketService;
 import mechanics.GameUser;
 import org.json.simple.JSONObject;
 

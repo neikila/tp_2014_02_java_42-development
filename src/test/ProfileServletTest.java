@@ -1,6 +1,6 @@
 package test;
 
-import Interface.AccountService;
+import main.accountService.AccountService;
 import frontend.ProfileServlet;
 import main.Context;
 import static org.junit.Assert.*;

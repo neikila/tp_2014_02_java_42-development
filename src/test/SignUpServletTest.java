@@ -1,6 +1,6 @@
 package test;
 
-import Interface.AccountService;
+import main.accountService.AccountService;
 import frontend.SignUpServlet;
 import main.Context;
 import org.junit.Before;

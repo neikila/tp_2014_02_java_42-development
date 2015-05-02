@@ -5,7 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
-import Interface.AccountService;
+import main.accountService.AccountService;
 import main.user.UserProfile;
 import resource.LoggerMessages;
 import resource.Messages;

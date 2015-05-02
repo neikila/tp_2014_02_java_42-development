@@ -1,9 +1,9 @@
 package test;
 
-import Interface.AccountService;
-import Interface.DBService;
+import main.accountService.AccountService;
+import dbService.DBService;
 import dbService.DBServiceImpl;
-import main.AccountServiceMySQLImpl;
+import main.accountService.AccountServiceMySQLImpl;
 import main.Context;
 import main.user.UserComparatorByScore;
 import main.user.UserProfile;

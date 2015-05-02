@@ -1,6 +1,6 @@
 package frontend;
 
-import Interface.AccountService;
+import main.accountService.AccountService;
 import main.Context;
 import main.user.MyValidator;
 import main.user.UserProfile;

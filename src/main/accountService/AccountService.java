@@ -1,4 +1,4 @@
-package Interface;
+package main.accountService;
 
 import main.user.UserProfile;
 

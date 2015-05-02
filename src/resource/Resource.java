@@ -1,4 +1,4 @@
-package Interface;
+package resource;
 
 /**
  * Created by neikila on 02.04.15.

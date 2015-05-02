@@ -1,7 +1,7 @@
 package test;
 
-import Interface.AccountService;
-import main.AccountServiceImpl;
+import main.accountService.AccountService;
+import main.accountService.AccountServiceImpl;
 import main.user.UserProfile;
 import resource.Messages;
 import resource.TestHelper;

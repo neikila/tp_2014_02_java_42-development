@@ -1,4 +1,4 @@
-package Interface;
+package mechanics;
 
 import org.json.simple.JSONObject;
 

@@ -1,7 +1,7 @@
 package main;
 
-import Interface.GameMechanics;
-import Interface.WebSocketService;
+import mechanics.GameMechanics;
+import frontend.game.WebSocketService;
 import frontend.*;
 import frontend.game.*;
 import mechanics.GameMechanicsImpl;
