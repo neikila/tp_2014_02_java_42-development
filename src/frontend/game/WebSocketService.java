@@ -1,5 +1,7 @@
 package frontend.game;
 
+import mechanics.GameMap;
+import mechanics.GameSession;
 import mechanics.GameUser;
 import org.json.simple.JSONObject;
 
@@ -10,11 +12,13 @@ public interface WebSocketService {
 
     void addUser(GameWebSocket user);
 
+    void sendSettings(GameUser user, GameMap map);
+
     void notifyMyNewScore(GameUser user);
 
-    void notifyEnemyNewScore(GameUser user);
+    void notifyEnemyNewScore(GameSession session, int gameUserPosition);
 
-    void notifyStartGame(GameUser user, String sequence);
+    void notifyStartGame(GameSession session, int gameUserPosition);
 
     void notifyGameOver(GameUser user, int result);
 

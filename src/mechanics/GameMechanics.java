@@ -6,7 +6,7 @@ public interface GameMechanics {
 
     public void addUser(String user);
 
-    public void incrementScore(String userName);
+    public void incrementScore(GameUser user);
 
     public void analyzeMessage(String userName, JSONObject message);
 

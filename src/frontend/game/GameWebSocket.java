@@ -3,6 +3,7 @@ package frontend.game;
 import main.Context;
 import mechanics.GameMap;
 import mechanics.GameMechanics;
+import mechanics.GameSession;
 import mechanics.GameUser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,11 +67,12 @@ public class GameWebSocket {
         sendJSON(jsonStart);
     }
 
-    public void startGame(GameUser user, String sequence) {
+    public void startGame(GameSession session, int position) {
+        String sequence = "123123123123";
         JSONObject jsonStart = new JSONObject();
         jsonStart.put("status", messages.JSONStatusStart());
-        jsonStart.put("position", user.getMyPosition());
-        jsonStart.put("enemyName", user.getEnemyName());
+        jsonStart.put("position", position);
+        jsonStart.put("enemyName", session.getEnemy(position).getMyName());
         jsonStart.put("sequence", sequence.substring(0, sequence.length() - 3) + "&#x200B;" + sequence.substring(sequence.length() - 3, sequence.length()));
         sendJSON(jsonStart);
     }
@@ -110,14 +112,6 @@ public class GameWebSocket {
         jsonStart.put("status", messages.JSONStatusIncrement());
         jsonStart.put("name", user.getMyName());
         jsonStart.put("score", user.getMyScore());
-        sendJSON(jsonStart);
-    }
-
-    public void setEnemyScore(GameUser user) {
-        JSONObject jsonStart = new JSONObject();
-        jsonStart.put("status", messages.JSONStatusIncrement());
-        jsonStart.put("name", user.getEnemyName());
-        jsonStart.put("score", user.getEnemyScore());
         sendJSON(jsonStart);
     }
 
