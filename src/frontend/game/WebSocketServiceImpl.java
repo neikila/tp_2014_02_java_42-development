@@ -1,5 +1,6 @@
 package frontend.game;
 
+import mechanics.GameMap;
 import mechanics.GameUser;
 import org.json.simple.JSONObject;
 
@@ -11,6 +12,10 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     public void addUser(GameWebSocket user) {
         userSockets.put(user.getMyName(), user);
+    }
+
+    public void sendSettings(String name, GameMap map) {
+        userSockets.get(name).settings(map);
     }
 
     public void notifyMyNewScore(GameUser user) {

@@ -44,6 +44,8 @@ public class Messages implements Serializable, Resource {
     private String JSONStatusStart;
     private String JSONStatusFinish;
     private String JSONStatusResult;
+    private String JSONStatusSettings;
+
 
     public String adminPage() { return adminPage;}
     public String notFound() { return notFound;}
@@ -63,6 +65,7 @@ public class Messages implements Serializable, Resource {
     public String JSONStatusStart() { return JSONStatusStart; };
     public String JSONStatusFinish() { return JSONStatusFinish; };
     public String JSONStatusResult() { return JSONStatusResult; };
+    public String JSONStatusSettings() { return JSONStatusSettings; };
 
     @Override
     public void checkState() {

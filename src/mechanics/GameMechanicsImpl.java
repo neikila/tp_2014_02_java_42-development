@@ -1,8 +1,8 @@
 package mechanics;
 
-import main.accountService.AccountService;
 import frontend.game.WebSocketService;
 import main.Context;
+import main.accountService.AccountService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -39,10 +39,11 @@ public class GameMechanicsImpl implements GameMechanics {
     public GameMechanicsImpl(Context context) {
         this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
         this.accountService = (AccountService) context.get(AccountService.class);
-        gameTime = ((GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings")).getTimeLimit() * 1000;
-        weight = ((GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings")).getWeight();
-        numAmount = ((GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings")).getNumAmount();
-        minDelta = ((GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings")).getMinDelta();
+        GameMechanicsSettings settings = (GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings");
+        gameTime = settings.getTimeLimit() * 1000;
+        weight = settings.getWeight();
+        numAmount = settings.getNumAmount();
+        minDelta = settings.getMinDelta();
     }
 
     public void addUser(String user) {

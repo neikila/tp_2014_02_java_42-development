@@ -1,4 +1,4 @@
-package reflection;
+package resource.reflection;
 
 /**
  * Created by neikila on 02.04.15.

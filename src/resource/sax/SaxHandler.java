@@ -1,11 +1,11 @@
-package sax;
+package resource.sax;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-import reflection.ReflectionHelper;
+import resource.reflection.ReflectionHelper;
 import resource.LoggerMessages;
 
 public class SaxHandler extends DefaultHandler {

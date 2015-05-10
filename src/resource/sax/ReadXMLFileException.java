@@ -1,4 +1,4 @@
-package exception;
+package resource.sax;
 
 /**
  * Created by neikila on 11.04.15.

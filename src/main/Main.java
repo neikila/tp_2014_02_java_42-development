@@ -1,10 +1,10 @@
 package main;
 
-import main.accountService.AccountService;
-import dbService.DBService;
 import MBean.AccountServiceController;
 import MBean.AccountServiceControllerMBean;
+import dbService.DBService;
 import dbService.DBServiceImpl;
+import main.accountService.AccountService;
 import main.accountService.AccountServiceMySQLImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +20,9 @@ public class Main {
     static final Logger logger = LogManager.getLogger(Main.class.getName());
 
     public static void main(String[] args) throws Exception {
+
+        // TODO uniqe на логин
+
         ResourceFactory resourceFactory = ResourceFactory.instance();
         Context context = new Context();
 
@@ -33,6 +36,7 @@ public class Main {
         accountService.createAdmin();
 
         // TODO Убрать при production
+        // TODO mode server in settigs
         accountService.createTestAccount();
 
         context.add(AccountService.class, accountService);

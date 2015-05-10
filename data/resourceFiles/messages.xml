@@ -17,4 +17,5 @@
     <JSONStatusFinish>finish</JSONStatusFinish>
     <JSONStatusResult>result</JSONStatusResult>
     <JSONStatusStart>start</JSONStatusStart>
+    <JSONStatusSettings>start</JSONStatusSettings>
 </class>

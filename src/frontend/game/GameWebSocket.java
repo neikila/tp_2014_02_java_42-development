@@ -1,7 +1,8 @@
 package frontend.game;
 
-import mechanics.GameMechanics;
 import main.Context;
+import mechanics.GameMap;
+import mechanics.GameMechanics;
 import mechanics.GameUser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,6 +57,13 @@ public class GameWebSocket {
         } else {
             logger.error(loggerMessages.socketClosed());
         }
+    }
+
+    public void settings(GameMap map) {
+        JSONObject jsonStart = new JSONObject();
+        jsonStart.put("status", messages.JSONStatusSettings());
+        jsonStart.put("map", map);
+        sendJSON(jsonStart);
     }
 
     public void startGame(GameUser user, String sequence) {

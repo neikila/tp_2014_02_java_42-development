@@ -25,7 +25,7 @@ public class DBServiceImpl implements DBService {
         configuration.setProperty("hibernate.connection.username", "gameAdmin");
         configuration.setProperty("hibernate.connection.password", "rfrltkf");
         configuration.setProperty("hibernate.show_sql", "true");
-        configuration.setProperty("hibernate.hbm2ddl.auto", "validate");
+        configuration.setProperty("hibernate.hbm2ddl.auto", "update");
 
         sessionFactory = createSessionFactory(configuration);
 
