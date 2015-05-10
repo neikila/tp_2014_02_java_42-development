@@ -31,16 +31,21 @@ public class TExecutor{
     }
 
     public <M> void actionUserProfileDAOVoid(DBActionVoid<M, UserProfileDAO> action, M param){
+        Session session = null;
+        Transaction transaction = null;
         try {
-            Session session = sessionFactory.openSession();
+            session = sessionFactory.openSession();
             UserProfileDAO dao = new UserProfileDAO(session);
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             action.action(dao, param);
-            transaction.commit();
         } catch (Exception e) {
-
+            if (transaction != null)
+                transaction.rollback();
         } finally {
-            // todo transaction.commit
+            if (transaction != null)
+                transaction.commit();
+            if (session != null)
+                session.close();
         }
     }
 }
