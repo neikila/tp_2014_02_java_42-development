@@ -3,7 +3,7 @@ use gameDB;
 create table users(
     id bigint unsigned auto_increment not null,
     email varchar(255) not null unique,
-    login varchar(255) not null,
+    login varchar(255) not null unique,
     password varchar(255) not null,
     score int not null default 0,
     isSuperUser bit not null default 0,

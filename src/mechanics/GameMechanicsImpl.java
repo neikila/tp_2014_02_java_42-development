@@ -11,10 +11,7 @@ import resource.LoggerMessages;
 import resource.ResourceFactory;
 import utils.TimeHelper;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class GameMechanicsImpl implements GameMechanics {
     final private Logger logger = LogManager.getLogger(GameMechanics.class.getName());
@@ -26,6 +23,7 @@ public class GameMechanicsImpl implements GameMechanics {
     final private int numAmount;
     final private int weight;
     final private int minDelta;
+    final private ArrayList<GameMap> maps;
 
     final private WebSocketService webSocketService;
     final private AccountService accountService;
@@ -44,6 +42,7 @@ public class GameMechanicsImpl implements GameMechanics {
         weight = settings.getWeight();
         numAmount = settings.getNumAmount();
         minDelta = settings.getMinDelta();
+        maps = settings.getMaps();
     }
 
     public void addUser(String user) {

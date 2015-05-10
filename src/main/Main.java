@@ -36,7 +36,7 @@ public class Main {
         accountService.createAdmin();
 
         // TODO Убрать при production
-        // TODO mode server in settigs
+        // TODO mode server in settings
         accountService.createTestAccount();
 
         context.add(AccountService.class, accountService);

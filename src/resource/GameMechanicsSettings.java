@@ -1,15 +1,24 @@
 package resource;
 
+import mechanics.GameMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by neikila on 03.04.15.
  */
 public class GameMechanicsSettings  implements Serializable, Resource {
+
+    private Logger logger = LogManager.getLogger(GameMechanicsSettings.class.getName());
+
     private int timeLimit;
     private int numAmount;
     private int weight;
     private int minDelta;
+    private ArrayList<GameMap> maps;
 
     public GameMechanicsSettings() {
         timeLimit = 15;
@@ -26,6 +35,8 @@ public class GameMechanicsSettings  implements Serializable, Resource {
 
     public int getMinDelta() { return minDelta; }
 
+    public ArrayList<GameMap> getMaps() { return maps; }
+
     public void checkState() {
         if (numAmount < 6)
             numAmount = 6;
@@ -37,5 +48,17 @@ public class GameMechanicsSettings  implements Serializable, Resource {
             weight = 0;
         if (minDelta < 0)
             minDelta = 0;
+
+        setAllMaps();
+    }
+
+    private void setAllMaps() {
+        // TODO переделать в цикл
+        try {
+            GameMap temp = new GameMap("defaultMap");
+            maps.add(temp);
+        } catch (Exception e) {
+            logger.error(e);
+        }
     }
 }

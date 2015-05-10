@@ -1,16 +1,16 @@
 package test;
 
-import static org.junit.Assert.*;
-import main.accountService.AccountService;
 import frontend.ScoreServlet;
 import main.Context;
+import main.accountService.AccountService;
 import main.user.UserProfile;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.StringWriter;
 
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 public class ScoreServletTest extends ServletTest {
     private ScoreServlet servlet;
@@ -42,8 +42,6 @@ public class ScoreServletTest extends ServletTest {
         response = getResponse(stringWriter);
     }
 
-
-    //TODO вынести в исходны файл
     @Test
     public void testDoGet() throws Exception {
         createUsers();

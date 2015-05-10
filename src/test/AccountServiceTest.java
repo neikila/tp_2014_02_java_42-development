@@ -15,8 +15,6 @@ import java.util.TreeSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-// TODO переделать взятие пользователей из класса Helper
-
 public class AccountServiceTest {
     AccountService accountService;
 
@@ -67,16 +65,6 @@ public class AccountServiceTest {
 
         assertEquals(accountService.getAmountOfSessions(), 1);
         assertEquals(accountService.getAmountOfSessionsWitUserAsKey(), 1);
-    }
-
-    @Test
-    public void testGetAmountOfSessions() throws Exception {
-        //TODO Пока что это просто getter в дальнейшем обращение к базе
-    }
-
-    @Test
-    public void testGetAmountOfUsers() throws Exception {
-        //TODO Пока что это просто getter в дальнейшем обращение к базе
     }
 
     @Test
