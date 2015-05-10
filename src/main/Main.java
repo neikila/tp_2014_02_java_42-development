@@ -8,6 +8,7 @@ import main.accountService.AccountService;
 import main.accountService.AccountServiceMySQLImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import resource.LoggerMessages;
 import resource.ResourceFactory;
 import resource.ServerSettings;
 
@@ -17,14 +18,12 @@ import java.lang.management.ManagementFactory;
 
 public class Main {
 
-    static final Logger logger = LogManager.getLogger(Main.class.getName());
-
     public static void main(String[] args) throws Exception {
-
-        // TODO uniqe на логин
-
         ResourceFactory resourceFactory = ResourceFactory.instance();
         Context context = new Context();
+
+        final Logger logger = LogManager.getLogger(Main.class.getName());
+        final LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
 
         DBService dbService = new DBServiceImpl();
         context.add(DBService.class, dbService);
@@ -35,25 +34,25 @@ public class Main {
         AccountService accountService = new AccountServiceMySQLImpl(context);
         accountService.createAdmin();
 
-        // TODO Убрать при production
-        // TODO mode server in settings
-        accountService.createTestAccount();
+        if (serverSettings.isProduction())
+            accountService.createTestAccount();
 
         context.add(AccountService.class, accountService);
 
         startMBean(context);
 
-        // TODO перенести в xml
-        logger.info("Starting at port: " + (String.valueOf(port)) + "\n");
+        logger.info(loggerMessages.serverStart(), (String.valueOf(port)));
 
         AppServer server = new AppServer(context, port);
         server.start();
     }
 
     private static void startMBean(Context context) throws Exception{
-        AccountServiceControllerMBean serverStatistics = new AccountServiceController(context);
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+
         ObjectName name = new ObjectName("ServerManager:type=AccountServiceController");
+        AccountServiceControllerMBean serverStatistics = new AccountServiceController(context);
         mbs.registerMBean(serverStatistics, name);
+
     }
 }

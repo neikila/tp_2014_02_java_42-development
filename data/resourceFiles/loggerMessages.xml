@@ -39,6 +39,7 @@
     <gameUserPosition>User {} is the {}</gameUserPosition>
     <newSocket>Start creating New socket </newSocket>
     <socketClosed>Socket has been already closed</socketClosed>
+    <serverStart>Starting at port: {}</serverStart>
     <newSocketSuccess>New Socket Successfully constructed</newSocketSuccess>
     <requestGetParams>Request params {}</requestGetParams>
     <jsonGotFromRequest>JSON from request: {}</jsonGotFromRequest>

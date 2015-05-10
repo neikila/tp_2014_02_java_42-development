@@ -48,6 +48,8 @@ public class LoggerMessages implements Serializable, Resource {
     private String requestGetParams;
     private String errorInReadingJSON;
     private String socketClosed;
+    private String serverStart;
+
     static private String jsonGotFromRequest = "JSON from request: {}";
     static private String errorXML = "Error while reading XML";
     static private String startXML = "Start Document";
@@ -99,6 +101,7 @@ public class LoggerMessages implements Serializable, Resource {
     public String newSocketSuccess() { return newSocketSuccess;}
     public String errorInReadingJSON() { return errorInReadingJSON; };
     public String socketClosed() { return socketClosed; }
+    public String serverStart() { return serverStart; }
     static public String jsonGotFromRequest() { return jsonGotFromRequest;}
     static public String errorXML() {return errorXML; }
     static public String startXML() {return startXML; }
