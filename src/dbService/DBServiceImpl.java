@@ -8,6 +8,8 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+import resource.DbServerSettings;
+import resource.ResourceFactory;
 
 import java.util.List;
 
@@ -16,16 +18,18 @@ public class DBServiceImpl implements DBService {
     private TExecutor tExecutor;
 
     public DBServiceImpl() {
+        DbServerSettings dbServerSettings = (DbServerSettings)ResourceFactory.instance().getResource("dbServerSettings");
+
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(UserProfile.class);
 
-        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/gameDB");
-        configuration.setProperty("hibernate.connection.username", "gameAdmin");
-        configuration.setProperty("hibernate.connection.password", "rfrltkf");
-        configuration.setProperty("hibernate.show_sql", "true");
-        configuration.setProperty("hibernate.hbm2ddl.auto", "update");
+        configuration.setProperty("hibernate.dialect", dbServerSettings.getDialect());
+        configuration.setProperty("hibernate.connection.driver_class", dbServerSettings.getDriverClass());
+        configuration.setProperty("hibernate.connection.url", dbServerSettings.getConnectionUrl());
+        configuration.setProperty("hibernate.connection.username", dbServerSettings.getUsername());
+        configuration.setProperty("hibernate.connection.password", dbServerSettings.getPassword());
+        configuration.setProperty("hibernate.show_sql", dbServerSettings.getShowSql());
+        configuration.setProperty("hibernate.hbm2ddl.auto", dbServerSettings.getMode());
 
         sessionFactory = createSessionFactory(configuration);
 

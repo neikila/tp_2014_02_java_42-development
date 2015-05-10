@@ -77,7 +77,13 @@ public class AccountServiceMySQLImplTest {
 
     @Test
     public void testGetAmountOfUsers() throws Exception {
-        //TODO Пока что это просто getter в дальнейшем обращение к базе
+        UserProfile user = new UserProfile("test1234", "test1234", "neikila@gmail.com");
+        UserProfile user1 = new UserProfile("test12341", "test1234", "neikila1@gmail.com");
+
+        accountService.addUser("test1234", user);
+        accountService.addUser("test12341", user1);
+
+        assertEquals(2, accountService.getAmountOfUsers());
     }
 
     @Test

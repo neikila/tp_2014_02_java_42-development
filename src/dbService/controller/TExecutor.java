@@ -39,12 +39,13 @@ public class TExecutor{
             transaction = session.beginTransaction();
             action.action(dao, param);
         } catch (Exception e) {
+            e.printStackTrace();
             if (transaction != null)
                 transaction.rollback();
         } finally {
             if (transaction != null)
                 transaction.commit();
-            if (session != null)
+            if (session != null && session.isOpen())
                 session.close();
         }
     }
