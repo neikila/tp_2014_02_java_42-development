@@ -89,7 +89,7 @@ public class UserProfile implements Serializable {
         return true;
     }
 
-    public String getRole() { return isSuperUser? "Admin": "User"; }
+    public String getRoleName() { return isSuperUser? "Admin": "User"; }
 
     public String getLogin() {
         return login;
@@ -109,7 +109,7 @@ public class UserProfile implements Serializable {
                 " Login: " + login +
                 " Password: " + password +
                 " Email: " + email +
-                " Role: " + getRole() +
+                " Role: " + getRoleName() +
                 " Score: " + score;
     }
 }
