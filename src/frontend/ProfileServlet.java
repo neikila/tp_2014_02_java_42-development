@@ -68,7 +68,7 @@ public class ProfileServlet extends HttpServlet {
             data.put("password", newPass);
             data.put("login", user.getLogin());
             data.put("email", user.getEmail());
-            data.put("role", user.getRole());
+            data.put("role", user.getRoleName());
             data.put("score", user.getScore());
         }
         obj.put("data", data);

@@ -5,5 +5,5 @@
     <username>gameAdmin</username>
     <password>rfrltkf</password>
     <showSql>false</showSql>
-    <mode>update</mode>
+    <mode>validate</mode>
 </class>

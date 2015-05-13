@@ -29,7 +29,7 @@ public class ProfileServletTest extends ServletTest {
         String pass = getUser().getPassword();
         String email = getUser().getEmail();
         int score = getUser().getScore();
-        String role = getUser().getRole();
+        String role = getUser().getRoleName();
 
         request = getRequest(null);
 
