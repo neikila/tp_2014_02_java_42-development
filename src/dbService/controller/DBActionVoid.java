@@ -1,5 +1,5 @@
 package dbService.controller;
 
 public interface DBActionVoid<M, C> {
-	void action(C dao, M param);
+	void action(C session, M param);
 }

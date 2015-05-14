@@ -1,6 +1,7 @@
 package dbService;
 
 import dbService.controller.TExecutor;
+import dbService.dao.UserProfileDAO;
 import main.user.UserProfile;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -45,35 +46,67 @@ public class DBServiceImpl implements DBService {
     }
 
     public void vipe() {
-        tExecutor.actionUserProfileDAOVoid((dao, temp) -> dao.vipe(), null);
+        tExecutor.actionVoid(
+                (session, temp) -> {
+                    UserProfileDAO dao = new UserProfileDAO(session);
+                    dao.deleteAll();
+                }, null);
     }
 
     public void deleteAllUsers() {
-        tExecutor.actionUserProfileDAOVoid((dao, temp) -> dao.deleteAll(), null);
+        tExecutor.actionVoid(
+                (session, temp) -> {
+                    UserProfileDAO dao = new UserProfileDAO(session);
+                    dao.deleteAll();
+                }, null);
     }
 
     public void save(UserProfile dataSet) {
-        tExecutor.actionUserProfileDAOVoid((dao, temp) -> dao.save(temp), dataSet);
+        tExecutor.actionVoid(
+                (session, temp) -> {
+                    UserProfileDAO dao = new UserProfileDAO(session);
+                    dao.save(temp);
+                }, dataSet);
     }
 
     public UserProfile readUser(long id) {
-        return tExecutor.actionUserProfileDAO((dao, temp) -> dao.read(temp), id);
+        return tExecutor.action(
+                (session, temp) -> {
+                    UserProfileDAO dao = new UserProfileDAO(session);
+                    return dao.read(temp);
+                }, id);
     }
 
     public UserProfile readUserByName(String name) {
-        return tExecutor.actionUserProfileDAO((dao, temp) -> dao.readByName(temp), name);
+        return tExecutor.action(
+                (session, temp) -> {
+                    UserProfileDAO dao = new UserProfileDAO(session);
+                    return dao.readByName(temp);
+                }, name);
     }
 
     public List<UserProfile> readAll() {
-        return tExecutor.actionUserProfileDAO((dao, temp) -> dao.readAll(), null);
+        return tExecutor.action(
+                (session, temp) -> {
+                    UserProfileDAO dao = new UserProfileDAO(session);
+                    return dao.readAll();
+                }, null);
     }
 
     public long countAllUsers() {
-        return tExecutor.actionUserProfileDAO((dao, temp) -> dao.countAll(), null);
+        return tExecutor.action(
+                (session, temp) -> {
+                    UserProfileDAO dao = new UserProfileDAO(session);
+                    return dao.countAll();
+                } , null);
     }
 
     public List<UserProfile> readLimitOrder(int limit) {
-        return tExecutor.actionUserProfileDAO((dao, temp) -> dao.readLimitOrder(temp), limit);
+        return tExecutor.action(
+                (session, temp) -> {
+                    UserProfileDAO dao = new UserProfileDAO(session);
+                    return dao.readLimitOrder(temp);
+                }, limit);
     }
 
     public void shutdown(){
