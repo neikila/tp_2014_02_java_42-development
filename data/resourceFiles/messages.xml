@@ -1,4 +1,4 @@
-<class type='resource.Messages'>
+<class type='utils.Messages'>
     <adminPage>Admin page</adminPage>
     <notFound>404: Not Found.</notFound>
     <wrongParamAction>Wrong 'action'</wrongParamAction>
@@ -17,5 +17,5 @@
     <JSONStatusFinish>finish</JSONStatusFinish>
     <JSONStatusResult>result</JSONStatusResult>
     <JSONStatusStart>start</JSONStatusStart>
-    <JSONStatusSettings>start</JSONStatusSettings>
+    <JSONStatusSettings>settings</JSONStatusSettings>
 </class>

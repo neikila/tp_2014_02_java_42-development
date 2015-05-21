@@ -6,7 +6,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import resource.reflection.ReflectionHelper;
-import resource.LoggerMessages;
+import utils.LoggerMessages;
 
 public class SaxHandler extends DefaultHandler {
 

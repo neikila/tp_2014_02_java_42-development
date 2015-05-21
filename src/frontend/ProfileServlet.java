@@ -1,14 +1,12 @@
 package frontend;
 
-import main.accountService.AccountService;
 import main.Context;
+import main.accountService.AccountService;
 import main.user.UserProfile;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
-import resource.LoggerMessages;
-import resource.Messages;
-import resource.ResourceFactory;
+import utils.LoggerMessages;
+import utils.Messages;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,22 +15,23 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static org.apache.logging.log4j.LogManager.getLogger;
+
 public class ProfileServlet extends HttpServlet {
 
-    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
-    final private Logger logger = LogManager.getLogger(ProfileServlet.class.getName());
+    final private Logger logger = getLogger(ProfileServlet.class.getName());
     final private AccountService accountService;
-    final private Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
 
     public ProfileServlet(Context contextGlobal) {
-        this.accountService = (AccountService)contextGlobal.get(AccountService.class);
+        this.accountService = (AccountService) contextGlobal.get(AccountService.class);
     }
 
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
-        logger.info(loggerMessages.doGetStart());
-        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
+        logger.info(LoggerMessages.doGetStart());
+        logger.info(LoggerMessages.requestGetParams(), request.getParameterMap().toString());
         HttpSession session = request.getSession();
 
         UserProfile user = accountService.getSessions(session.getId());
@@ -41,22 +40,22 @@ public class ProfileServlet extends HttpServlet {
         String message = "";
 
         if (user == null) {
-            logger.info(loggerMessages.notAuthorised());
+            logger.info(LoggerMessages.notAuthorised());
             status = 401;
-            message = messages.notAuthorised();
+            message = Messages.notAuthorised();
         } else {
-            logger.info(loggerMessages.hasAuthorised(), user.getLogin());
+            logger.info(LoggerMessages.hasAuthorised(), user.getLogin());
             status = 200;
         }
 
         createResponse(response, status, message, user);
-        logger.info(loggerMessages.doGetFinish());
+        logger.info(LoggerMessages.doGetFinish());
     }
 
     private void createResponse(HttpServletResponse response, short status, String errorMessage, UserProfile user) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
-        response.setStatus(HttpServletResponse.SC_OK);
+        response.setStatus(SC_OK);
 
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();

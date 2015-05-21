@@ -7,15 +7,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import resource.GameMechanicsSettings;
-import resource.LoggerMessages;
 import resource.ResourceFactory;
+import utils.LoggerMessages;
 import utils.TimeHelper;
 
 import java.util.*;
 
 public class GameMechanicsImpl implements GameMechanics {
     final private Logger logger = LogManager.getLogger(GameMechanics.class.getName());
-    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
 
     private static final int STEP_TIME = 100;
 
@@ -57,14 +56,14 @@ public class GameMechanicsImpl implements GameMechanics {
 
             webSocketService.sendSettings(waiter, maps.get(nextMap));
 
-            logger.info(loggerMessages.firstPlayer());
+            logger.info(LoggerMessages.firstPlayer());
         } else {
             GameUser secondPlayer = new GameUser(user);
             secondPlayer.setMyPosition(2);
             userManager.addUser(secondPlayer);
 
-            logger.info(loggerMessages.secondPlayer());
-            logger.info(loggerMessages.startGame());
+            logger.info(LoggerMessages.secondPlayer());
+            logger.info(LoggerMessages.startGame());
 
             webSocketService.sendSettings(waiter, maps.get(nextMap));
 
@@ -85,7 +84,7 @@ public class GameMechanicsImpl implements GameMechanics {
             webSocketService.notifyAction(myUser, message);
             webSocketService.notifyAction(opponent, message);
         } else {
-            logger.info(loggerMessages.onMessage(), userName, message.toString());
+            logger.info(LoggerMessages.onMessage(), userName, message.toString());
         }
     }
 
@@ -123,10 +122,10 @@ public class GameMechanicsImpl implements GameMechanics {
         int secondResult = -1 * firstResult;
 
         if (firstResult == 0) {
-            logger.info(loggerMessages.draw(), firstName, secondName);
+            logger.info(LoggerMessages.draw(), firstName, secondName);
         } else {
-            logger.info(loggerMessages.isWinner(), firstResult > 0 ? firstName : secondName);
-            logger.info(loggerMessages.isLoser(), firstResult < 0 ? firstName : secondName);
+            logger.info(LoggerMessages.isWinner(), firstResult > 0 ? firstName : secondName);
+            logger.info(LoggerMessages.isLoser(), firstResult < 0 ? firstName : secondName);
         }
         int deltaScore = firstResult * (minDelta + weight * Math.abs(first.getMyScore() - second.getMyScore() ) );
 
@@ -138,14 +137,14 @@ public class GameMechanicsImpl implements GameMechanics {
         allSessions.remove(session);
         userManager.removeUser(first);
         userManager.removeUser(second);
-        logger.info(loggerMessages.sessionFinished());
+        logger.info(LoggerMessages.sessionFinished());
     }
 
     private void starGame(GameUser first, GameUser second, GameMap nextMap) {
         GameSession gameSession = new GameSession(first, second, nextMap);
-        logger.info(loggerMessages.gameUserPosition(),
+        logger.info(LoggerMessages.gameUserPosition(),
                 gameSession.getFirst().getMyName(), gameSession.getFirst().getMyPosition());
-        logger.info(loggerMessages.gameUserPosition(),
+        logger.info(LoggerMessages.gameUserPosition(),
                 gameSession.getSecond().getMyName(), gameSession.getSecond().getMyPosition());
         allSessions.add(gameSession);
         nameToGame.put(first.getMyName(), gameSession);

@@ -1,17 +1,12 @@
 package frontend;
 
-import main.accountService.AccountService;
 import main.Context;
-import main.user.MyValidator;
+import main.accountService.AccountService;
 import main.user.UserProfile;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
-import resource.LoggerMessages;
-import resource.Messages;
-import resource.ResourceFactory;
-import utils.JsonInterpreterFromRequest;
-import utils.PageGenerator;
+import utils.LoggerMessages;
+import utils.Messages;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,24 +17,28 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static main.user.MyValidator.*;
+import static org.apache.logging.log4j.LogManager.getLogger;
+import static utils.JsonInterpreterFromRequest.getJSONFromRequest;
+import static utils.PageGenerator.getPage;
+
 public class SignUpServlet extends HttpServlet {
 
-    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
-    final private Logger logger = LogManager.getLogger(SignUpServlet.class.getName());
-    final private Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
+    final private Logger logger = getLogger(SignUpServlet.class.getName());
     final private AccountService accountService;
     final private Context context;
 
     public SignUpServlet(Context contextGlobal) {
-        this.accountService = (AccountService)contextGlobal.get(AccountService.class);
+        this.accountService = (AccountService) contextGlobal.get(AccountService.class);
         context = contextGlobal;
     }
 
     // Для демонстрации! Ну, и, отладки
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-        logger.info(loggerMessages.doGetStart());
-        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
+        logger.info(LoggerMessages.doGetStart());
+        logger.info(LoggerMessages.requestGetParams(), request.getParameterMap().toString());
         HttpSession session = request.getSession();
         UserProfile user = accountService.getSessions(session.getId());
 
@@ -49,31 +48,31 @@ public class SignUpServlet extends HttpServlet {
         if (!context.isBlocked()) {
             if (user == null) {
                 pageToReturn = "signUpForm.html";
-                message = messages.fillAllTheGaps();
-                logger.info(loggerMessages.signUp());
+                message = Messages.fillAllTheGaps();
+                logger.info(LoggerMessages.signUp());
             } else {
                 pageToReturn = "signupstatus.html";
-                message = messages.logOutFirst();
-                logger.info(loggerMessages.alreadyLoggedIn(), user.getLogin());
+                message = Messages.logOutFirst();
+                logger.info(LoggerMessages.alreadyLoggedIn(), user.getLogin());
             }
         } else {
             pageToReturn = "signupstatus.html";
-            message = messages.block();
-            logger.info(loggerMessages.block());
+            message = Messages.block();
+            logger.info(LoggerMessages.block());
         }
         pageVariables.put("signUpStatus", message);
-        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
-        response.setStatus(HttpServletResponse.SC_OK);
-        logger.info(loggerMessages.doGetFinish());
+        response.getWriter().println(getPage(pageToReturn, pageVariables));
+        response.setStatus(SC_OK);
+        logger.info(LoggerMessages.doGetFinish());
     }
 
 
     public void doPost(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
-        logger.info(loggerMessages.doPostStart());
-        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
-        JSONObject jsonObject = JsonInterpreterFromRequest.getJSONFromRequest(request);
-        logger.info(loggerMessages.jsonGotFromRequest(), jsonObject.toString());
+                       HttpServletResponse response) throws ServletException, IOException {
+        logger.info(LoggerMessages.doPostStart());
+        logger.info(LoggerMessages.requestGetParams(), request.getParameterMap().toString());
+        JSONObject jsonObject = getJSONFromRequest(request);
+        logger.info(LoggerMessages.jsonGotFromRequest(), jsonObject.toString());
 
         String login = (String) jsonObject.get("login");
         String password = (String) jsonObject.get("password");
@@ -87,41 +86,41 @@ public class SignUpServlet extends HttpServlet {
 
         if (!context.isBlocked()) {
             if (accountService.getSessions(session.getId()) == null) {
-                if (MyValidator.isUserNameValid(login) && MyValidator.isPasswordValid(password) && MyValidator.isEmailValid(email)) {
+                if (isUserNameValid(login) && isPasswordValid(password) && isEmailValid(email)) {
                     if (accountService.addUser(login, user)) {
                         status = 200;
-                        logger.info(loggerMessages.signUpSuccess(), user.getLogin());
+                        logger.info(LoggerMessages.signUpSuccess(), user.getLogin());
                         accountService.addSessions(session.getId(), user);
-                        logger.info(loggerMessages.hasAuthorised(), user.getLogin());
+                        logger.info(LoggerMessages.hasAuthorised(), user.getLogin());
                     } else {
                         status = 400;
-                        message = messages.exist();
-                        logger.info(loggerMessages.loginIsAlreadyExist(), login);
+                        message = Messages.exist();
+                        logger.info(LoggerMessages.loginIsAlreadyExist(), login);
                     }
                 } else {
                     status = 400;
-                    message = messages.wrongSignUpData();
-                    logger.info(loggerMessages.wrongSignUpData(), login, email, password);
+                    message = Messages.wrongSignUpData();
+                    logger.info(LoggerMessages.wrongSignUpData(), login, email, password);
                 }
             } else {
                 status = 400;
-                message = messages.alreadyLoggedIn();
-                logger.info(loggerMessages.alreadyLoggedIn());
+                message = Messages.alreadyLoggedIn();
+                logger.info(LoggerMessages.alreadyLoggedIn());
             }
         } else {
-            logger.info(loggerMessages.block());
+            logger.info(LoggerMessages.block());
             status = 400;
-            message = messages.block();
+            message = Messages.block();
         }
         createResponse(response, status, message, user);
-        logger.info(loggerMessages.doPostFinish());
+        logger.info(LoggerMessages.doPostFinish());
     }
 
 
-    private void createResponse (HttpServletResponse response, short status, String message, UserProfile user) throws IOException {
+    private void createResponse(HttpServletResponse response, short status, String message, UserProfile user) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
-        response.setStatus(HttpServletResponse.SC_OK);
+        response.setStatus(SC_OK);
 
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();

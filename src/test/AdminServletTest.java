@@ -1,8 +1,8 @@
 package test;
 
-import main.accountService.AccountService;
 import frontend.AdminServlet;
 import main.Context;
+import main.accountService.AccountService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,6 +41,7 @@ public class AdminServletTest extends ServletTest {
         servlet = new AdminServletTestExtension(context);
         stringWriter = new StringWriter();
         response = getResponse(stringWriter);
+
     }
 
     @Test

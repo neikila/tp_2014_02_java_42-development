@@ -2,7 +2,7 @@ package resource.sax;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import resource.LoggerMessages;
+import utils.LoggerMessages;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;

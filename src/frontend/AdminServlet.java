@@ -1,14 +1,12 @@
 package frontend;
 
-import main.accountService.AccountService;
 import main.Context;
+import main.accountService.AccountService;
 import main.user.UserProfile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
-import resource.LoggerMessages;
-import resource.Messages;
-import resource.ResourceFactory;
+import utils.Messages;
 import utils.PageGenerator;
 import utils.TimeHelper;
 
@@ -21,11 +19,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static utils.LoggerMessages.*;
+
 public class AdminServlet extends HttpServlet{
 
     final private Logger logger = LogManager.getLogger(AdminServlet.class.getName());
-    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
-    final private Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
     final private AccountService accountService;
 
     public AdminServlet(Context contextGlobal) {
@@ -34,8 +32,8 @@ public class AdminServlet extends HttpServlet{
 
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-        logger.info(loggerMessages.doGetStart());
-        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
+        logger.info(doGetStart());
+        logger.info(requestGetParams(), request.getParameterMap().toString());
 
         response.setStatus(HttpServletResponse.SC_OK);
 
@@ -47,26 +45,26 @@ public class AdminServlet extends HttpServlet{
         UserProfile user = accountService.getSessions(session.getId());
 
         if (user != null && user.isAdmin()) {
-            logger.info(loggerMessages.isAdmin(), user.getLogin());
+            logger.info(isAdmin(), user.getLogin());
             pageToReturn = "adminPage.html";
-            pageVariables.put("titleMessage", messages.adminPage());
+            pageVariables.put("titleMessage", Messages.adminPage());
         } else {
             if (user != null)
-                logger.info(loggerMessages.isNotAdmin(), user.getLogin());
+                logger.info(isNotAdmin(), user.getLogin());
             else
-                logger.info(loggerMessages.notAuthorised());
-            pageVariables.put("errorMessage", messages.notFound());
+                logger.info(notAuthorised());
+            pageVariables.put("errorMessage", Messages.notFound());
             pageToReturn = "errorPage.html";
         }
         response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
-        logger.info(loggerMessages.doGetFinish());
+        logger.info(doGetFinish());
     }
 
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
-        logger.info(loggerMessages.doPostStart());
-        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
+        logger.info(doPostStart());
+        logger.info(requestGetParams(), request.getParameterMap().toString());
         response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
         response.setStatus(HttpServletResponse.SC_OK);
@@ -74,7 +72,7 @@ public class AdminServlet extends HttpServlet{
         String action = request.getParameter("action");
 
         Map<String, Object> pageVariables = new HashMap<>();
-        pageVariables.put("errorMessage", messages.notFound());
+        pageVariables.put("errorMessage", Messages.notFound());
         String pageToReturn = "errorPage.html";
 
         HttpSession session = request.getSession();
@@ -82,15 +80,15 @@ public class AdminServlet extends HttpServlet{
         UserProfile user = accountService.getSessions(session.getId());
         if (user != null) {
             if (user.isAdmin()) {
-                logger.info(loggerMessages.isAdmin(), user.getLogin());
+                logger.info(isAdmin(), user.getLogin());
                 if (action != null) {
                     switch (action) {
                         case "stop":
-                            logger.info(loggerMessages.stop());
+                            logger.info(stop());
                             StopServers();
                             break;
                         case "get":
-                            logger.info(loggerMessages.statistic());
+                            logger.info(statistic());
                             JSONObject data = new JSONObject();
                             data.put("amountOfLoggedIn", accountService.getAmountOfSessions());
                             data.put("amountOfSignedUp", accountService.getAmountOfUsers());
@@ -98,19 +96,19 @@ public class AdminServlet extends HttpServlet{
                             response.getWriter().write(data.toString());
                             break;
                         default:
-                            pageVariables.put("errorMessage", messages.wrongParamAction());
-                            logger.warn(loggerMessages.wrongAction());
+                            pageVariables.put("errorMessage", Messages.wrongParamAction());
+                            logger.warn(wrongAction());
                     }
                 }
             } else {
                 response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
-                logger.info(loggerMessages.isNotAdmin(), user.getLogin());
+                logger.info(isNotAdmin(), user.getLogin());
             }
         } else {
             response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
-            logger.info(loggerMessages.notAuthorised());
+            logger.info(notAuthorised());
         }
-        logger.info(loggerMessages.doPostFinish());
+        logger.info(doPostFinish());
     }
 
     protected void StopServers() {

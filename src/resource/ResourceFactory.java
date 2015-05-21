@@ -3,6 +3,7 @@ package resource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import resource.sax.ReadXMLFileSAX;
+import utils.LoggerMessages;
 
 import java.util.HashMap;
 

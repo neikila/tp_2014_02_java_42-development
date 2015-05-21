@@ -1,14 +1,12 @@
 package frontend;
 
-import main.accountService.AccountService;
 import main.Context;
+import main.accountService.AccountService;
 import main.user.UserProfile;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
-import resource.LoggerMessages;
-import resource.Messages;
-import resource.ResourceFactory;
+import utils.LoggerMessages;
+import utils.Messages;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,22 +15,23 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class SignOutServlet extends HttpServlet{
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static org.apache.logging.log4j.LogManager.getLogger;
 
-    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
-    final private Logger logger = LogManager.getLogger(SignOutServlet.class.getName());
-    final private Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
+public class SignOutServlet extends HttpServlet {
+
+    final private Logger logger = getLogger(SignOutServlet.class.getName());
     final private AccountService accountService;
 
     public SignOutServlet(Context contextGlobal) {
-        this.accountService = (AccountService)contextGlobal.get(AccountService.class);
+        this.accountService = (AccountService) contextGlobal.get(AccountService.class);
     }
 
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
-        logger.info(loggerMessages.doPostStart());
-        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
+        logger.info(LoggerMessages.doPostStart());
+        logger.info(LoggerMessages.requestGetParams(), request.getParameterMap().toString());
         HttpSession session = request.getSession();
 
         UserProfile user = accountService.getSessions(session.getId());
@@ -40,15 +39,15 @@ public class SignOutServlet extends HttpServlet{
         short status;
 
         if (user != null) {
-            logger.info(loggerMessages.loggedOut(), user.getLogin());
+            logger.info(LoggerMessages.loggedOut(), user.getLogin());
             accountService.removeSession(session.getId());
             status = 200;
         } else {
-            logger.info(loggerMessages.notAuthorised());
+            logger.info(LoggerMessages.notAuthorised());
             status = 401;
         }
         createResponse(response, status);
-        logger.info(loggerMessages.doPostFinish());
+        logger.info(LoggerMessages.doPostFinish());
     }
 
 
@@ -57,13 +56,13 @@ public class SignOutServlet extends HttpServlet{
 
         response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
-        response.setStatus(HttpServletResponse.SC_OK);
+        response.setStatus(SC_OK);
 
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();
         obj.put("data", data);
         if (status != 200) {
-            data.put("message", messages.notAuthorised());
+            data.put("message", Messages.notAuthorised());
         }
         obj.put("status", status);
         response.getWriter().write(obj.toString());

@@ -8,9 +8,9 @@ import main.accountService.AccountService;
 import main.accountService.AccountServiceMySQLImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import resource.LoggerMessages;
 import resource.ResourceFactory;
 import resource.ServerSettings;
+import utils.LoggerMessages;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -23,7 +23,6 @@ public class Main {
         Context context = new Context();
 
         final Logger logger = LogManager.getLogger(Main.class.getName());
-        final LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
 
         DBService dbService = new DBServiceImpl();
         context.add(DBService.class, dbService);
@@ -41,7 +40,7 @@ public class Main {
 
         startMBean(context);
 
-        logger.info(loggerMessages.serverStart(), (String.valueOf(port)));
+        logger.info(LoggerMessages.serverStart(), (String.valueOf(port)));
 
         AppServer server = new AppServer(context, port);
         server.start();

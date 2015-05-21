@@ -5,7 +5,6 @@ import mechanics.GameMap;
 import mechanics.GameMechanics;
 import mechanics.GameSession;
 import mechanics.GameUser;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -13,17 +12,18 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.json.simple.JSONObject;
-import resource.LoggerMessages;
-import resource.Messages;
-import resource.ResourceFactory;
-import utils.JsonInterpreterFromRequest;
+import utils.Messages;
+import utils.LoggerMessages;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
+import static resource.ResourceFactory.instance;
+import static utils.JsonInterpreterFromRequest.getJsonFromString;
 
 @WebSocket
 public class GameWebSocket {
 
-    final private Logger logger = LogManager.getLogger(GameWebSocket.class.getName());
-    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
-    final private Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
+    final private Logger logger = getLogger(GameWebSocket.class.getName());
+    final private Messages messages = (Messages) instance().getResource("messages");
 
     final private String myName;
     final private GameMechanics gameMechanics;
@@ -40,7 +40,7 @@ public class GameWebSocket {
         session = null;
         closed = true;
         gameSessionClosed = true;
-        logger.info(loggerMessages.newSocketSuccess());
+        logger.info(LoggerMessages.newSocketSuccess());
     }
 
     public String getMyName() {
@@ -56,7 +56,7 @@ public class GameWebSocket {
                 e.printStackTrace();
             }
         } else {
-            logger.error(loggerMessages.socketClosed());
+            logger.error(LoggerMessages.socketClosed());
         }
     }
 
@@ -92,7 +92,7 @@ public class GameWebSocket {
     @OnWebSocketMessage
     public void onMessage(String data) {
         if (!gameSessionClosed) {
-            JSONObject message = JsonInterpreterFromRequest.getJsonFromString(data);
+            JSONObject message = getJsonFromString(data);
             gameMechanics.analyzeMessage(myName, message);
         }
     }
@@ -101,7 +101,7 @@ public class GameWebSocket {
     public void onOpen(Session session) {
         closed = false;
         gameSessionClosed = false;
-        logger.info(loggerMessages.onOpen(), myName);
+        logger.info(LoggerMessages.onOpen(), myName);
         setSession(session);
         webSocketService.addUser(this);
         gameMechanics.addUser(myName);
@@ -133,6 +133,6 @@ public class GameWebSocket {
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
         closed = true;
-        logger.info(loggerMessages.onClose(), myName);
+        logger.info(LoggerMessages.onClose(), myName);
     }
 }
