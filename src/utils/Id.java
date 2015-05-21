@@ -12,6 +12,6 @@ public class Id <T>{
 
     @Override
     public String toString() {
-        return "Id: " + id;
+        return "" + id;
     }
 }
