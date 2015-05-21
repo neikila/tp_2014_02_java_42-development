@@ -9,4 +9,9 @@ public class Id <T>{
     public Id(long id) { this.id = id; }
 
     public long getId() { return id; }
+
+    @Override
+    public String toString() {
+        return "Id: " + id;
+    }
 }

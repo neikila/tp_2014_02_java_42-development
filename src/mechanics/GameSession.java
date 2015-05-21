@@ -1,21 +1,20 @@
 package mechanics;
 
+import utils.Id;
+
 import java.util.Date;
 
-/**
- * @author v.chibrikov
- */
 public class GameSession {
     private final long startTime;
     private final GameUser first;
     private final GameUser second;
     private GameMap map;
-    private String winner;
+    private Id<GameUser> id;
 
     public GameSession(GameUser first, GameUser second, GameMap map) {
         this.map = map;
         startTime = new Date().getTime();
-        winner = null;
+        id = null;
 
         this.first = first;
         this.second = second;
@@ -48,14 +47,16 @@ public class GameSession {
     }
 
     public int getWinner() {
-        if (winner == null) {
+        if (id == null) {
             return 0;
         } else {
-            if (winner.equals(first.getMyName())) {
+            if (id.equals(first.getId())) {
                 return 1;
             } else {
                 return -1;
             }
         }
     }
+
+    public GameMap getMap() { return map; }
 }

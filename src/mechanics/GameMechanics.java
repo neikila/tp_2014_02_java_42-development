@@ -1,14 +1,16 @@
 package mechanics;
 
+import main.user.UserProfile;
 import org.json.simple.JSONObject;
+import utils.Id;
 
 public interface GameMechanics {
 
-    public void addUser(String user);
+    public void addUser(Id<GameUser> id, UserProfile user);
 
     public void incrementScore(GameUser user);
 
-    public void analyzeMessage(String userName, JSONObject message);
+    public void analyzeMessage(Id<GameUser> id, JSONObject message);
 
     public void run();
 }

@@ -1,6 +1,7 @@
 package frontend.game;
 
 import main.Context;
+import main.user.UserProfile;
 import mechanics.GameMap;
 import mechanics.GameMechanics;
 import mechanics.GameSession;
@@ -12,6 +13,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.json.simple.JSONObject;
+import utils.Id;
 import utils.LoggerMessages;
 import utils.Messages;
 
@@ -23,27 +25,27 @@ public class GameWebSocket {
 
     final private Logger logger = getLogger(GameWebSocket.class.getName());
 
-    final private String myName;
+    final private UserProfile user;
     final private GameMechanics gameMechanics;
     final private WebSocketService webSocketService;
+    final private Id<GameUser> id;
     private Session session;
     private boolean closed; // TODO возможно ли обратиться к этомму объекту после того как сработает OnSocketClosed
     // На случай, если сокет закрыт, но объект остался
     private boolean gameSessionClosed;
 
-    public GameWebSocket(String myName, Context context) {
+    public GameWebSocket(UserProfile userProfile, Context context) {
         this.gameMechanics = (GameMechanics) context.get(GameMechanics.class);
         this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
-        this.myName = myName;
+        this.user = userProfile;
+        this.id = new Id<>(user.getId());
         session = null;
         closed = true;
         gameSessionClosed = true;
         logger.info(LoggerMessages.newSocketSuccess());
     }
 
-    public String getMyName() {
-        return myName;
-    }
+    public Id <GameUser> getId() { return id; }
 
     private void sendJSON(JSONObject jsonObject) {
         if (!closed) {
@@ -70,7 +72,7 @@ public class GameWebSocket {
         JSONObject jsonStart = new JSONObject();
         jsonStart.put("status", Messages.JSONStatusStart());
         jsonStart.put("position", position);
-        jsonStart.put("enemyName", session.getEnemy(position).getMyName());
+        jsonStart.put("enemyName", session.getEnemy(position).getUser().getLogin());
         jsonStart.put("sequence", sequence.substring(0, sequence.length() - 3) + "&#x200B;" + sequence.substring(sequence.length() - 3, sequence.length()));
         sendJSON(jsonStart);
     }
@@ -91,7 +93,7 @@ public class GameWebSocket {
     public void onMessage(String data) {
         if (!gameSessionClosed) {
             JSONObject message = getJsonFromString(data);
-            gameMechanics.analyzeMessage(myName, message);
+            gameMechanics.analyzeMessage(id, message);
         }
     }
 
@@ -99,16 +101,16 @@ public class GameWebSocket {
     public void onOpen(Session session) {
         closed = false;
         gameSessionClosed = false;
-        logger.info(LoggerMessages.onOpen(), myName);
+        logger.info(LoggerMessages.onOpen(), user.getLogin());
         setSession(session);
         webSocketService.addUser(this);
-        gameMechanics.addUser(myName);
+        gameMechanics.addUser(id, user);
     }
 
     public void setMyScore(GameUser user) {
         JSONObject jsonStart = new JSONObject();
         jsonStart.put("status", Messages.JSONStatusIncrement());
-        jsonStart.put("name", user.getMyName());
+        jsonStart.put("name", user.getUser().getLogin());
         jsonStart.put("score", user.getMyScore());
         sendJSON(jsonStart);
     }
@@ -131,6 +133,6 @@ public class GameWebSocket {
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
         closed = true;
-        logger.info(LoggerMessages.onClose(), myName);
+        logger.info(LoggerMessages.onClose(), user.getLogin());
     }
 }
