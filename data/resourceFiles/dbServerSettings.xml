@@ -1,0 +1,9 @@
+<class type='resource.DbServerSettings'>
+    <dialect>org.hibernate.dialect.MySQLDialect</dialect>
+    <driverClass>com.mysql.jdbc.Driver</driverClass>
+    <connectionUrl>jdbc:mysql://localhost:3306/gameDB</connectionUrl>
+    <username>gameAdmin</username>
+    <password>rfrltkf</password>
+    <showSql>false</showSql>
+    <mode>validate</mode>
+</class>

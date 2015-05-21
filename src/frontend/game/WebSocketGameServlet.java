@@ -1,14 +1,14 @@
 package frontend.game;
 
 import main.Context;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
-import resource.LoggerMessages;
-import resource.ResourceFactory;
+import utils.LoggerMessages;
 
 import javax.servlet.annotation.WebServlet;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * This class represents a servlet starting a webSocket application
@@ -16,8 +16,7 @@ import javax.servlet.annotation.WebServlet;
 @WebServlet(name = "WebSocketGameServlet", urlPatterns = {"/gameplay"})
 public class WebSocketGameServlet extends WebSocketServlet {
 
-    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
-    final private Logger logger = LogManager.getLogger(WebSocketGameServlet.class.getName());
+    final private Logger logger = getLogger(WebSocketGameServlet.class.getName());
 
     final private static int IDLE_TIME = 60 * 1000;
     final private Context context;
@@ -28,7 +27,7 @@ public class WebSocketGameServlet extends WebSocketServlet {
 
     @Override
     public void configure(WebSocketServletFactory factory) {
-        logger.info(loggerMessages.configure());
+        logger.info(LoggerMessages.configure());
         factory.getPolicy().setIdleTimeout(IDLE_TIME);
         factory.setCreator(new GameWebSocketCreator(context));
     }

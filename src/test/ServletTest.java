@@ -1,11 +1,8 @@
 package test;
 
-import Interface.AccountService;
-import main.AccountServiceImpl;
+import main.accountService.AccountService;
+import main.accountService.AccountServiceImpl;
 import main.user.UserProfile;
-import resource.Messages;
-import resource.TestHelper;
-import resource.ResourceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,21 +14,42 @@ import java.io.StringWriter;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+
 /**
  * Created by neikila on 30.03.15.
- *
  */
 
 public class ServletTest {
-    final protected Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
-    final private TestHelper testHelper;
+//    final protected Messages messages;
     protected AccountService accountService;
     protected HttpServletRequest request;
     protected HttpServletResponse response;
     protected StringWriter stringWriter;
 
     public ServletTest() {
-        testHelper = (TestHelper)(ResourceFactory.instance().getResource("helper"));
+
+//        messages = mock(Messages.class); //(Messages) ResourceFactory.instance().getResource("messages")
+//
+//        when(messages.adminPage()).thenReturn("Admin page");
+//        when(messages.notFound()).thenReturn("404: Not Found.");
+//        when(messages.wrongParamAction()).thenReturn("Wrong 'action'");
+//        when(messages.notAuthorised()).thenReturn("Not Authorised");
+//        when(messages.logInStatus()).thenReturn("Log In:");
+//        when(messages.alreadyLoggedIn()).thenReturn("You has already Logged In");
+//        when(messages.block()).thenReturn("Authorization and signing up is blocked");
+//        when(messages.wrongPasOrLogin()).thenReturn("Wrong password or login");
+//        when(messages.fillAllTheGaps()).thenReturn("Fill all the gaps, please:");
+//        when(messages.logOutFirst()).thenReturn("You have to logout before signing up.");
+//        when(messages.exist()).thenReturn("Such user already exists");
+//        when(messages.wrongSignUpData()).thenReturn("Wrong sign Up data");
+//        when(messages.wrongLimit()).thenReturn("WrongLimit");
+//        when(messages.askToSignIn()).thenReturn("You haven't signed up yet. Please, do it.");
+//        when(messages.JSONStatusIncrement()).thenReturn("increment");
+//        when(messages.JSONStatusFinish()).thenReturn("finish");
+//        when(messages.JSONStatusResult()).thenReturn("result");
+//        when(messages.JSONStatusStart()).thenReturn("start");
+//        when(messages.JSONStatusSettings()).thenReturn("settings");
+
     }
 
     public AccountService getAccountService() {
@@ -68,10 +86,12 @@ public class ServletTest {
     }
 
     public UserProfile getUser() {
-        return testHelper.getUser();
+        return new UserProfile("test_test", "test_test", "test@test.test");
     }
 
     public UserProfile getAdmin() {
-        return testHelper.getAdmin();
+        UserProfile admin = new UserProfile("admin", "admin", "admin@gmail.com");
+        admin.setAdmin(true);
+        return admin;
     }
 }

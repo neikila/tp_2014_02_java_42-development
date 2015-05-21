@@ -1,10 +1,11 @@
 package test;
 
-import Interface.AccountService;
 import frontend.SignInServlet;
 import main.Context;
+import main.accountService.AccountService;
 import org.junit.Before;
 import org.junit.Test;
+import utils.Messages;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -50,7 +51,7 @@ public class SignInServletTest extends ServletTest {
     public void testDoPostIfNoLogin() throws Exception {
         String login = "";
         request = getRequest(null);
-        String CorrectResponse = "{\"data\":{\"message\":\"" + messages.wrongPasOrLogin() + "\"},\"status\":400}";
+        String CorrectResponse = "{\"data\":{\"message\":\"" + Messages.wrongPasOrLogin() + "\"},\"status\":400}";
         setRequestReader(login, getUser().getPassword());
 
         servlet.doPost(request, response);
@@ -62,7 +63,7 @@ public class SignInServletTest extends ServletTest {
     public void testDoPostIfNoPassword() throws Exception {
         String password = "";
         request = getRequest(null);
-        String CorrectResponse = "{\"data\":{\"message\":\"" + messages.wrongPasOrLogin() + "\"},\"status\":400}";
+        String CorrectResponse = "{\"data\":{\"message\":\"" + Messages.wrongPasOrLogin() + "\"},\"status\":400}";
         setRequestReader(getUser().getLogin(), password);
 
         servlet.doPost(request, response);
@@ -73,7 +74,7 @@ public class SignInServletTest extends ServletTest {
     @Test
     public void testDoPostIfNotExist() throws Exception {
         request = getRequest(null);
-        String CorrectResponse = "{\"data\":{\"message\":\"" + messages.wrongPasOrLogin() + "\"},\"status\":400}";
+        String CorrectResponse = "{\"data\":{\"message\":\"" + Messages.wrongPasOrLogin() + "\"},\"status\":400}";
         setRequestReader(getUser().getLogin() + "0", getUser().getLogin());
 
         servlet.doPost(request, response);
@@ -84,7 +85,7 @@ public class SignInServletTest extends ServletTest {
     @Test
     public void testDoPostIfAlreadySignedIn() throws Exception {
         request = getRequest(null);
-        String CorrectResponse = "{\"data\":{\"message\":\"" + messages.alreadyLoggedIn() + "\"},\"status\":400}";
+        String CorrectResponse = "{\"data\":{\"message\":\"" + Messages.alreadyLoggedIn() + "\"},\"status\":400}";
         setRequestReader(getUser().getLogin(), getUser().getPassword());
         accountService.addSessions(null, getUser());
 
@@ -97,7 +98,7 @@ public class SignInServletTest extends ServletTest {
     public void testDoPostIfBlocked() throws Exception {
         request = getRequest(null);
         context.setBlock();
-        String CorrectResponse = "{\"data\":{\"message\":\"" + messages.block() + "\"},\"status\":400}";
+        String CorrectResponse = "{\"data\":{\"message\":\"" + Messages.block() + "\"},\"status\":400}";
         setRequestReader(getUser().getLogin(), getUser().getPassword());
 
         servlet.doPost(request, response);

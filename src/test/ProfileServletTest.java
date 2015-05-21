@@ -1,6 +1,6 @@
 package test;
 
-import Interface.AccountService;
+import main.accountService.AccountService;
 import frontend.ProfileServlet;
 import main.Context;
 import static org.junit.Assert.*;
@@ -29,7 +29,7 @@ public class ProfileServletTest extends ServletTest {
         String pass = getUser().getPassword();
         String email = getUser().getEmail();
         int score = getUser().getScore();
-        String role = getUser().getRole();
+        String role = getUser().getRoleName();
 
         request = getRequest(null);
 

@@ -1,6 +1,5 @@
 package resource;
 
-import Interface.Resource;
 import main.user.UserProfile;
 import java.io.Serializable;
 

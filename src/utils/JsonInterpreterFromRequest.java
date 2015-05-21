@@ -4,21 +4,19 @@ package utils;
  * Created by neikila on 31.03.15.
  */
 
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import resource.LoggerMessages;
-import resource.ResourceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 
-public class JsonInterpreterFromRequest
-{
-    static final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
-    static final Logger logger = LogManager.getLogger(JsonInterpreterFromRequest.class.getName());
+import static org.apache.logging.log4j.LogManager.getLogger;
+import static utils.LoggerMessages.errorInReadingJSON;
+
+public class JsonInterpreterFromRequest {
+    static final Logger logger = getLogger(JsonInterpreterFromRequest.class.getName());
 
     static public JSONObject getJSONFromRequest(HttpServletRequest request) {
         JSONObject jsonObj = null;
@@ -32,11 +30,9 @@ public class JsonInterpreterFromRequest
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(test);
             jsonObj = (JSONObject) obj;
-            logger.info(loggerMessages.jsonGotFromRequest(), jsonObj.toString());
         } catch (Exception e) { //сообщение об ошибке
-            e.printStackTrace();
             logger.error(e);
-            logger.error(loggerMessages.errorInReadingJSON());
+            logger.error(errorInReadingJSON());
         }
         return jsonObj;
     }
@@ -48,7 +44,8 @@ public class JsonInterpreterFromRequest
         try {
             obj = parser.parse(request);
         } catch (ParseException e) {
-            logger.error(e.toString());
+            logger.error(e);
+            logger.error(errorInReadingJSON(), request);
         }
         return (JSONObject) obj;
     }

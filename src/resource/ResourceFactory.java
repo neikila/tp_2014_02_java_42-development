@@ -1,9 +1,9 @@
 package resource;
 
-import Interface.Resource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import sax.ReadXMLFileSAX;
+import resource.sax.ReadXMLFileSAX;
+import utils.LoggerMessages;
 
 import java.util.HashMap;
 
@@ -29,7 +29,7 @@ public class ResourceFactory {
     public Resource getResource(String resourceWay) {
         Resource object;
         if((object = resources.get(resourceWay)) == null) {
-            object = (Resource) ReadXMLFileSAX.readXML("data/" + resourceWay + ".xml");
+            object = (Resource) ReadXMLFileSAX.readXML("data/resourceFiles/" + resourceWay + ".xml");
             object.checkState();
             resources.put(resourceWay, object);
             logger.info(LoggerMessages.resourceWasParsed(), resourceWay);

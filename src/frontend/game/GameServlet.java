@@ -1,13 +1,11 @@
 package frontend.game;
 
-import Interface.AccountService;
 import main.Context;
+import main.accountService.AccountService;
 import main.user.UserProfile;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import resource.LoggerMessages;
-import resource.ResourceFactory;
-import utils.PageGenerator;
+import utils.Messages;
+import utils.LoggerMessages;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,42 +15,40 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static org.apache.logging.log4j.LogManager.getLogger;
+import static resource.ResourceFactory.instance;
+import static utils.PageGenerator.getPage;
+
 public class GameServlet extends HttpServlet {
 
-    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
-    final private Logger logger = LogManager.getLogger(GameServlet.class.getName());
+    final private Logger logger = getLogger(GameServlet.class.getName());
+    final private Messages messages = (Messages) instance().getResource("messages");
     final private AccountService accountService;
 
     public GameServlet(Context context) {
         this.accountService = (AccountService) context.get(AccountService.class);
     }
 
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
-    }
-
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
 
-        logger.info(loggerMessages.doPostStart());
+        logger.info(LoggerMessages.doPostStart());
 
         Map<String, Object> pageVariables = new HashMap<>();
         UserProfile user = accountService.getSessions(request.getSession().getId());
-        if(user != null) {
-            logger.info(loggerMessages.authorised(), user.getLogin());
-            String name = user.getLogin();
-            pageVariables.put("myName", name);
+        response.setStatus(SC_OK);
+        response.setContentType("text/html;charset=utf-8");
 
-            response.getWriter().println(utils.PageGenerator.getPage("game.html", pageVariables));
-
-            response.setContentType("text/html;charset=utf-8");
-            response.setStatus(HttpServletResponse.SC_OK);
-            //TimeHelper.sleep(1000);
+        if (user != null) {
+            logger.info(LoggerMessages.authorised(), user.getLogin());
+            pageVariables.put("myName", user.getLogin());
+            response.getWriter().println(getPage("game.html", pageVariables));
         } else {
-            logger.info(loggerMessages.notAuthorised());
-            pageVariables.put("loginStatus", "You haven't signed up yet. Please, do it.");
-            response.getWriter().println(PageGenerator.getPage("authstatus.html", pageVariables));
+            logger.info(LoggerMessages.notAuthorised());
+            pageVariables.put("loginStatus", messages.askToSignIn());
+            response.getWriter().println(getPage("authstatus.html", pageVariables));
         }
-        logger.info(loggerMessages.doPostFinish());
+        logger.info(LoggerMessages.doPostFinish());
     }
 }

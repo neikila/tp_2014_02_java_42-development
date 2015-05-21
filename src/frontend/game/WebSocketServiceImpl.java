@@ -1,7 +1,9 @@
 package frontend.game;
 
-import Interface.WebSocketService;
+import mechanics.GameMap;
+import mechanics.GameSession;
 import mechanics.GameUser;
+import org.json.simple.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,17 +15,26 @@ public class WebSocketServiceImpl implements WebSocketService {
         userSockets.put(user.getMyName(), user);
     }
 
+    public void sendSettings(GameUser user, GameMap map) {
+        userSockets.get(user.getMyName()).settings(map);
+    }
+
+    public void notifyAction(GameUser user, JSONObject action) {
+        GameWebSocket gameWebSocket = userSockets.get(user.getMyName());
+        gameWebSocket.sendAction(action);
+    }
+
     public void notifyMyNewScore(GameUser user) {
         userSockets.get(user.getMyName()).setMyScore(user);
     }
 
-    public void notifyEnemyNewScore(GameUser user) {
-        userSockets.get(user.getMyName()).setEnemyScore(user);
+    public void notifyEnemyNewScore(GameSession session, int position) {
+        userSockets.get(session.getSelf(position).getMyName()).setMyScore(session.getEnemy(position));
     }
 
-    public void notifyStartGame(GameUser user, String sequence) {
-        GameWebSocket gameWebSocket = userSockets.get(user.getMyName());
-        gameWebSocket.startGame(user, sequence);
+    public void notifyStartGame(GameSession session, int position) {
+        GameWebSocket gameWebSocket = userSockets.get(session.getSelf(position).getMyName());
+        gameWebSocket.startGame(session, position);
     }
 
     @Override

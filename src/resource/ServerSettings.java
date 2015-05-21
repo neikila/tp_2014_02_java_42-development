@@ -1,7 +1,5 @@
 package resource;
 
-import Interface.Resource;
-
 import java.io.Serializable;
 
 /**
@@ -9,6 +7,7 @@ import java.io.Serializable;
  */
 public class ServerSettings implements Serializable, Resource {
     private int port;
+    private String mode;
 
     public ServerSettings() {
         this.port = 80;
@@ -25,6 +24,8 @@ public class ServerSettings implements Serializable, Resource {
     public String toString() {
         return "Port: " + port;
     }
+
+    public boolean isProduction() { return mode.equals("Production"); }
 
     @Override
     public void checkState() {

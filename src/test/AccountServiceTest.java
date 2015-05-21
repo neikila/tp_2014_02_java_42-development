@@ -1,23 +1,21 @@
 package test;
 
-import main.AccountServiceImpl;
-import Interface.AccountService;
+import main.accountService.AccountService;
+import main.accountService.AccountServiceImpl;
 import main.user.UserComparatorByScore;
 import main.user.UserProfile;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import resource.TestHelper;
-import resource.ResourceFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
-import static org.junit.Assert.*;
-
-// TODO переделать взятие пользователей из класса Helper
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class AccountServiceTest {
-    final private TestHelper testHelper = (TestHelper)(ResourceFactory.instance().getResource("helper"));
     AccountService accountService;
 
     @Before
@@ -67,16 +65,6 @@ public class AccountServiceTest {
 
         assertEquals(accountService.getAmountOfSessions(), 1);
         assertEquals(accountService.getAmountOfSessionsWitUserAsKey(), 1);
-    }
-
-    @Test
-    public void testGetAmountOfSessions() throws Exception {
-        //TODO Пока что это просто getter в дальнейшем обращение к базе
-    }
-
-    @Test
-    public void testGetAmountOfUsers() throws Exception {
-        //TODO Пока что это просто getter в дальнейшем обращение к базе
     }
 
     @Test
@@ -174,9 +162,12 @@ public class AccountServiceTest {
         UserProfile Dan = new UserProfile("Danya", "Danya", "Danya@gmail.com");
         Dan.setScore(2);
         accountService.addUser(Dan.getLogin(), Dan);
+        FirstFour.add(Dan);
 
-        TreeSet<UserProfile> resultTree = accountService.getFirstPlayersByScore(4 - 1);
+        List<UserProfile> test = new ArrayList<>(FirstFour);
 
-        assertEquals("GetFirstByScore", FirstFour, resultTree);
+        List<UserProfile> resultTree = accountService.getFirstPlayersByScore(4);
+
+        assertEquals("GetFirstByScore", test, resultTree);
     }
 }

@@ -1,32 +1,27 @@
 package mechanics;
 
-import Interface.AccountService;
-import Interface.GameMechanics;
-import Interface.WebSocketService;
+import frontend.game.WebSocketService;
 import main.Context;
+import main.accountService.AccountService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
 import resource.GameMechanicsSettings;
-import resource.LoggerMessages;
 import resource.ResourceFactory;
-import utils.JsonInterpreterFromRequest;
+import utils.LoggerMessages;
 import utils.TimeHelper;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class GameMechanicsImpl implements GameMechanics {
     final private Logger logger = LogManager.getLogger(GameMechanics.class.getName());
-    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
 
     private static final int STEP_TIME = 100;
 
     final private int gameTime;
-    final private int numAmount;
     final private int weight;
     final private int minDelta;
+    final private ArrayList<GameMap> maps;
 
     final private WebSocketService webSocketService;
     final private AccountService accountService;
@@ -35,46 +30,69 @@ public class GameMechanicsImpl implements GameMechanics {
 
     final private Set<GameSession> allSessions = new HashSet<>();
 
-    private String waiter;
+    final private GameUserManager userManager = new GameUserManager();
+
+    private GameUser waiter = null;
+    private int nextMap = 0;
 
     public GameMechanicsImpl(Context context) {
         this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
         this.accountService = (AccountService) context.get(AccountService.class);
-        gameTime = ((GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings")).getTimeLimit() * 1000;
-        weight = ((GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings")).getWeight();
-        numAmount = ((GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings")).getNumAmount();
-        minDelta = ((GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings")).getMinDelta();
+        GameMechanicsSettings settings = (GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings");
+        gameTime = settings.getTimeLimit() * 1000;
+        weight = settings.getWeight();
+        minDelta = settings.getMinDelta();
+        maps = settings.getMaps();
     }
 
     public void addUser(String user) {
-        if (waiter != null) {
-            logger.info(loggerMessages.secondPlayer());
-            logger.info(loggerMessages.startGame());
-            starGame(user);
-            waiter = null;
+        if (waiter == null) {
+            Random rand = new Random();
+            nextMap = rand.nextInt(maps.size());
+
+            waiter = new GameUser(user);
+            waiter.setMyPosition(1);
+            userManager.addUser(waiter);
+
+            webSocketService.sendSettings(waiter, maps.get(nextMap));
+
+            logger.info(LoggerMessages.firstPlayer());
         } else {
-            logger.info(loggerMessages.firstPlayer());
-            waiter = user;
+            GameUser secondPlayer = new GameUser(user);
+            secondPlayer.setMyPosition(2);
+            userManager.addUser(secondPlayer);
+
+            logger.info(LoggerMessages.secondPlayer());
+            logger.info(LoggerMessages.startGame());
+
+            webSocketService.sendSettings(waiter, maps.get(nextMap));
+
+            starGame(waiter, secondPlayer, maps.get(nextMap));
+
+            waiter = null;
         }
     }
 
-    public void incrementScore(String userName) {
-        GameSession myGameSession = nameToGame.get(userName);
-        GameUser myUser = myGameSession.getSelf(userName);
-        myUser.incrementMyScore();
-        GameUser enemyUser = myGameSession.getEnemy(userName);
-        enemyUser.incrementEnemyScore();
-        webSocketService.notifyMyNewScore(myUser);
-        webSocketService.notifyEnemyNewScore(enemyUser);
+    public void analyzeMessage(String userName, JSONObject message) {
+        if (message.containsKey("action")) {
+            GameUser myUser = userManager.getSelf(userName);
+            GameSession myGameSession = nameToGame.get(userName);
+            GameUser opponent = myGameSession.getEnemy(myUser.getMyPosition());
+
+            message.put("player", myUser.getMyPosition());
+
+            webSocketService.notifyAction(myUser, message);
+            webSocketService.notifyAction(opponent, message);
+        } else {
+            logger.info(LoggerMessages.onMessage(), userName, message.toString());
+        }
     }
 
-    public boolean checkSequence(String userName, String sequence) {
-        GameSession myGameSession = nameToGame.get(userName);
-        GameUser myUser = myGameSession.getSelf(userName);
-        boolean result = myGameSession.isCorrect(userName, JsonInterpreterFromRequest.getJsonFromString(sequence).get("sequence").toString());
-        String resultStr = result ? "Correct" : "Failed";
-        webSocketService.notifyResult(myUser, resultStr);
-        return result;
+    public void incrementScore(GameUser user) {
+        GameSession myGameSession = nameToGame.get(user.getMyName());
+        user.incrementMyScore();
+        webSocketService.notifyMyNewScore(user);
+        webSocketService.notifyEnemyNewScore(myGameSession, user.getMyPosition());
     }
 
     @Override
@@ -91,41 +109,48 @@ public class GameMechanicsImpl implements GameMechanics {
                 finishGame(session);
             }
         }
-        // !! Не поддавайтесь искушению, не соглашайтесь с IntelliJ IDEA. Замените, и будет отсюда exception прилетать!
     }
 
     private void finishGame(GameSession session) {
-        String firstName = session.getFirst().getMyName();
-        String secondName = session.getSecond().getMyName();
+        GameUser first = session.getFirst();
+        GameUser second = session.getSecond();
+
+        String firstName = first.getMyName();
+        String secondName = second.getMyName();
+
         int firstResult = session.getWinner();
         int secondResult = -1 * firstResult;
+
         if (firstResult == 0) {
-            logger.info(loggerMessages.draw(), firstName, secondName);
+            logger.info(LoggerMessages.draw(), firstName, secondName);
         } else {
-            logger.info(loggerMessages.isWinner(), firstResult > 0 ? firstName : secondName);
-            logger.info(loggerMessages.isLoser(), firstResult < 0 ? firstName : secondName);
+            logger.info(LoggerMessages.isWinner(), firstResult > 0 ? firstName : secondName);
+            logger.info(LoggerMessages.isLoser(), firstResult < 0 ? firstName : secondName);
         }
-        int deltaScore = firstResult * (minDelta + weight * Math.abs(session.getFirst().getMyScore() - session.getFirst().getEnemyScore() ) );
+        int deltaScore = firstResult * (minDelta + weight * Math.abs(first.getMyScore() - second.getMyScore() ) );
+
         accountService.getUser(firstName).increaseScoreOnValue(deltaScore);
         accountService.getUser(secondName).increaseScoreOnValue(-1 * deltaScore);
-        webSocketService.notifyGameOver(session.getFirst(), firstResult);
-        webSocketService.notifyGameOver(session.getSecond(), secondResult);
+
+        webSocketService.notifyGameOver(first, firstResult);
+        webSocketService.notifyGameOver(second, secondResult);
         allSessions.remove(session);
-        logger.info(loggerMessages.sessionFinished());
+        userManager.removeUser(first);
+        userManager.removeUser(second);
+        logger.info(LoggerMessages.sessionFinished());
     }
 
-    private void starGame(String second) {
-        String first = waiter;
-        GameSession gameSession = new GameSession(first, second, numAmount);
-        logger.info(loggerMessages.gameUserPosition(),
+    private void starGame(GameUser first, GameUser second, GameMap nextMap) {
+        GameSession gameSession = new GameSession(first, second, nextMap);
+        logger.info(LoggerMessages.gameUserPosition(),
                 gameSession.getFirst().getMyName(), gameSession.getFirst().getMyPosition());
-        logger.info(loggerMessages.gameUserPosition(),
+        logger.info(LoggerMessages.gameUserPosition(),
                 gameSession.getSecond().getMyName(), gameSession.getSecond().getMyPosition());
         allSessions.add(gameSession);
-        nameToGame.put(first, gameSession);
-        nameToGame.put(second, gameSession);
+        nameToGame.put(first.getMyName(), gameSession);
+        nameToGame.put(second.getMyName(), gameSession);
 
-        webSocketService.notifyStartGame(gameSession.getSelf(first), gameSession.getSequence());
-        webSocketService.notifyStartGame(gameSession.getSelf(second), gameSession.getSequence());
+        webSocketService.notifyStartGame(gameSession, first.getMyPosition());
+        webSocketService.notifyStartGame(gameSession, second.getMyPosition());
     }
 }

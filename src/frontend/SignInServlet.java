@@ -1,17 +1,12 @@
 package frontend;
 
 import main.Context;
-import org.apache.logging.log4j.LogManager;
+import main.accountService.AccountService;
+import main.user.UserProfile;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
-
-import Interface.AccountService;
-import main.user.UserProfile;
-import resource.LoggerMessages;
-import resource.Messages;
-import resource.ResourceFactory;
-import utils.JsonInterpreterFromRequest;
-import utils.PageGenerator;
+import utils.LoggerMessages;
+import utils.Messages;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,24 +17,27 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static org.apache.logging.log4j.LogManager.getLogger;
+import static utils.JsonInterpreterFromRequest.getJSONFromRequest;
+import static utils.PageGenerator.getPage;
+
 public class SignInServlet extends HttpServlet {
 
-    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
-    final private Logger logger = LogManager.getLogger(SignInServlet.class.getName());
-    final private Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
+    final private Logger logger = getLogger(SignInServlet.class.getName());
     final private AccountService accountService;
     final private Context context;
 
     public SignInServlet(Context contextGlobal) {
-        this.accountService = (AccountService)contextGlobal.get(AccountService.class);
+        this.accountService = (AccountService) contextGlobal.get(AccountService.class);
         context = contextGlobal;
     }
 
     protected void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
-        logger.info(loggerMessages.doGetStart());
-        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
-        response.setStatus(HttpServletResponse.SC_OK);
+                         HttpServletResponse response) throws ServletException, IOException {
+        logger.info(LoggerMessages.doGetStart());
+        logger.info(LoggerMessages.requestGetParams(), request.getParameterMap().toString());
+        response.setStatus(SC_OK);
 
         String pageToReturn;
 
@@ -52,32 +50,32 @@ public class SignInServlet extends HttpServlet {
 
         if (!context.isBlocked()) {
             if (user == null) {
-                logger.info(loggerMessages.signIn());
-                loginStatus = messages.logInStatus();
+                logger.info(LoggerMessages.signIn());
+                loginStatus = Messages.logInStatus();
                 pageToReturn = "signInForm.html";
             } else {
-                logger.info(loggerMessages.alreadyLoggedIn(), user.getLogin());
-                loginStatus = messages.alreadyLoggedIn();
+                logger.info(LoggerMessages.alreadyLoggedIn(), user.getLogin());
+                loginStatus = Messages.alreadyLoggedIn();
                 pageToReturn = "authstatus.html";
             }
         } else {
-            loginStatus = messages.block();
-            logger.info(loggerMessages.block());
+            loginStatus = Messages.block();
+            logger.info(LoggerMessages.block());
             pageToReturn = "authstatus.html";
         }
 
         pageVariables.put("loginStatus", loginStatus);
 
-        response.getWriter().println(PageGenerator.getPage(pageToReturn, pageVariables));
-        logger.info(loggerMessages.doGetFinish());
+        response.getWriter().println(getPage(pageToReturn, pageVariables));
+        logger.info(LoggerMessages.doGetFinish());
     }
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
-        logger.info(loggerMessages.doPostStart());
-        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
-        JSONObject jsonObject = JsonInterpreterFromRequest.getJSONFromRequest(request);
-
+        logger.info(LoggerMessages.doPostStart());
+        logger.info(LoggerMessages.requestGetParams(), request.getParameterMap().toString());
+        JSONObject jsonObject = getJSONFromRequest(request);
+        logger.info(LoggerMessages.jsonGotFromRequest(), jsonObject.toString());
         String login = (String) jsonObject.get("login");
         String password = (String) jsonObject.get("password");
 
@@ -92,32 +90,32 @@ public class SignInServlet extends HttpServlet {
                 if (profile != null && profile.getPassword().equals(password)) {
                     accountService.addSessions(session.getId(), profile);
                     status = 200;
-                    logger.info(loggerMessages.hasAuthorised(), profile.getLogin());
+                    logger.info(LoggerMessages.hasAuthorised(), profile.getLogin());
                 } else {
                     status = 400;
-                    logger.info(loggerMessages.wrongPasOrLogin(), password, login);
-                    message = messages.wrongPasOrLogin();
+                    logger.info(LoggerMessages.wrongPasOrLogin(), password, login);
+                    message = Messages.wrongPasOrLogin();
                 }
             } else {
                 status = 400;
-                logger.info(loggerMessages.alreadyLoggedIn(), login);
-                message = messages.alreadyLoggedIn();
+                logger.info(LoggerMessages.alreadyLoggedIn(), login);
+                message = Messages.alreadyLoggedIn();
             }
         } else {
             status = 400;
-            logger.info(loggerMessages.block());
-            message = messages.block();
+            logger.info(LoggerMessages.block());
+            message = Messages.block();
         }
 
         createResponse(response, status, message, login);
-        logger.info(loggerMessages.doPostFinish());
+        logger.info(LoggerMessages.doPostFinish());
     }
 
     private void createResponse(HttpServletResponse response, short status, String errorMessage, String login) throws IOException {
 
         response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
-        response.setStatus(HttpServletResponse.SC_OK);
+        response.setStatus(SC_OK);
 
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();

@@ -1,66 +1,66 @@
 package frontend;
 
-import Interface.AccountService;
 import main.Context;
+import main.accountService.AccountService;
 import main.user.UserProfile;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import resource.LoggerMessages;
-import resource.Messages;
-import resource.ResourceFactory;
+import utils.LoggerMessages;
+import utils.Messages;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.TreeSet;
+import java.util.List;
+
+import static java.lang.Integer.parseInt;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 public class ScoreServlet extends HttpServlet {
 
-    final private LoggerMessages loggerMessages = (LoggerMessages) ResourceFactory.instance().getResource("loggerMessages");
-    final private Logger logger = LogManager.getLogger(ScoreServlet.class.getName());
-    final private Messages messages = (Messages) ResourceFactory.instance().getResource("messages");
+    final private Logger logger = getLogger(ScoreServlet.class.getName());
     final private AccountService accountService;
 
     public ScoreServlet(Context contextGlobal) {
-        this.accountService = (AccountService)contextGlobal.get(AccountService.class);
+        this.accountService = (AccountService) contextGlobal.get(AccountService.class);
     }
 
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
-        logger.info(loggerMessages.doGetStart());
-        logger.info(loggerMessages.requestGetParams(), request.getParameterMap().toString());
+        logger.info(LoggerMessages.doGetStart());
+        logger.info(LoggerMessages.requestGetParams(), request.getParameterMap().toString());
         short status = 200;
         String message = "";
         String limitInRequest = request.getParameter("limit");
         int limit;
         if (limitInRequest == null) {
-            logger.info(loggerMessages.lackOfParam(), "limit");
+            logger.info(LoggerMessages.lackOfParam(), "limit");
             limit = 0;
-            message = messages.wrongLimit();
+            message = Messages.wrongLimit();
             status = 400;
         } else {
             try {
-                limit = Integer.parseInt(request.getParameter("limit"));
+                limit = parseInt(request.getParameter("limit"));
             } catch (Exception e) {
                 logger.error(e);
-                logger.error(loggerMessages.paramHasWrongType(), "limit");
+                logger.error(LoggerMessages.paramHasWrongType(), "limit");
                 limit = 0;
-                message = messages.wrongLimit();
+                message = Messages.wrongLimit();
                 status = 400;
             }
         }
         createResponse(response, status, message, accountService.getFirstPlayersByScore(limit));
-        logger.info(loggerMessages.doGetFinish());
+        logger.info(LoggerMessages.doGetFinish());
     }
 
-    private void createResponse(HttpServletResponse response, short status, String errorMessage, TreeSet<UserProfile> FirstLimit) throws IOException {
+    private void createResponse(HttpServletResponse response, short status, String errorMessage, List<UserProfile> FirstLimit) throws IOException {
 
-        response.setStatus(HttpServletResponse.SC_OK);
+        response.setStatus(SC_OK);
         response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
 
@@ -72,11 +72,10 @@ public class ScoreServlet extends HttpServlet {
         if (status != 200) {
             data.put("message", errorMessage);
         } else {
-            while (!FirstLimit.isEmpty()) {
+            for (UserProfile aFirstLimit : FirstLimit) {
                 scoreItem = new JSONObject();
-                UserProfile temp = FirstLimit.pollFirst();
-                scoreItem.put("login", temp.getLogin());
-                scoreItem.put("score", temp.getScore());
+                scoreItem.put("login", aFirstLimit.getLogin());
+                scoreItem.put("score", aFirstLimit.getScore());
                 scoreList.add(scoreItem);
             }
             data.put("scoreList", scoreList);

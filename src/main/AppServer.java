@@ -1,7 +1,7 @@
 package main;
 
-import Interface.GameMechanics;
-import Interface.WebSocketService;
+import mechanics.GameMechanics;
+import frontend.game.WebSocketService;
 import frontend.*;
 import frontend.game.*;
 import mechanics.GameMechanicsImpl;
@@ -57,9 +57,10 @@ public class AppServer {
     public void start(){
         try {
             server.start();
+            // TODO перенести в xml
             logger.info("Start");
+            logger.info("MySQL version");
             gameMechanics.run();
-            //server.join();
         } catch (Exception e) {
             logger.fatal("There is an error in Server.Start()");
             logger.fatal(e);
