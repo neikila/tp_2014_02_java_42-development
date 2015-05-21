@@ -31,6 +31,6 @@ public class GameWebSocketCreator implements WebSocketCreator {
             logger.info(LoggerMessages.notAuthorised());
             return null;
         }
-        return new GameWebSocket(temp.getLogin(), context);
+        return new GameWebSocket(temp, context);
     }
 }

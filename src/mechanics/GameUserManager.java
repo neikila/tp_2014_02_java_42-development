@@ -1,5 +1,7 @@
 package mechanics;
 
+import utils.Id;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,17 +9,17 @@ import java.util.Map;
  * Created by neikila on 10.05.15.
  */
 public class GameUserManager {
-    private Map<String, GameUser> users = new HashMap<>();
+    private Map<Id <GameUser> , GameUser> users = new HashMap<>();
 
-    public GameUser getSelf(String user) {
-        return users.get(user);
+    public GameUser getSelf(Id <GameUser> id) {
+        return users.get(id);
     }
 
-    public void addUser(GameUser user) {
-        users.put(user.getMyName(), user);
+    public boolean addUser(GameUser user) {
+        return users.put(user.getId(), user) != null;
     }
 
     public void removeUser(GameUser user) {
-        users.remove(user.getMyName());
+        users.remove(user.getId());
     }
 }

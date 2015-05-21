@@ -48,6 +48,10 @@ public class AccountServiceMySQLImpl implements AccountService {
         return dbService.readUserByName(userName);
     }
 
+    public UserProfile getUser(long id) {
+        return dbService.readUser(id);
+    }
+
     public UserProfile getSessions(String sessionId) {
         return sessions.get(sessionId);
     }

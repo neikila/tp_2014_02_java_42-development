@@ -2,11 +2,12 @@ package mechanics;
 
 import frontend.game.WebSocketService;
 import main.Context;
-import main.accountService.AccountService;
+import main.user.UserProfile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import resource.GameMechanicsSettings;
+import utils.Id;
 import utils.LoggerMessages;
 import utils.TimeHelper;
 
@@ -23,9 +24,8 @@ public class GameMechanicsImpl implements GameMechanics {
     final private ArrayList<GameMap> maps;
 
     final private WebSocketService webSocketService;
-    final private AccountService accountService;
 
-    final private Map<String, GameSession> nameToGame = new HashMap<>();
+    final private Map<Id <GameUser>, GameSession> nameToGame = new HashMap<>();
 
     final private Set<GameSession> allSessions = new HashSet<>();
 
@@ -36,19 +36,17 @@ public class GameMechanicsImpl implements GameMechanics {
 
     public GameMechanicsImpl(Context context, GameMechanicsSettings settings) {
         this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
-        this.accountService = (AccountService) context.get(AccountService.class);
         gameTime = settings.getTimeLimit() * 1000;
         weight = settings.getWeight();
         minDelta = settings.getMinDelta();
         maps = settings.getMaps();
     }
 
-    public void addUser(String user) {
+    public void addUser(Id <GameUser> id, UserProfile user) {
         if (waiter == null) {
             Random rand = new Random();
             nextMap = rand.nextInt(maps.size());
-
-            waiter = new GameUser(user);
+            waiter = new GameUser(id, user);
             waiter.setMyPosition(1);
             userManager.addUser(waiter);
 
@@ -56,7 +54,7 @@ public class GameMechanicsImpl implements GameMechanics {
 
             logger.info(LoggerMessages.firstPlayer());
         } else {
-            GameUser secondPlayer = new GameUser(user);
+            GameUser secondPlayer = new GameUser(id, user);
             secondPlayer.setMyPosition(2);
             userManager.addUser(secondPlayer);
 
@@ -71,10 +69,10 @@ public class GameMechanicsImpl implements GameMechanics {
         }
     }
 
-    public void analyzeMessage(String userName, JSONObject message) {
+    public void analyzeMessage(Id<GameUser> id, JSONObject message) {
         if (message.containsKey("action")) {
-            GameUser myUser = userManager.getSelf(userName);
-            GameSession myGameSession = nameToGame.get(userName);
+            GameUser myUser = userManager.getSelf(id);
+            GameSession myGameSession = nameToGame.get(id);
             GameUser opponent = myGameSession.getEnemy(myUser.getMyPosition());
 
             message.put("player", myUser.getMyPosition());
@@ -82,12 +80,12 @@ public class GameMechanicsImpl implements GameMechanics {
             webSocketService.notifyAction(myUser, message);
             webSocketService.notifyAction(opponent, message);
         } else {
-            logger.info(LoggerMessages.onMessage(), userName, message.toString());
+            logger.info(LoggerMessages.onMessage(), id, message.toString());
         }
     }
 
     public void incrementScore(GameUser user) {
-        GameSession myGameSession = nameToGame.get(user.getMyName());
+        GameSession myGameSession = nameToGame.get(user.getId());
         user.incrementMyScore();
         webSocketService.notifyMyNewScore(user);
         webSocketService.notifyEnemyNewScore(myGameSession, user.getMyPosition());
@@ -113,22 +111,22 @@ public class GameMechanicsImpl implements GameMechanics {
         GameUser first = session.getFirst();
         GameUser second = session.getSecond();
 
-        String firstName = first.getMyName();
-        String secondName = second.getMyName();
+        Id <GameUser> firstId = first.getId();
+        Id <GameUser> secondId = second.getId();
 
         int firstResult = session.getWinner();
         int secondResult = -1 * firstResult;
 
         if (firstResult == 0) {
-            logger.info(LoggerMessages.draw(), firstName, secondName);
+            logger.info(LoggerMessages.draw(), firstId, secondId);
         } else {
-            logger.info(LoggerMessages.isWinner(), firstResult > 0 ? firstName : secondName);
-            logger.info(LoggerMessages.isLoser(), firstResult < 0 ? firstName : secondName);
+            logger.info(LoggerMessages.isWinner(), firstResult > 0 ? firstId: secondId);
+            logger.info(LoggerMessages.isLoser(), firstResult < 0 ? firstId: secondId);
         }
         int deltaScore = firstResult * (minDelta + weight * Math.abs(first.getMyScore() - second.getMyScore() ) );
 
-        accountService.getUser(firstName).increaseScoreOnValue(deltaScore);
-        accountService.getUser(secondName).increaseScoreOnValue(-1 * deltaScore);
+        first.getUser().increaseScoreOnValue(deltaScore);
+        second.getUser().increaseScoreOnValue(-1 * deltaScore);
 
         webSocketService.notifyGameOver(first, firstResult);
         webSocketService.notifyGameOver(second, secondResult);
@@ -141,12 +139,12 @@ public class GameMechanicsImpl implements GameMechanics {
     private void starGame(GameUser first, GameUser second, GameMap nextMap) {
         GameSession gameSession = new GameSession(first, second, nextMap);
         logger.info(LoggerMessages.gameUserPosition(),
-                gameSession.getFirst().getMyName(), gameSession.getFirst().getMyPosition());
+                first.getUser().getLogin(), gameSession.getFirst().getMyPosition());
         logger.info(LoggerMessages.gameUserPosition(),
-                gameSession.getSecond().getMyName(), gameSession.getSecond().getMyPosition());
+                second.getUser().getLogin(), gameSession.getSecond().getMyPosition());
         allSessions.add(gameSession);
-        nameToGame.put(first.getMyName(), gameSession);
-        nameToGame.put(second.getMyName(), gameSession);
+        nameToGame.put(first.getId(), gameSession);
+        nameToGame.put(second.getId(), gameSession);
 
         webSocketService.notifyStartGame(gameSession, first.getMyPosition());
         webSocketService.notifyStartGame(gameSession, second.getMyPosition());

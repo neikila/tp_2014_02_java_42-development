@@ -59,6 +59,7 @@ public class GameMechanicsSettings  implements Serializable, Resource {
             GameMap temp = new GameMap("defaultMap");
             maps.add(temp);
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e);
         }
     }
