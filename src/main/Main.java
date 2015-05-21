@@ -8,6 +8,7 @@ import main.accountService.AccountService;
 import main.accountService.AccountServiceMySQLImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import resource.DbServerSettings;
 import resource.ResourceFactory;
 import resource.ServerSettings;
 import utils.LoggerMessages;
@@ -24,7 +25,7 @@ public class Main {
 
         final Logger logger = LogManager.getLogger(Main.class.getName());
 
-        DBService dbService = new DBServiceImpl();
+        DBService dbService = new DBServiceImpl((DbServerSettings)resourceFactory.getResource("dbServerSettings"));
         context.add(DBService.class, dbService);
 
         ServerSettings serverSettings = (ServerSettings)resourceFactory.getResource("serverSettings");

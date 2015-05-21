@@ -10,10 +10,14 @@ import main.user.UserProfile;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import resource.DbServerSettings;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -24,7 +28,17 @@ public class AccountServiceMySQLImplTest {
 
     @Before
     public void setUp() throws Exception {
-        dbService = new DBServiceImpl();
+        DbServerSettings dbServerSettings = mock(DbServerSettings.class);
+        when(dbServerSettings.getConnectionUrl()).thenReturn("jdbc:mysql://localhost:3306/gameDB");
+
+        when(dbServerSettings.getDialect()).thenReturn("org.hibernate.dialect.MySQLDialect");
+        when(dbServerSettings.getDriverClass()).thenReturn("com.mysql.jdbc.Driver");
+        when(dbServerSettings.getMode()).thenReturn("validate");
+        when(dbServerSettings.getShowSql()).thenReturn("false");
+        when(dbServerSettings.getPassword()).thenReturn("rfrltkf");
+        when(dbServerSettings.getUsername()).thenReturn("gameAdmin");
+
+        dbService = new DBServiceImpl(dbServerSettings);
         Context context = new Context();
         context.add(DBService.class, dbService);
         accountService = new AccountServiceMySQLImpl(context);

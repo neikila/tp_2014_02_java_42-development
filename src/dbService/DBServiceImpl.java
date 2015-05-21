@@ -10,7 +10,6 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import resource.DbServerSettings;
-import resource.ResourceFactory;
 
 import java.util.List;
 
@@ -18,9 +17,7 @@ public class DBServiceImpl implements DBService {
     private SessionFactory sessionFactory;
     private TExecutor tExecutor;
 
-    public DBServiceImpl() {
-        DbServerSettings dbServerSettings = (DbServerSettings)ResourceFactory.instance().getResource("dbServerSettings");
-
+    public DBServiceImpl(DbServerSettings dbServerSettings) {
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(UserProfile.class);
 
