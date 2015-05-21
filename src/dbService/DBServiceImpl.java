@@ -42,14 +42,6 @@ public class DBServiceImpl implements DBService {
         return status;
     }
 
-    public void vipe() {
-        tExecutor.actionVoid(
-                (session, temp) -> {
-                    UserProfileDAO dao = new UserProfileDAO(session);
-                    dao.deleteAll();
-                }, null);
-    }
-
     public void deleteAllUsers() {
         tExecutor.actionVoid(
                 (session, temp) -> {

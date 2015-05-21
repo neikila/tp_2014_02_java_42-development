@@ -34,10 +34,6 @@ public class UserProfileDAO {
         session.createSQLQuery("delete from users").executeUpdate();
     }
 
-    public void vipe() {
-        session.createSQLQuery("truncate table users").executeUpdate();
-    }
-
     @SuppressWarnings("unchecked")
     public List<UserProfile> readAll() {
         Criteria criteria = session.createCriteria(UserProfile.class);

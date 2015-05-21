@@ -4,9 +4,6 @@ import main.user.UserProfile;
 
 import java.util.List;
 
-/**
- * @author v.chibrikov
- */
 public interface DBService {
     String getLocalStatus();
 
@@ -19,8 +16,6 @@ public interface DBService {
     List<UserProfile> readAll();
 
     long countAllUsers();
-
-    void vipe();
 
     void deleteAllUsers();
 
