@@ -45,8 +45,7 @@ public class GameMechanicsImpl implements GameMechanics {
     public void addUser(Id <GameUser> id, UserProfile user) {
         if (waiter == null) {
             Random rand = new Random();
-            //nextMap = rand.nextInt(maps.size());
-            nextMap = 1;
+            nextMap = rand.nextInt(maps.size());
             waiter = new GameUser(id, user);
             waiter.setMyPosition(1);
             userManager.addUser(waiter);

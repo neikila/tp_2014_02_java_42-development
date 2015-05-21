@@ -25,6 +25,7 @@ public class GameMechanicsSettings  implements Serializable, Resource {
         numAmount = 6;
         weight = 10;
         minDelta = 5;
+        maps = new ArrayList<>();
     }
 
     public int getTimeLimit() { return timeLimit; }
@@ -58,6 +59,7 @@ public class GameMechanicsSettings  implements Serializable, Resource {
             GameMap temp = new GameMap("defaultMap");
             maps.add(temp);
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e);
         }
     }
