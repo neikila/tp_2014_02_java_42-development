@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import resource.GameMechanicsSettings;
-import resource.ResourceFactory;
 import utils.LoggerMessages;
 import utils.TimeHelper;
 
@@ -35,10 +34,9 @@ public class GameMechanicsImpl implements GameMechanics {
     private GameUser waiter = null;
     private int nextMap = 0;
 
-    public GameMechanicsImpl(Context context) {
+    public GameMechanicsImpl(Context context, GameMechanicsSettings settings) {
         this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
         this.accountService = (AccountService) context.get(AccountService.class);
-        GameMechanicsSettings settings = (GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings");
         gameTime = settings.getTimeLimit() * 1000;
         weight = settings.getWeight();
         minDelta = settings.getMinDelta();

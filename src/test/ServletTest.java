@@ -20,7 +20,6 @@ import static org.mockito.Mockito.when;
  */
 
 public class ServletTest {
-//    final protected Messages messages;
     protected AccountService accountService;
     protected HttpServletRequest request;
     protected HttpServletResponse response;

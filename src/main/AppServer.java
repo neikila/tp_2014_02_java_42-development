@@ -1,18 +1,22 @@
 package main;
 
-import mechanics.GameMechanics;
-import frontend.game.WebSocketService;
 import frontend.*;
-import frontend.game.*;
+import frontend.game.GameServlet;
+import frontend.game.WebSocketGameServlet;
+import frontend.game.WebSocketService;
+import frontend.game.WebSocketServiceImpl;
+import mechanics.GameMechanics;
 import mechanics.GameMechanicsImpl;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.apache.logging.log4j.Logger;
+import resource.GameMechanicsSettings;
+import resource.ResourceFactory;
 
 public class AppServer {
 
@@ -39,7 +43,8 @@ public class AppServer {
 
         WebSocketService webSocketService = new WebSocketServiceImpl();
         contextGlobal.add(WebSocketService.class, webSocketService);
-        gameMechanics = new GameMechanicsImpl(contextGlobal);
+        GameMechanicsSettings gameMechanicsSettings = (GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings");
+        gameMechanics = new GameMechanicsImpl(contextGlobal, gameMechanicsSettings);
         contextGlobal.add(GameMechanics.class, gameMechanics);
 
         context.addServlet(new ServletHolder(new WebSocketGameServlet(contextGlobal)), "/gameplay");
