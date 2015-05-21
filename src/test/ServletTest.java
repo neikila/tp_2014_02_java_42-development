@@ -27,29 +27,6 @@ public class ServletTest {
     protected StringWriter stringWriter;
 
     public ServletTest() {
-
-//        messages = mock(Messages.class); //(Messages) ResourceFactory.instance().getResource("messages")
-//
-//        when(messages.adminPage()).thenReturn("Admin page");
-//        when(messages.notFound()).thenReturn("404: Not Found.");
-//        when(messages.wrongParamAction()).thenReturn("Wrong 'action'");
-//        when(messages.notAuthorised()).thenReturn("Not Authorised");
-//        when(messages.logInStatus()).thenReturn("Log In:");
-//        when(messages.alreadyLoggedIn()).thenReturn("You has already Logged In");
-//        when(messages.block()).thenReturn("Authorization and signing up is blocked");
-//        when(messages.wrongPasOrLogin()).thenReturn("Wrong password or login");
-//        when(messages.fillAllTheGaps()).thenReturn("Fill all the gaps, please:");
-//        when(messages.logOutFirst()).thenReturn("You have to logout before signing up.");
-//        when(messages.exist()).thenReturn("Such user already exists");
-//        when(messages.wrongSignUpData()).thenReturn("Wrong sign Up data");
-//        when(messages.wrongLimit()).thenReturn("WrongLimit");
-//        when(messages.askToSignIn()).thenReturn("You haven't signed up yet. Please, do it.");
-//        when(messages.JSONStatusIncrement()).thenReturn("increment");
-//        when(messages.JSONStatusFinish()).thenReturn("finish");
-//        when(messages.JSONStatusResult()).thenReturn("result");
-//        when(messages.JSONStatusStart()).thenReturn("start");
-//        when(messages.JSONStatusSettings()).thenReturn("settings");
-
     }
 
     public AccountService getAccountService() {

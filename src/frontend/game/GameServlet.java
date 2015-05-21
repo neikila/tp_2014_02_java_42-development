@@ -4,8 +4,8 @@ import main.Context;
 import main.accountService.AccountService;
 import main.user.UserProfile;
 import org.apache.logging.log4j.Logger;
-import utils.Messages;
 import utils.LoggerMessages;
+import utils.Messages;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,13 +17,11 @@ import java.util.Map;
 
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.apache.logging.log4j.LogManager.getLogger;
-import static resource.ResourceFactory.instance;
 import static utils.PageGenerator.getPage;
 
 public class GameServlet extends HttpServlet {
 
     final private Logger logger = getLogger(GameServlet.class.getName());
-    final private Messages messages = (Messages) instance().getResource("messages");
     final private AccountService accountService;
 
     public GameServlet(Context context) {
@@ -46,7 +44,7 @@ public class GameServlet extends HttpServlet {
             response.getWriter().println(getPage("game.html", pageVariables));
         } else {
             logger.info(LoggerMessages.notAuthorised());
-            pageVariables.put("loginStatus", messages.askToSignIn());
+            pageVariables.put("loginStatus", Messages.askToSignIn());
             response.getWriter().println(getPage("authstatus.html", pageVariables));
         }
         logger.info(LoggerMessages.doPostFinish());

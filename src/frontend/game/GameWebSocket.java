@@ -12,18 +12,16 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.json.simple.JSONObject;
-import utils.Messages;
 import utils.LoggerMessages;
+import utils.Messages;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
-import static resource.ResourceFactory.instance;
 import static utils.JsonInterpreterFromRequest.getJsonFromString;
 
 @WebSocket
 public class GameWebSocket {
 
     final private Logger logger = getLogger(GameWebSocket.class.getName());
-    final private Messages messages = (Messages) instance().getResource("messages");
 
     final private String myName;
     final private GameMechanics gameMechanics;
@@ -62,7 +60,7 @@ public class GameWebSocket {
 
     public void settings(GameMap map) {
         JSONObject jsonStart = new JSONObject();
-        jsonStart.put("status", messages.JSONStatusSettings());
+        jsonStart.put("status", Messages.JSONStatusSettings());
         jsonStart.put("map", map);
         sendJSON(jsonStart);
     }
@@ -70,7 +68,7 @@ public class GameWebSocket {
     public void startGame(GameSession session, int position) {
         String sequence = "123123123123";
         JSONObject jsonStart = new JSONObject();
-        jsonStart.put("status", messages.JSONStatusStart());
+        jsonStart.put("status", Messages.JSONStatusStart());
         jsonStart.put("position", position);
         jsonStart.put("enemyName", session.getEnemy(position).getMyName());
         jsonStart.put("sequence", sequence.substring(0, sequence.length() - 3) + "&#x200B;" + sequence.substring(sequence.length() - 3, sequence.length()));
@@ -80,7 +78,7 @@ public class GameWebSocket {
     public void gameOver(GameUser user, int result) {
         gameSessionClosed = true;
         JSONObject jsonEnd = new JSONObject();
-        jsonEnd.put("status", messages.JSONStatusFinish());
+        jsonEnd.put("status", Messages.JSONStatusFinish());
         jsonEnd.put("result", result);
         sendJSON(jsonEnd);
     }
@@ -109,7 +107,7 @@ public class GameWebSocket {
 
     public void setMyScore(GameUser user) {
         JSONObject jsonStart = new JSONObject();
-        jsonStart.put("status", messages.JSONStatusIncrement());
+        jsonStart.put("status", Messages.JSONStatusIncrement());
         jsonStart.put("name", user.getMyName());
         jsonStart.put("score", user.getMyScore());
         sendJSON(jsonStart);
@@ -117,7 +115,7 @@ public class GameWebSocket {
 
     public void setMyResult(String result) {
         JSONObject jsonStart = new JSONObject();
-        jsonStart.put("status", messages.JSONStatusResult());
+        jsonStart.put("status", Messages.JSONStatusResult());
         jsonStart.put("result", result);
         sendJSON(jsonStart);
     }
