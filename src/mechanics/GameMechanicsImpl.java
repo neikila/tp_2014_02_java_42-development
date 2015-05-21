@@ -66,7 +66,7 @@ public class GameMechanicsImpl implements GameMechanics {
             webSocketService.sendSettings(waiter, maps.get(nextMap));
 
             starGame(waiter, secondPlayer, maps.get(nextMap));
-
+            logger.info("Map Number: {}", nextMap);
             waiter = null;
         }
     }
