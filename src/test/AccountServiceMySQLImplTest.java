@@ -58,6 +58,20 @@ public class AccountServiceMySQLImplTest {
     }
 
     @Test
+    public void testCreateTest() throws Exception {
+        String login = "qwerty";
+        String password = "qwerty";
+        String email = "qwerty@mail.ru";
+        UserProfile profile = new UserProfile(login, password, email);
+        profile.setAdmin(false);
+        profile.setScore(500);
+
+        accountService.createTestAccount();
+
+        assertEquals(profile, accountService.getUser(login));
+    }
+
+    @Test
     public void testAddUserIfAlreadyExist() throws Exception {
         UserProfile user = new UserProfile("test1234", "test1234", "neikila@gmail.com");
 
