@@ -29,8 +29,7 @@ public class AccountServiceMySQLImplTest {
     @Before
     public void setUp() throws Exception {
         DbServerSettings dbServerSettings = mock(DbServerSettings.class);
-        when(dbServerSettings.getConnectionUrl()).thenReturn("jdbc:mysql://localhost:3306/gameDB");
-
+        when(dbServerSettings.getConnectionUrl()).thenReturn("jdbc:mysql://localhost:3306/gameTestDB");
         when(dbServerSettings.getDialect()).thenReturn("org.hibernate.dialect.MySQLDialect");
         when(dbServerSettings.getDriverClass()).thenReturn("com.mysql.jdbc.Driver");
         when(dbServerSettings.getMode()).thenReturn("validate");
