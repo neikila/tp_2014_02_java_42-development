@@ -1,5 +1,6 @@
 package test;
 
+import main.Context;
 import main.accountService.AccountService;
 import main.accountService.AccountServiceImpl;
 import main.user.UserProfile;
@@ -29,8 +30,7 @@ public class ServletTest {
     }
 
     public AccountService getAccountService() {
-        AccountService accountService = new AccountServiceImpl();
-        return accountService;
+        return new AccountServiceImpl(new Context());
     }
 
     public AccountService getAccountService(UserProfile user) {

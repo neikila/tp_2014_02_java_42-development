@@ -1,4 +1,5 @@
 <class type='resource.ServerSettings'>
     <port>8080</port>
     <mode>Development</mode>
+    <ASType>temp</ASType>
 </class>

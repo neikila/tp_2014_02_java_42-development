@@ -5,7 +5,9 @@ import MBean.AccountServiceControllerMBean;
 import dbService.DBService;
 import dbService.DBServiceImpl;
 import main.accountService.AccountService;
+import main.accountService.AccountServiceImpl;
 import main.accountService.AccountServiceMySQLImpl;
+import messageSystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import resource.DbServerSettings;
@@ -25,13 +27,17 @@ public class Main {
 
         final Logger logger = LogManager.getLogger(Main.class.getName());
 
-        DBService dbService = new DBServiceImpl((DbServerSettings)resourceFactory.getResource("dbServerSettings"));
-        context.add(DBService.class, dbService);
-
         ServerSettings serverSettings = (ServerSettings)resourceFactory.getResource("serverSettings");
         int port = serverSettings.getPort();
 
-        AccountService accountService = new AccountServiceMySQLImpl(context);
+        if (serverSettings.isASTypeOfDatabase()) {
+            DBService dbService = new DBServiceImpl((DbServerSettings) resourceFactory.getResource("dbServerSettings"));
+            context.add(DBService.class, dbService);
+        }
+
+        final MessageSystem messageSystem = new MessageSystem();
+
+        AccountService accountService = serverSettings.isASTypeOfDatabase() ? new AccountServiceMySQLImpl(context) : new AccountServiceImpl(context) ;
         accountService.createAdmin();
 
         if (serverSettings.isProduction())

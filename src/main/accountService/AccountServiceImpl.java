@@ -1,5 +1,6 @@
 package main.accountService;
 
+import main.Context;
 import main.user.UserComparatorByScore;
 import main.user.UserProfile;
 
@@ -9,6 +10,9 @@ public class AccountServiceImpl implements AccountService {
     final private Map<String, UserProfile> users = new HashMap<>();
     final private Map<String, UserProfile> sessions = new HashMap<>();
     final private Map<String, UserProfile> sessionsWithUserAsKey = new HashMap<>();
+
+    public AccountServiceImpl(Context context) {
+    }
 
     public boolean addUser(String userName, UserProfile userProfile) {
         return (!users.containsKey(userName) && (users.put(userName, userProfile) == null));
@@ -93,7 +97,6 @@ public class AccountServiceImpl implements AccountService {
                 }
             }
         }
-        List <UserProfile> list = new ArrayList<>(FirstFour);
-        return list;
+        return new ArrayList<>(FirstFour);
     }
 }

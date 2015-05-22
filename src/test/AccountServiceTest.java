@@ -1,5 +1,6 @@
 package test;
 
+import main.Context;
 import main.accountService.AccountService;
 import main.accountService.AccountServiceImpl;
 import main.user.UserComparatorByScore;
@@ -20,7 +21,7 @@ public class AccountServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        accountService = new AccountServiceImpl();
+        accountService = new AccountServiceImpl(new Context());
     }
 
     @After
