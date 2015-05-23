@@ -58,6 +58,14 @@ public class DBServiceImpl implements DBService {
                 }, dataSet);
     }
 
+    public void update(UserProfile dataSet) {
+        tExecutor.actionVoid(
+                (session, temp) -> {
+                    UserProfileDAO dao = new UserProfileDAO(session);
+                    dao.update(temp);
+                }, dataSet);
+    }
+
     public UserProfile readUser(long id) {
         return tExecutor.action(
                 (session, temp) -> {

@@ -2,7 +2,11 @@ package mechanics;
 
 import frontend.game.WebSocketService;
 import main.Context;
+import main.accountService.AccountService;
 import main.user.UserProfile;
+import messageSystem.Abonent;
+import messageSystem.Address;
+import messageSystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -13,8 +17,13 @@ import utils.TimeHelper;
 
 import java.util.*;
 
-public class GameMechanicsImpl implements GameMechanics {
+public final class GameMechanicsImpl implements GameMechanics, Abonent, Runnable {
     final private Logger logger = LogManager.getLogger(GameMechanics.class.getName());
+
+    Address address = new Address();
+    final private MessageSystem messageSystem;
+
+    final private AccountService accountService;
 
     private static final int STEP_TIME = 100;
 
@@ -35,7 +44,14 @@ public class GameMechanicsImpl implements GameMechanics {
     private int nextMap = 0;
 
     public GameMechanicsImpl(Context context, GameMechanicsSettings settings) {
+        this.messageSystem = (MessageSystem) context.get(MessageSystem.class);
+        messageSystem.addService(this);
+        messageSystem.getAddressService().registerGameMechanics(this);
+
+        accountService = (AccountService) context.get(AccountService.class);
+
         this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
+
         gameTime = settings.getTimeLimit() * 1000;
         weight = settings.getWeight();
         minDelta = settings.getMinDelta();
@@ -125,8 +141,11 @@ public class GameMechanicsImpl implements GameMechanics {
         }
         int deltaScore = firstResult * (minDelta + weight * Math.abs(first.getMyScore() - second.getMyScore() ) );
 
-        first.getUser().increaseScoreOnValue(deltaScore);
-        second.getUser().increaseScoreOnValue(-1 * deltaScore);
+        // TODO не забыть про 123 =)
+        first.getUser().increaseScoreOnValue(deltaScore + 123);
+        second.getUser().increaseScoreOnValue(-1 * deltaScore - 123);
+        accountService.updateUser(first.getUser());
+        accountService.updateUser(second.getUser());
 
         webSocketService.notifyGameOver(first, firstResult);
         webSocketService.notifyGameOver(second, secondResult);
@@ -149,4 +168,9 @@ public class GameMechanicsImpl implements GameMechanics {
         webSocketService.notifyStartGame(gameSession, first.getMyPosition());
         webSocketService.notifyStartGame(gameSession, second.getMyPosition());
     }
+
+    public Address getAddress() {
+        return address;
+    }
+
 }

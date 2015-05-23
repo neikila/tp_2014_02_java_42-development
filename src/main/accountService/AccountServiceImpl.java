@@ -3,15 +3,25 @@ package main.accountService;
 import main.Context;
 import main.user.UserComparatorByScore;
 import main.user.UserProfile;
+import messageSystem.Abonent;
+import messageSystem.Address;
+import messageSystem.MessageSystem;
+import utils.TimeHelper;
 
 import java.util.*;
 
-public class AccountServiceImpl implements AccountService {
+public class AccountServiceImpl implements AccountService, Abonent, Runnable  {
     final private Map<String, UserProfile> users = new HashMap<>();
     final private Map<String, UserProfile> sessions = new HashMap<>();
     final private Map<String, UserProfile> sessionsWithUserAsKey = new HashMap<>();
 
+    final private MessageSystem messageSystem;
+    final private Address address;
+
     public AccountServiceImpl(Context context) {
+        address = new Address();
+        messageSystem = (MessageSystem) context.get(MessageSystem.class);
+        messageSystem.addService(this);
     }
 
     public boolean addUser(String userName, UserProfile userProfile) {
@@ -98,5 +108,19 @@ public class AccountServiceImpl implements AccountService {
             }
         }
         return new ArrayList<>(FirstFour);
+    }
+
+    public void updateUser(UserProfile userProfile) {
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            TimeHelper.sleep(100);
+        }
+    }
+
+    public Address getAddress (){
+        return address;
     }
 }

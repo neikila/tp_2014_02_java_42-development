@@ -1,11 +1,13 @@
 package messageSystem;
 
+import main.accountService.AccountService;
+import mechanics.GameMechanics;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class AddressService {
-    private Address frontEnd;
     private Address gameMechanics;
     private List<Address> accountServiceList = new ArrayList<>();
 
@@ -15,17 +17,27 @@ public final class AddressService {
 //        this.frontEnd = frontEnd.getAddress();
 //    }
 
-//    public void registerGameMechanics(GameMechanics gameMechanics) {
-//        this.gameMechanics = gameMechanics.getAddress();
-//    }
+    public boolean registerGameMechanics(Abonent gameMechanics) {
+        if (gameMechanics instanceof GameMechanics) {
+            this.gameMechanics = gameMechanics.getAddress();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean registerAccountService(Abonent accountService) {
+        if (accountService instanceof AccountService) {
+            accountServiceList.add(accountService.getAddress());
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 //    public void registerAccountService(AccountService accountService) {
 //        accountServiceList.add(accountService.getAddress());
 //    }
-
-    public Address getFrontEndAddress() {
-        return frontEnd;
-    }
 
     public Address getGameMechanicsAddress() {
         return gameMechanics;

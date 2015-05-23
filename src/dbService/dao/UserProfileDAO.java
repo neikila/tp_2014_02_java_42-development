@@ -21,6 +21,11 @@ public class UserProfileDAO {
         session.close();
     }
 
+    public void update(UserProfile dataSet) {
+        session.update(dataSet);
+        session.flush();
+        session.close();
+    }
     public UserProfile read(long id) {
         return (UserProfile) session.load(UserProfile.class, id);
     }

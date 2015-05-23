@@ -36,11 +36,12 @@ public class Main {
         }
 
         final MessageSystem messageSystem = new MessageSystem();
+        context.add(MessageSystem.class, messageSystem);
 
         AccountService accountService = serverSettings.isASTypeOfDatabase() ? new AccountServiceMySQLImpl(context) : new AccountServiceImpl(context) ;
         accountService.createAdmin();
 
-        if (serverSettings.isProduction())
+        if (!serverSettings.isProduction())
             accountService.createTestAccount();
 
         context.add(AccountService.class, accountService);

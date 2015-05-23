@@ -43,6 +43,7 @@ public class AppServer {
 
         WebSocketService webSocketService = new WebSocketServiceImpl();
         contextGlobal.add(WebSocketService.class, webSocketService);
+
         GameMechanicsSettings gameMechanicsSettings = (GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings");
         gameMechanics = new GameMechanicsImpl(contextGlobal, gameMechanicsSettings);
         contextGlobal.add(GameMechanics.class, gameMechanics);

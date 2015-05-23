@@ -30,5 +30,7 @@ public interface AccountService {
 
     public void createTestAccount();
 
+    public void updateUser(UserProfile user);
+
     public List<UserProfile> getFirstPlayersByScore(int limit);
 }

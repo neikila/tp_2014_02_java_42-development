@@ -9,6 +9,8 @@ public interface DBService {
 
     void save(UserProfile dataSet);
 
+    void update(UserProfile dataSet);
+
     UserProfile readUser(long id);
 
     UserProfile readUserByName(String name);

@@ -3,17 +3,27 @@ package main.accountService;
 import dbService.DBService;
 import main.Context;
 import main.user.UserProfile;
+import messageSystem.Abonent;
+import messageSystem.Address;
+import messageSystem.MessageSystem;
+import utils.TimeHelper;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AccountServiceMySQLImpl implements AccountService {
+public class AccountServiceMySQLImpl implements AccountService, Abonent, Runnable {
     final private DBService dbService;
     final private Map<String, UserProfile> sessions = new HashMap<>();
     final private Map<String, UserProfile> sessionsWithUserAsKey = new HashMap<>();
 
+    final private MessageSystem messageSystem;
+    final private Address address;
+
     public AccountServiceMySQLImpl(Context context) {
+        address = new Address();
+        messageSystem = (MessageSystem) context.get(MessageSystem.class);
+        messageSystem.addService(this);
         dbService = (DBService) context.get(DBService.class);
     }
 
@@ -89,5 +99,20 @@ public class AccountServiceMySQLImpl implements AccountService {
 
     public List<UserProfile> getFirstPlayersByScore(int limit) {
         return dbService.readLimitOrder(limit);
+    }
+
+    public void updateUser(UserProfile userProfile) {
+        dbService.update(userProfile);
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            TimeHelper.sleep(100);
+        }
+    }
+
+    public Address getAddress (){
+        return address;
     }
 }
