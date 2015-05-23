@@ -57,10 +57,12 @@ public class Main {
         logger.info(LoggerMessages.serverStart(), (String.valueOf(port)));
 
         AppServer server = new AppServer(context, port);
+//        context.add(AppServer.class, server);
 
         final Thread accountServiceThread = new Thread(new AccountService(context));
-        accountServiceThread.setDaemon(true);
-        accountServiceThread.setName("Account Service");
+        accountServiceThread.setDaemon(false);
+        accountServiceThread.setName("AccountService");
+//        context.add(AccountService.class, accountServiceThread);
 
         accountServiceThread.start();
         server.start();
@@ -72,7 +74,8 @@ public class Main {
 
         final Thread gameMechanicsThread = new Thread(new GameMechanics(context));
         gameMechanicsThread.setDaemon(false);
-        gameMechanicsThread.setName("Game Mechanics");
+        gameMechanicsThread.setName("GameMechanics");
+//        context.add(GameMechanics.class, gameMechanicsThread);
 
         gameMechanicsThread.start();
 

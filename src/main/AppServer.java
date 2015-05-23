@@ -54,7 +54,6 @@ public class AppServer {
     public void start(){
         try {
             server.start();
-            // TODO перенести в xml
         } catch (Exception e) {
             logger.fatal("There is an error in Server.Start()");
             logger.fatal(e);
