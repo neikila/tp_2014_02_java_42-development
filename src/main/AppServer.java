@@ -5,8 +5,6 @@ import frontend.game.GameServlet;
 import frontend.game.WebSocketGameServlet;
 import frontend.game.WebSocketService;
 import frontend.game.WebSocketServiceImpl;
-import mechanics.GameMechanics;
-import mechanics.GameMechanicsImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Handler;
@@ -15,14 +13,11 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import resource.GameMechanicsSettings;
-import resource.ResourceFactory;
 
 public class AppServer {
 
     static final Logger logger = LogManager.getLogger(AppServer.class.getName());
 
-    private GameMechanics gameMechanics;
     private Server server;
 
     public AppServer(Context contextGlobal, int port) {
@@ -44,10 +39,6 @@ public class AppServer {
         WebSocketService webSocketService = new WebSocketServiceImpl();
         contextGlobal.add(WebSocketService.class, webSocketService);
 
-        GameMechanicsSettings gameMechanicsSettings = (GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings");
-        gameMechanics = new GameMechanicsImpl(contextGlobal, gameMechanicsSettings);
-        contextGlobal.add(GameMechanics.class, gameMechanics);
-
         context.addServlet(new ServletHolder(new WebSocketGameServlet(contextGlobal)), "/gameplay");
         context.addServlet(new ServletHolder(new GameServlet(contextGlobal)), "/game.html");
 
@@ -66,7 +57,6 @@ public class AppServer {
             // TODO перенести в xml
             logger.info("Start");
             logger.info("Threads in process");
-            gameMechanics.run();
         } catch (Exception e) {
             logger.fatal("There is an error in Server.Start()");
             logger.fatal(e);

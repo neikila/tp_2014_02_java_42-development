@@ -7,10 +7,13 @@ import dbService.DBServiceImpl;
 import main.accountService.AccountService;
 import main.accountService.AccountServiceImpl;
 import main.accountService.AccountServiceMySQLImpl;
+import mechanics.GameMechanics;
+import mechanics.GameMechanicsImpl;
 import messageSystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import resource.DbServerSettings;
+import resource.GameMechanicsSettings;
 import resource.ResourceFactory;
 import resource.ServerSettings;
 import utils.LoggerMessages;
@@ -46,12 +49,34 @@ public class Main {
 
         context.add(AccountService.class, accountService);
 
+
+        GameMechanics gameMechanics;
+        GameMechanicsSettings gameMechanicsSettings = (GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings");
+        gameMechanics = new GameMechanicsImpl(context, gameMechanicsSettings);
+        context.add(GameMechanics.class, gameMechanics);
+
         startMBean(context);
 
         logger.info(LoggerMessages.serverStart(), (String.valueOf(port)));
 
         AppServer server = new AppServer(context, port);
         server.start();
+        gameMechanics.run();
+
+//        final Thread accountServiceThread = new Thread();
+//        accountServiceThread.setDaemon(true);
+//        accountServiceThread.setName("Account Service");
+//        final Thread gameMechanicsThread = new Thread(new GameMechanics(messageSystem));
+//        gameMechanicsThread.setDaemon(true);
+//        gameMechanicsThread.setName("Game Mechanics");
+//        final FrontEnd frontEnd = new FrontEnd(messageSystem);
+//        final Thread frontEndThread = new Thread(frontEnd);
+//        frontEndThread.setDaemon(true);
+//        frontEndThread.setName("FrontEnd");
+//
+//        accountServiceThread.start();
+//        gameMechanicsThread.start();
+//        frontEndThread.start();
     }
 
     private static void startMBean(Context context) throws Exception{

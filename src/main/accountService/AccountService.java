@@ -1,6 +1,7 @@
 package main.accountService;
 
 import main.user.UserProfile;
+import messageSystem.MessageSystem;
 
 import java.util.List;
 
@@ -33,4 +34,7 @@ public interface AccountService {
     public void updateUser(UserProfile user);
 
     public List<UserProfile> getFirstPlayersByScore(int limit);
+
+    // TODO перенести в объект управления потока account service, собственно заодно и сделать его ;-)
+    public MessageSystem getMessageSystem();
 }

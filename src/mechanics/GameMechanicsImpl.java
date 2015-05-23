@@ -3,9 +3,11 @@ package mechanics;
 import frontend.game.WebSocketService;
 import main.Context;
 import main.accountService.AccountService;
+import main.accountService.MessageUpdateProfile;
 import main.user.UserProfile;
 import messageSystem.Abonent;
 import messageSystem.Address;
+import messageSystem.Message;
 import messageSystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,11 +46,11 @@ public final class GameMechanicsImpl implements GameMechanics, Abonent, Runnable
     private int nextMap = 0;
 
     public GameMechanicsImpl(Context context, GameMechanicsSettings settings) {
+        accountService = (AccountService) context.get(AccountService.class);
+
         this.messageSystem = (MessageSystem) context.get(MessageSystem.class);
         messageSystem.addService(this);
         messageSystem.getAddressService().registerGameMechanics(this);
-
-        accountService = (AccountService) context.get(AccountService.class);
 
         this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
 
@@ -144,8 +146,11 @@ public final class GameMechanicsImpl implements GameMechanics, Abonent, Runnable
         // TODO не забыть про 123 =)
         first.getUser().increaseScoreOnValue(deltaScore + 123);
         second.getUser().increaseScoreOnValue(-1 * deltaScore - 123);
+
         accountService.updateUser(first.getUser());
+        updateUser(first.getUser());
         accountService.updateUser(second.getUser());
+        updateUser(second.getUser());
 
         webSocketService.notifyGameOver(first, firstResult);
         webSocketService.notifyGameOver(second, secondResult);
@@ -173,4 +178,8 @@ public final class GameMechanicsImpl implements GameMechanics, Abonent, Runnable
         return address;
     }
 
+    private void updateUser(UserProfile user) {
+        Message updateMes = new MessageUpdateProfile(this.getAddress(), messageSystem.getAddressService().getAccountServiceAddress(), user);
+        messageSystem.sendMessage(updateMes);
+    }
 }

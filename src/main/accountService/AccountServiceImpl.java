@@ -6,7 +6,6 @@ import main.user.UserProfile;
 import messageSystem.Abonent;
 import messageSystem.Address;
 import messageSystem.MessageSystem;
-import utils.TimeHelper;
 
 import java.util.*;
 
@@ -113,10 +112,19 @@ public class AccountServiceImpl implements AccountService, Abonent, Runnable  {
     public void updateUser(UserProfile userProfile) {
     }
 
+    public MessageSystem getMessageSystem() {
+        return messageSystem;
+    }
+
     @Override
     public void run() {
-        while (true) {
-            TimeHelper.sleep(100);
+        while (true){
+            messageSystem.execForAbonent(this);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

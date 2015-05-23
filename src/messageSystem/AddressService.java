@@ -35,10 +35,6 @@ public final class AddressService {
         }
     }
 
-//    public void registerAccountService(AccountService accountService) {
-//        accountServiceList.add(accountService.getAddress());
-//    }
-
     public Address getGameMechanicsAddress() {
         return gameMechanics;
     }

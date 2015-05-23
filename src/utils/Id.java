@@ -14,4 +14,9 @@ public class Id <T>{
     public String toString() {
         return "" + id;
     }
+
+    @Override
+    public int hashCode() {
+        return (int)id;
+    }
 }
