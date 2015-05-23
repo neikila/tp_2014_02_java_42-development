@@ -62,14 +62,25 @@ public class AppServer {
         }
     }
 
+//    @Override
+//    public void interrupt() {
+//        try {
+//            server.stop();
+//        } catch (Exception e) {
+//            System.out.println("Bye-bye");
+////            System.exit(0);
+//        }
+//    }
+
     public void stop(){
         try {
-            System.exit(0);
+            server.stop();
+//            System.exit(0);
         } catch (Exception e) {
             logger.fatal("There is an error in Server.Stop()");
             logger.fatal(e);
-            e.printStackTrace();
-            System.exit(1);
+//            e.printStackTrace();
+//            System.exit(1);
         }
     }
 }

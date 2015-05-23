@@ -40,6 +40,7 @@ public final class AccountService implements Abonent, Runnable {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                return;
             }
         }
     }

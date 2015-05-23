@@ -19,6 +19,7 @@ import resource.GameMechanicsSettings;
 import resource.ResourceFactory;
 import resource.ServerSettings;
 import utils.LoggerMessages;
+import utils.ThreadManager;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -56,13 +57,16 @@ public class Main {
 
         logger.info(LoggerMessages.serverStart(), (String.valueOf(port)));
 
+        ThreadManager threadManager = new ThreadManager();
+        context.add(ThreadManager.class, threadManager);
         AppServer server = new AppServer(context, port);
-//        context.add(AppServer.class, server);
+        threadManager.setFrontEndThread(server);
 
         final Thread accountServiceThread = new Thread(new AccountService(context));
         accountServiceThread.setDaemon(false);
         accountServiceThread.setName("AccountService");
 //        context.add(AccountService.class, accountServiceThread);
+        threadManager.addASThread(accountServiceThread);
 
         accountServiceThread.start();
         server.start();
@@ -75,6 +79,7 @@ public class Main {
         final Thread gameMechanicsThread = new Thread(new GameMechanics(context));
         gameMechanicsThread.setDaemon(false);
         gameMechanicsThread.setName("GameMechanics");
+        threadManager.addGMThread(gameMechanicsThread);
 //        context.add(GameMechanics.class, gameMechanicsThread);
 
         gameMechanicsThread.start();

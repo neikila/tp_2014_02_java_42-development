@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import utils.Messages;
 import utils.PageGenerator;
+import utils.ThreadManager;
 import utils.TimeHelper;
 
 import javax.servlet.ServletException;
@@ -25,8 +26,10 @@ public class AdminServlet extends HttpServlet{
 
     final private Logger logger = LogManager.getLogger(AdminServlet.class.getName());
     final private AccountServiceDAO accountServiceDAO;
+    final private ThreadManager threadManager;
 
     public AdminServlet(Context contextGlobal) {
+        this.threadManager = (ThreadManager)contextGlobal.get(ThreadManager.class);
         this.accountServiceDAO = (AccountServiceDAO)contextGlobal.get(AccountServiceDAO.class);
     }
 
@@ -112,7 +115,9 @@ public class AdminServlet extends HttpServlet{
     }
 
     protected void StopServers() {
+        threadManager.interruptThreads();
+        System.out.println("I hope we are stopping");
         TimeHelper.sleep(100);
-        System.exit(0);
+        //System.exit(0);
     }
 }
