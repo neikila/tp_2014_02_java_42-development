@@ -3,7 +3,7 @@ package frontend.game;
 import main.Context;
 import main.user.UserProfile;
 import mechanics.GameMap;
-import mechanics.GameMechanics;
+import mechanics.GameMechanicsDAO;
 import mechanics.GameSession;
 import mechanics.GameUser;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +26,7 @@ public class GameWebSocket {
     final private Logger logger = getLogger(GameWebSocket.class.getName());
 
     final private UserProfile user;
-    final private GameMechanics gameMechanics;
+    final private GameMechanicsDAO gameMechanicsDAO;
     final private WebSocketService webSocketService;
     final private Id<GameUser> id;
     private Session session;
@@ -35,7 +35,7 @@ public class GameWebSocket {
     private boolean gameSessionClosed;
 
     public GameWebSocket(UserProfile userProfile, Context context) {
-        this.gameMechanics = (GameMechanics) context.get(GameMechanics.class);
+        this.gameMechanicsDAO = (GameMechanicsDAO) context.get(GameMechanicsDAO.class);
         this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
         this.user = userProfile;
         this.id = new Id<>(user.getId());
@@ -93,7 +93,7 @@ public class GameWebSocket {
     public void onMessage(String data) {
         if (!gameSessionClosed) {
             JSONObject message = getJsonFromString(data);
-            gameMechanics.analyzeMessage(id, message);
+            gameMechanicsDAO.analyzeMessage(id, message);
         }
     }
 
@@ -104,7 +104,7 @@ public class GameWebSocket {
         logger.info(LoggerMessages.onOpen(), user.getLogin());
         setSession(session);
         webSocketService.addUser(this);
-        gameMechanics.addUser(id, user);
+        gameMechanicsDAO.addUser(id, user);
     }
 
     public void setMyScore(GameUser user) {

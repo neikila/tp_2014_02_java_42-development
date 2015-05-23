@@ -9,7 +9,8 @@ import main.accountService.AccountServiceDAO;
 import main.accountService.AccountServiceDAOImpl;
 import main.accountService.AccountServiceDAOMySQLImpl;
 import mechanics.GameMechanics;
-import mechanics.GameMechanicsImpl;
+import mechanics.GameMechanicsDAO;
+import mechanics.GameMechanicsDAOImpl;
 import messageSystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -62,26 +63,22 @@ public class Main {
         accountServiceThread.setName("Account Service");
 
         accountServiceThread.start();
-//        final Thread gameMechanicsThread = new Thread(new GameMechanics(messageSystem));
-//        gameMechanicsThread.setDaemon(true);
-//        gameMechanicsThread.setName("Game Mechanics");
-//        final FrontEnd frontEnd = new FrontEnd(messageSystem);
-//        final Thread frontEndThread = new Thread(frontEnd);
-//        frontEndThread.setDaemon(true);
-//        frontEndThread.setName("FrontEnd");
-//
-//        accountServiceThread.start();
-//        gameMechanicsThread.start();
-//        frontEndThread.start();
         server.start();
-        logger.info("Threads in process");
 
-        GameMechanics gameMechanics;
+        GameMechanicsDAO gameMechanicsDAO;
         GameMechanicsSettings gameMechanicsSettings = (GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings");
-        gameMechanics = new GameMechanicsImpl(context, gameMechanicsSettings);
-        context.add(GameMechanics.class, gameMechanics);
+        gameMechanicsDAO = new GameMechanicsDAOImpl(context, gameMechanicsSettings);
+        context.add(GameMechanicsDAO.class, gameMechanicsDAO);
 
-        gameMechanics.run();
+        final Thread gameMechanicsThread = new Thread(new GameMechanics(context));
+        gameMechanicsThread.setDaemon(false);
+        gameMechanicsThread.setName("Game Mechanics");
+
+        gameMechanicsThread.start();
+
+        logger.info("version: Threads in process");
+        logger.info("Start");
+        gameMechanicsThread.join();
     }
 
     private static void startMBean(Context context) throws Exception{

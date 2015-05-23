@@ -1,7 +1,8 @@
-package main.accountService;
+package main.accountService.messages;
 
+import main.accountService.AccountService;
 import main.user.UserProfile;
-import mechanics.MessageUpdateResult;
+import mechanics.messages.MessageUpdateResult;
 import messageSystem.Address;
 import messageSystem.Message;
 

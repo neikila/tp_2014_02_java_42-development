@@ -1,5 +1,6 @@
-package mechanics;
+package mechanics.messages;
 
+import mechanics.GameMechanics;
 import messageSystem.Address;
 
 public final class MessageUpdateResult extends MessageToGameMechanics {

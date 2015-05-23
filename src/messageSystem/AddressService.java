@@ -8,30 +8,31 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class AddressService {
-    private Address gameMechanics;
     private List<Address> accountServiceList = new ArrayList<>();
+    private List<Address> gameMechanicsList = new ArrayList<>();
 
     private AtomicInteger accountServiceCounter = new AtomicInteger();
+    private AtomicInteger gameMechanicsCounter= new AtomicInteger();
 
 //    public void registerFrontEnd(FrontEnd frontEnd) {
 //        this.frontEnd = frontEnd.getAddress();
 //    }
 
-    public boolean registerGameMechanics(Abonent gameMechanics) {
-        if (gameMechanics instanceof GameMechanics) {
-            this.gameMechanics = gameMechanics.getAddress();
-            return true;
-        } else {
-            return false;
-        }
+    public void registerGameMechanics(GameMechanics gameMechanics) {
+        gameMechanicsList.add(gameMechanics.getAddress());
     }
 
     public void registerAccountService(AccountService accountService) {
-            accountServiceList.add(accountService.getAddress());
+        accountServiceList.add(accountService.getAddress());
     }
 
-    public Address getGameMechanicsAddress() {
-        return gameMechanics;
+    // TODO два synchronized - плохо, можно ли поправить?
+    public synchronized Address getGameMechanicsAddress() {
+        int index = gameMechanicsCounter.getAndIncrement();
+        if (index >= gameMechanicsList.size()) {
+            index = 0;
+        }
+        return gameMechanicsList.get(index);
     }
 
     public synchronized Address getAccountServiceAddress() {

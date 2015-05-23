@@ -1,5 +1,6 @@
-package mechanics;
+package mechanics.messages;
 
+import mechanics.GameMechanics;
 import messageSystem.Abonent;
 import messageSystem.Address;
 import messageSystem.Message;

@@ -2,29 +2,20 @@ package mechanics;
 
 import frontend.game.WebSocketService;
 import main.Context;
-import main.accountService.MessageUpdateProfile;
 import main.user.UserProfile;
-import messageSystem.Abonent;
-import messageSystem.Address;
-import messageSystem.Message;
-import messageSystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import resource.GameMechanicsSettings;
 import utils.Id;
 import utils.LoggerMessages;
-import utils.TimeHelper;
 
 import java.util.*;
 
-public final class GameMechanicsImpl implements GameMechanics, Abonent, Runnable {
-    final private Logger logger = LogManager.getLogger(GameMechanics.class.getName());
+public final class GameMechanicsDAOImpl implements GameMechanicsDAO {
+    final private Logger logger = LogManager.getLogger(GameMechanicsDAO.class.getName());
 
-    Address address = new Address();
-    final private MessageSystem messageSystem;
-
-//    final private AccountServiceDAO accountServiceDAO;
+    private GameMechanics shellAbove = null;
 
     private static final int STEP_TIME = 100;
 
@@ -44,12 +35,7 @@ public final class GameMechanicsImpl implements GameMechanics, Abonent, Runnable
     private GameUser waiter = null;
     private int nextMap = 0;
 
-    public GameMechanicsImpl(Context context, GameMechanicsSettings settings) {
-//        accountServiceDAO = (AccountServiceDAO) context.get(AccountServiceDAO.class);
-
-        this.messageSystem = (MessageSystem) context.get(MessageSystem.class);
-        messageSystem.addService(this);
-        messageSystem.getAddressService().registerGameMechanics(this);
+    public GameMechanicsDAOImpl(Context context, GameMechanicsSettings settings) {
 
         this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
 
@@ -57,6 +43,12 @@ public final class GameMechanicsImpl implements GameMechanics, Abonent, Runnable
         weight = settings.getWeight();
         minDelta = settings.getMinDelta();
         maps = settings.getMaps();
+    }
+
+    public void setShellAbove(GameMechanics shellAbove) {
+        if (this.shellAbove == null) {
+            this.shellAbove = shellAbove;
+        }
     }
 
     public void addUser(Id <GameUser> id, UserProfile user) {
@@ -110,15 +102,7 @@ public final class GameMechanicsImpl implements GameMechanics, Abonent, Runnable
         webSocketService.notifyEnemyNewScore(myGameSession, user.getMyPosition());
     }
 
-    @Override
-    public void run() {
-        while (true) {
-            gmStep();
-            TimeHelper.sleep(STEP_TIME);
-        }
-    }
-
-    private void gmStep() {
+    public void gmStep() {
         for (GameSession session : allSessions) {
             if(session.getSessionTime() > gameTime) {
                 finishGame(session);
@@ -148,10 +132,8 @@ public final class GameMechanicsImpl implements GameMechanics, Abonent, Runnable
         first.getUser().increaseScoreOnValue(deltaScore + 123);
         second.getUser().increaseScoreOnValue(-1 * deltaScore - 123);
 
-//        accountServiceDAO.updateUser(first.getUser());
-        updateUser(first.getUser());
-//        accountServiceDAO.updateUser(second.getUser());
-        updateUser(second.getUser());
+        shellAbove.updateUser(first.getUser());
+        shellAbove.updateUser(second.getUser());
 
         webSocketService.notifyGameOver(first, firstResult);
         webSocketService.notifyGameOver(second, secondResult);
@@ -173,14 +155,5 @@ public final class GameMechanicsImpl implements GameMechanics, Abonent, Runnable
 
         webSocketService.notifyStartGame(gameSession, first.getMyPosition());
         webSocketService.notifyStartGame(gameSession, second.getMyPosition());
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    private void updateUser(UserProfile user) {
-        Message updateMes = new MessageUpdateProfile(this.getAddress(), messageSystem.getAddressService().getAccountServiceAddress(), user);
-        messageSystem.sendMessage(updateMes);
     }
 }
