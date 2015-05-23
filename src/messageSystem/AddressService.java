@@ -26,13 +26,8 @@ public final class AddressService {
         }
     }
 
-    public boolean registerAccountService(Abonent accountService) {
-        if (accountService instanceof AccountService) {
+    public void registerAccountService(AccountService accountService) {
             accountServiceList.add(accountService.getAddress());
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public Address getGameMechanicsAddress() {

@@ -15,7 +15,7 @@ public final class MessageUpdateProfile extends MessageToAccountService {
 
     @Override
     protected void exec(AccountService service) {
-        service.updateUser(user);
+        service.getAccountServiceDAO().updateUser(user);
         final Message back = new MessageUpdateResult(getTo(), getFrom(), true);
         service.getMessageSystem().sendMessage(back);
     }

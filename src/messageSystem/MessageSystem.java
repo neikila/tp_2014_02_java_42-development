@@ -20,6 +20,7 @@ public final class MessageSystem {
     }
 
     public void sendMessage(Message message) {
+        System.out.println("To whom = " + message.getTo().toString());
         messages.get(message.getTo()).add(message);
     }
 

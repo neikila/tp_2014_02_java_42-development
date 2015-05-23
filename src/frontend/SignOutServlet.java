@@ -1,7 +1,7 @@
 package frontend;
 
 import main.Context;
-import main.accountService.AccountService;
+import main.accountService.AccountServiceDAO;
 import main.user.UserProfile;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -21,10 +21,10 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 public class SignOutServlet extends HttpServlet {
 
     final private Logger logger = getLogger(SignOutServlet.class.getName());
-    final private AccountService accountService;
+    final private AccountServiceDAO accountServiceDAO;
 
     public SignOutServlet(Context contextGlobal) {
-        this.accountService = (AccountService) contextGlobal.get(AccountService.class);
+        this.accountServiceDAO = (AccountServiceDAO) contextGlobal.get(AccountServiceDAO.class);
     }
 
 
@@ -34,13 +34,13 @@ public class SignOutServlet extends HttpServlet {
         logger.info(LoggerMessages.requestGetParams(), request.getParameterMap().toString());
         HttpSession session = request.getSession();
 
-        UserProfile user = accountService.getSessions(session.getId());
+        UserProfile user = accountServiceDAO.getSessions(session.getId());
 
         short status;
 
         if (user != null) {
             logger.info(LoggerMessages.loggedOut(), user.getLogin());
-            accountService.removeSession(session.getId());
+            accountServiceDAO.removeSession(session.getId());
             status = 200;
         } else {
             logger.info(LoggerMessages.notAuthorised());

@@ -1,40 +1,46 @@
 package main.accountService;
 
-import main.user.UserProfile;
+import main.Context;
+import messageSystem.Abonent;
+import messageSystem.Address;
 import messageSystem.MessageSystem;
 
-import java.util.List;
+public final class AccountService implements Abonent, Runnable {
+    private final Address address = new Address();
+    private final MessageSystem messageSystem;
 
-public interface AccountService {
+    private final AccountServiceDAO accountServiceDAO;
 
-    public boolean addUser(String userName, UserProfile userProfile);
+    public AccountService(Context context) {
+        this.messageSystem = (MessageSystem) context.get(MessageSystem.class);
+        messageSystem.addService(this);
+        messageSystem.getAddressService().registerAccountService(this);
 
-    public boolean addSessions(String sessionId, UserProfile userProfile);
+        this.accountServiceDAO = (AccountServiceDAO) context.get(AccountServiceDAO.class);
+    }
 
-    public int getAmountOfSessions();
+    public MessageSystem getMessageSystem() {
+        return messageSystem;
+    }
 
-    public int getAmountOfSessionsWitUserAsKey();
+    public AccountServiceDAO getAccountServiceDAO() {
+        return accountServiceDAO;
+    }
 
-    public long getAmountOfUsers();
+    @Override
+    public Address getAddress() {
+        return address;
+    }
 
-    public boolean isSessionWithSuchLoginExist(String userName);
-
-    public UserProfile getUser(String userName);
-
-    public UserProfile getSessions(String sessionId);
-
-    public UserProfile getSessionsByLogin(String login);
-
-    public void removeSession(String sessionId);
-
-    public void createAdmin();
-
-    public void createTestAccount();
-
-    public void updateUser(UserProfile user);
-
-    public List<UserProfile> getFirstPlayersByScore(int limit);
-
-    // TODO перенести в объект управления потока account service, собственно заодно и сделать его ;-)
-    public MessageSystem getMessageSystem();
+    @Override
+    public void run() {
+        while (true){
+            messageSystem.execForAbonent(this);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

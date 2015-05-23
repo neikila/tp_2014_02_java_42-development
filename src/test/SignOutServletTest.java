@@ -2,7 +2,7 @@ package test;
 
 import frontend.SignOutServlet;
 import main.Context;
-import main.accountService.AccountService;
+import main.accountService.AccountServiceDAO;
 import org.junit.Before;
 import org.junit.Test;
 import utils.Messages;
@@ -16,9 +16,9 @@ public class SignOutServletTest extends ServletTest{
 
     @Before
     public void setUp() throws Exception {
-        accountService = getAccountServiceWithSession(getUser());
+        accountServiceDAO = getAccountServiceWithSession(getUser());
         Context context = new Context();
-        context.add(AccountService.class, accountService);
+        context.add(AccountServiceDAO.class, accountServiceDAO);
         servlet = new SignOutServlet(context);
         stringWriter = new StringWriter();
         response = getResponse(stringWriter);

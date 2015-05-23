@@ -3,24 +3,15 @@ package main.accountService;
 import main.Context;
 import main.user.UserComparatorByScore;
 import main.user.UserProfile;
-import messageSystem.Abonent;
-import messageSystem.Address;
-import messageSystem.MessageSystem;
 
 import java.util.*;
 
-public class AccountServiceImpl implements AccountService, Abonent, Runnable  {
+public class AccountServiceDAOImpl implements AccountServiceDAO {
     final private Map<String, UserProfile> users = new HashMap<>();
     final private Map<String, UserProfile> sessions = new HashMap<>();
     final private Map<String, UserProfile> sessionsWithUserAsKey = new HashMap<>();
 
-    final private MessageSystem messageSystem;
-    final private Address address;
-
-    public AccountServiceImpl(Context context) {
-        address = new Address();
-        messageSystem = (MessageSystem) context.get(MessageSystem.class);
-        messageSystem.addService(this);
+    public AccountServiceDAOImpl(Context context) {
     }
 
     public boolean addUser(String userName, UserProfile userProfile) {
@@ -110,25 +101,5 @@ public class AccountServiceImpl implements AccountService, Abonent, Runnable  {
     }
 
     public void updateUser(UserProfile userProfile) {
-    }
-
-    public MessageSystem getMessageSystem() {
-        return messageSystem;
-    }
-
-    @Override
-    public void run() {
-        while (true){
-            messageSystem.execForAbonent(this);
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public Address getAddress (){
-        return address;
     }
 }

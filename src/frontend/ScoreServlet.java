@@ -1,7 +1,7 @@
 package frontend;
 
 import main.Context;
-import main.accountService.AccountService;
+import main.accountService.AccountServiceDAO;
 import main.user.UserProfile;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -23,10 +23,10 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 public class ScoreServlet extends HttpServlet {
 
     final private Logger logger = getLogger(ScoreServlet.class.getName());
-    final private AccountService accountService;
+    final private AccountServiceDAO accountServiceDAO;
 
     public ScoreServlet(Context contextGlobal) {
-        this.accountService = (AccountService) contextGlobal.get(AccountService.class);
+        this.accountServiceDAO = (AccountServiceDAO) contextGlobal.get(AccountServiceDAO.class);
     }
 
     public void doGet(HttpServletRequest request,
@@ -54,7 +54,7 @@ public class ScoreServlet extends HttpServlet {
                 status = 400;
             }
         }
-        createResponse(response, status, message, accountService.getFirstPlayersByScore(limit));
+        createResponse(response, status, message, accountServiceDAO.getFirstPlayersByScore(limit));
         logger.info(LoggerMessages.doGetFinish());
     }
 

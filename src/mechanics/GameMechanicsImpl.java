@@ -2,7 +2,6 @@ package mechanics;
 
 import frontend.game.WebSocketService;
 import main.Context;
-import main.accountService.AccountService;
 import main.accountService.MessageUpdateProfile;
 import main.user.UserProfile;
 import messageSystem.Abonent;
@@ -25,7 +24,7 @@ public final class GameMechanicsImpl implements GameMechanics, Abonent, Runnable
     Address address = new Address();
     final private MessageSystem messageSystem;
 
-    final private AccountService accountService;
+//    final private AccountServiceDAO accountServiceDAO;
 
     private static final int STEP_TIME = 100;
 
@@ -46,7 +45,7 @@ public final class GameMechanicsImpl implements GameMechanics, Abonent, Runnable
     private int nextMap = 0;
 
     public GameMechanicsImpl(Context context, GameMechanicsSettings settings) {
-        accountService = (AccountService) context.get(AccountService.class);
+//        accountServiceDAO = (AccountServiceDAO) context.get(AccountServiceDAO.class);
 
         this.messageSystem = (MessageSystem) context.get(MessageSystem.class);
         messageSystem.addService(this);
@@ -68,7 +67,9 @@ public final class GameMechanicsImpl implements GameMechanics, Abonent, Runnable
             waiter.setMyPosition(1);
             userManager.addUser(waiter);
 
-            webSocketService.sendSettings(waiter, maps.get(nextMap));
+            GameMap map = maps.get(nextMap);
+
+            webSocketService.sendSettings(waiter, map);
 
             logger.info(LoggerMessages.firstPlayer());
         } else {
@@ -147,9 +148,9 @@ public final class GameMechanicsImpl implements GameMechanics, Abonent, Runnable
         first.getUser().increaseScoreOnValue(deltaScore + 123);
         second.getUser().increaseScoreOnValue(-1 * deltaScore - 123);
 
-        accountService.updateUser(first.getUser());
+//        accountServiceDAO.updateUser(first.getUser());
         updateUser(first.getUser());
-        accountService.updateUser(second.getUser());
+//        accountServiceDAO.updateUser(second.getUser());
         updateUser(second.getUser());
 
         webSocketService.notifyGameOver(first, firstResult);

@@ -5,8 +5,9 @@ import MBean.AccountServiceControllerMBean;
 import dbService.DBService;
 import dbService.DBServiceImpl;
 import main.accountService.AccountService;
-import main.accountService.AccountServiceImpl;
-import main.accountService.AccountServiceMySQLImpl;
+import main.accountService.AccountServiceDAO;
+import main.accountService.AccountServiceDAOImpl;
+import main.accountService.AccountServiceDAOMySQLImpl;
 import mechanics.GameMechanics;
 import mechanics.GameMechanicsImpl;
 import messageSystem.MessageSystem;
@@ -41,31 +42,26 @@ public class Main {
         final MessageSystem messageSystem = new MessageSystem();
         context.add(MessageSystem.class, messageSystem);
 
-        AccountService accountService = serverSettings.isASTypeOfDatabase() ? new AccountServiceMySQLImpl(context) : new AccountServiceImpl(context) ;
-        accountService.createAdmin();
+        AccountServiceDAO accountServiceDAO = serverSettings.isASTypeOfDatabase() ? new AccountServiceDAOMySQLImpl(context) : new AccountServiceDAOImpl(context) ;
+        accountServiceDAO.createAdmin();
 
         if (!serverSettings.isProduction())
-            accountService.createTestAccount();
+            accountServiceDAO.createTestAccount();
 
-        context.add(AccountService.class, accountService);
+        context.add(AccountServiceDAO.class, accountServiceDAO);
 
-
-        GameMechanics gameMechanics;
-        GameMechanicsSettings gameMechanicsSettings = (GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings");
-        gameMechanics = new GameMechanicsImpl(context, gameMechanicsSettings);
-        context.add(GameMechanics.class, gameMechanics);
 
         startMBean(context);
 
         logger.info(LoggerMessages.serverStart(), (String.valueOf(port)));
 
         AppServer server = new AppServer(context, port);
-        server.start();
-        gameMechanics.run();
 
-//        final Thread accountServiceThread = new Thread();
-//        accountServiceThread.setDaemon(true);
-//        accountServiceThread.setName("Account Service");
+        final Thread accountServiceThread = new Thread(new AccountService(context));
+        accountServiceThread.setDaemon(true);
+        accountServiceThread.setName("Account Service");
+
+        accountServiceThread.start();
 //        final Thread gameMechanicsThread = new Thread(new GameMechanics(messageSystem));
 //        gameMechanicsThread.setDaemon(true);
 //        gameMechanicsThread.setName("Game Mechanics");
@@ -77,6 +73,15 @@ public class Main {
 //        accountServiceThread.start();
 //        gameMechanicsThread.start();
 //        frontEndThread.start();
+        server.start();
+        logger.info("Threads in process");
+
+        GameMechanics gameMechanics;
+        GameMechanicsSettings gameMechanicsSettings = (GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings");
+        gameMechanics = new GameMechanicsImpl(context, gameMechanicsSettings);
+        context.add(GameMechanics.class, gameMechanics);
+
+        gameMechanics.run();
     }
 
     private static void startMBean(Context context) throws Exception{

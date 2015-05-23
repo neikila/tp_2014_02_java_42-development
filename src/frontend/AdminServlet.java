@@ -1,7 +1,7 @@
 package frontend;
 
 import main.Context;
-import main.accountService.AccountService;
+import main.accountService.AccountServiceDAO;
 import main.user.UserProfile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,10 +24,10 @@ import static utils.LoggerMessages.*;
 public class AdminServlet extends HttpServlet{
 
     final private Logger logger = LogManager.getLogger(AdminServlet.class.getName());
-    final private AccountService accountService;
+    final private AccountServiceDAO accountServiceDAO;
 
     public AdminServlet(Context contextGlobal) {
-        this.accountService = (AccountService)contextGlobal.get(AccountService.class);
+        this.accountServiceDAO = (AccountServiceDAO)contextGlobal.get(AccountServiceDAO.class);
     }
 
     public void doGet(HttpServletRequest request,
@@ -42,7 +42,7 @@ public class AdminServlet extends HttpServlet{
         Map<String, Object> pageVariables = new HashMap<>();
 
         HttpSession session = request.getSession();
-        UserProfile user = accountService.getSessions(session.getId());
+        UserProfile user = accountServiceDAO.getSessions(session.getId());
 
         if (user != null && user.isAdmin()) {
             logger.info(isAdmin(), user.getLogin());
@@ -77,7 +77,7 @@ public class AdminServlet extends HttpServlet{
 
         HttpSession session = request.getSession();
 
-        UserProfile user = accountService.getSessions(session.getId());
+        UserProfile user = accountServiceDAO.getSessions(session.getId());
         if (user != null) {
             if (user.isAdmin()) {
                 logger.info(isAdmin(), user.getLogin());
@@ -90,8 +90,8 @@ public class AdminServlet extends HttpServlet{
                         case "get":
                             logger.info(statistic());
                             JSONObject data = new JSONObject();
-                            data.put("amountOfLoggedIn", accountService.getAmountOfSessions());
-                            data.put("amountOfSignedUp", accountService.getAmountOfUsers());
+                            data.put("amountOfLoggedIn", accountServiceDAO.getAmountOfSessions());
+                            data.put("amountOfSignedUp", accountServiceDAO.getAmountOfUsers());
                             logger.info(data.toString());
                             response.getWriter().write(data.toString());
                             break;

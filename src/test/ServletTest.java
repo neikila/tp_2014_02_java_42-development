@@ -1,8 +1,8 @@
 package test;
 
 import main.Context;
-import main.accountService.AccountService;
-import main.accountService.AccountServiceImpl;
+import main.accountService.AccountServiceDAO;
+import main.accountService.AccountServiceDAOImpl;
 import main.user.UserProfile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
  */
 
 public class ServletTest {
-    protected AccountService accountService;
+    protected AccountServiceDAO accountServiceDAO;
     protected HttpServletRequest request;
     protected HttpServletResponse response;
     protected StringWriter stringWriter;
@@ -29,21 +29,21 @@ public class ServletTest {
     public ServletTest() {
     }
 
-    public AccountService getAccountService() {
-        return new AccountServiceImpl(new Context());
+    public AccountServiceDAO getAccountServiceDAO() {
+        return new AccountServiceDAOImpl(new Context());
     }
 
-    public AccountService getAccountService(UserProfile user) {
-        AccountService accountService = getAccountService();
-        accountService.addUser(user.getLogin(), user);
-        return accountService;
+    public AccountServiceDAO getAccountService(UserProfile user) {
+        AccountServiceDAO accountServiceDAO = getAccountServiceDAO();
+        accountServiceDAO.addUser(user.getLogin(), user);
+        return accountServiceDAO;
     }
 
-    public AccountService getAccountServiceWithSession(UserProfile user) {
-        AccountService accountService = getAccountService();
-        accountService.addUser(user.getLogin(), user);
-        accountService.addSessions(null, user);
-        return accountService;
+    public AccountServiceDAO getAccountServiceWithSession(UserProfile user) {
+        AccountServiceDAO accountServiceDAO = getAccountServiceDAO();
+        accountServiceDAO.addUser(user.getLogin(), user);
+        accountServiceDAO.addSessions(null, user);
+        return accountServiceDAO;
     }
 
     public HttpServletRequest getRequest(String sessionId) {

@@ -1,6 +1,6 @@
 package test;
 
-import main.accountService.AccountService;
+import main.accountService.AccountServiceDAO;
 import frontend.ProfileServlet;
 import main.Context;
 import static org.junit.Assert.*;
@@ -15,9 +15,9 @@ public class ProfileServletTest extends ServletTest {
 
     @Before
     public void setUp() throws Exception {
-        accountService = getAccountServiceWithSession(getUser());
+        accountServiceDAO = getAccountServiceWithSession(getUser());
         Context context = new Context();
-        context.add(AccountService.class, accountService);
+        context.add(AccountServiceDAO.class, accountServiceDAO);
         servlet = new ProfileServlet(context);
         stringWriter = new StringWriter();
         response = getResponse(stringWriter);
