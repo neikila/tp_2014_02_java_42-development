@@ -9,7 +9,7 @@ import utils.Id;
 public class GameUser {
     private Id <GameUser> id;
     private int myScore = 0;
-    private int position; // It is needed for left or right position on the screen
+    private int position = 0; // It is needed for left or right position on the screen
     private UserProfile user;
 
     public GameUser(Id <GameUser> id, UserProfile user) {
@@ -17,7 +17,10 @@ public class GameUser {
         this.user = user;
     }
 
-    public void setMyPosition(int myPos) { position = myPos; }
+    public void setMyPosition(int myPos) {
+        if (position == 0)
+        position = myPos;
+    }
 
     public int getMyPosition() { return position; }
 

@@ -3,8 +3,6 @@ package main;
 import frontend.*;
 import frontend.game.GameServlet;
 import frontend.game.WebSocketGameServlet;
-import frontend.game.WebSocketService;
-import frontend.game.WebSocketServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Handler;
@@ -35,9 +33,6 @@ public class AppServer {
         context.addServlet(new ServletHolder(new AdminServlet(contextGlobal)), url + "/auth/admin");
         context.addServlet(new ServletHolder(new SignOutServlet(contextGlobal)), url + "/auth/signout");
         context.addServlet(new ServletHolder(new ScoreServlet(contextGlobal)), url + "/score");
-
-        WebSocketService webSocketService = new WebSocketServiceImpl();
-        contextGlobal.add(WebSocketService.class, webSocketService);
 
         context.addServlet(new ServletHolder(new WebSocketGameServlet(contextGlobal)), "/gameplay");
         context.addServlet(new ServletHolder(new GameServlet(contextGlobal)), "/game.html");
@@ -71,5 +66,9 @@ public class AppServer {
             e.printStackTrace();
             System.exit(1);
         }
+    }
+
+    public Server getServer() {
+        return server;
     }
 }

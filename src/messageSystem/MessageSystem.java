@@ -24,7 +24,6 @@ public final class MessageSystem {
     }
 
     public void sendMessage(Message message) {
-        System.out.println("Address = " + message.getTo());
         ConcurrentLinkedQueue<Message> queue = messages.get(message.getTo());
         if (queue != null)
             queue.add(message);

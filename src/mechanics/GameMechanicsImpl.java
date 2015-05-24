@@ -1,6 +1,9 @@
 package mechanics;
 
-import frontend.game.WebSocketService;
+import frontend.game.messages.MessageAction;
+import frontend.game.messages.MessageGameOver;
+import frontend.game.messages.MessageSendSettings;
+import frontend.game.messages.MessageStartGame;
 import main.Context;
 import main.accountService.messages.MessageSaveGameSession;
 import main.user.UserProfile;
@@ -30,7 +33,7 @@ public final class GameMechanicsImpl implements GameMechanics {
     final private int minDelta;
     final private ArrayList<GameMap> maps;
 
-    final private WebSocketService webSocketService;
+//    final private WebSocketService webSocketService;
 
     final private Map<Id <GameUser>, GameSession> nameToGame = new HashMap<>();
 
@@ -45,7 +48,7 @@ public final class GameMechanicsImpl implements GameMechanics {
         messageSystem.addService(this);
         messageSystem.getAddressService().registerGameMechanics(this);
 
-        this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
+//        this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
 
         gameTime = settings.getTimeLimit() * 1000;
         weight = settings.getWeight();
@@ -91,8 +94,9 @@ public final class GameMechanicsImpl implements GameMechanics {
             int nextMap = rand.nextInt(maps.size());
             GameMap map = maps.get(nextMap);
 
-            webSocketService.sendSettings(first, map);
-            webSocketService.sendSettings(second, map);
+            Address to = messageSystem.getAddressService().getWebSocketServiceAddress();
+            messageSystem.sendMessage(new MessageSendSettings(address, to, first.getId(), map));
+            messageSystem.sendMessage(new MessageSendSettings(address, to, second.getId(), map));
 
             starGame(first, second, map);
             logger.info(LoggerMessages.firstPlayer());
@@ -110,18 +114,12 @@ public final class GameMechanicsImpl implements GameMechanics {
 
             message.put("player", myUser.getMyPosition());
 
-            webSocketService.notifyAction(myUser, message);
-            webSocketService.notifyAction(opponent, message);
+            Address to = messageSystem.getAddressService().getWebSocketServiceAddress();
+            messageSystem.sendMessage(new MessageAction(address, to, id, message));
+            messageSystem.sendMessage(new MessageAction(address, to, opponent.getId(), message));
         } else {
             logger.info(LoggerMessages.onMessage(), id, message.toString());
         }
-    }
-
-    public void incrementScore(GameUser user) {
-        GameSession myGameSession = nameToGame.get(user.getId());
-        user.incrementMyScore();
-        webSocketService.notifyMyNewScore(user);
-        webSocketService.notifyEnemyNewScore(myGameSession, user.getMyPosition());
     }
 
     private void gmStep() {
@@ -159,8 +157,9 @@ public final class GameMechanicsImpl implements GameMechanics {
 
         saveSession(session);
 
-        webSocketService.notifyGameOver(first, gameResult.ordinal());
-        webSocketService.notifyGameOver(second, gameResult.ordinal());
+        Address to = messageSystem.getAddressService().getWebSocketServiceAddress();
+        messageSystem.sendMessage(new MessageGameOver(address, to, first.getId(), gameResult.ordinal()));
+        messageSystem.sendMessage(new MessageGameOver(address, to, second.getId(), gameResult.ordinal()));
 
         session.finish();
 
@@ -191,7 +190,8 @@ public final class GameMechanicsImpl implements GameMechanics {
         nameToGame.put(first.getId(), gameSession);
         nameToGame.put(second.getId(), gameSession);
 
-        webSocketService.notifyStartGame(gameSession, first.getMyPosition());
-        webSocketService.notifyStartGame(gameSession, second.getMyPosition());
+        Address to = messageSystem.getAddressService().getWebSocketServiceAddress();
+        messageSystem.sendMessage(new MessageStartGame(address, to, gameSession, first.getId()));
+        messageSystem.sendMessage(new MessageStartGame(address, to, gameSession, second.getId()));
     }
 }

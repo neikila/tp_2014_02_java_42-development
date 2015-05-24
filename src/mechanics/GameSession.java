@@ -1,5 +1,7 @@
 package mechanics;
 
+import utils.Id;
+
 import java.util.Date;
 import java.util.Random;
 
@@ -63,6 +65,14 @@ public class GameSession {
         }
 
         return winner;
+    }
+
+    public GameUser getUser(Id <GameUser> id) {
+        if (first.getId().getId() == id.getId()) {
+            return first;
+        } else {
+            return second;
+        }
     }
 
     public GameMap getMap() { return map; }

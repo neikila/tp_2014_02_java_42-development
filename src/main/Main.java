@@ -4,10 +4,12 @@ import MBean.AccountServiceController;
 import MBean.AccountServiceControllerMBean;
 import dbService.DBService;
 import dbService.DBServiceImpl;
-import main.accountService.AccountServiceThread;
+import frontend.game.WebSocketService;
+import frontend.game.WebSocketServiceImpl;
 import main.accountService.AccountService;
 import main.accountService.AccountServiceImpl;
 import main.accountService.AccountServiceMySQLImpl;
+import main.accountService.AccountServiceThread;
 import mechanics.GameMechanics;
 import mechanics.GameMechanicsImpl;
 import messageSystem.MessageSystem;
@@ -59,30 +61,35 @@ public class Main {
 //        context.add(AppServer.class, server);
 
         for (int i = 0; i < 2; ++i) {
-            final Thread accountServiceThread = new Thread(new AccountServiceThread(context));
+            Thread accountServiceThread = new Thread(new AccountServiceThread(context));
             accountServiceThread.setDaemon(false);
             accountServiceThread.setName("AccountService" + (i + 1));
 //        context.add(AccountService.class, accountServiceThread);
 
             accountServiceThread.start();
         }
+
+        WebSocketService webSocketService = new WebSocketServiceImpl(context);
+        context.add(WebSocketService.class, webSocketService);
+        final Thread webSocketServiceThread = new Thread(webSocketService);
+        webSocketServiceThread.start();
+
         server.start();
 
         GameMechanics gameMechanics;
         GameMechanicsSettings gameMechanicsSettings = (GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings");
-        gameMechanics = new GameMechanicsImpl(context, gameMechanicsSettings);
-        context.add(GameMechanics.class, gameMechanics);
+        for (int i = 0; i < 2; ++i) {
+            gameMechanics = new GameMechanicsImpl(context, gameMechanicsSettings);
 
-        final Thread gameMechanicsThread = new Thread(gameMechanics);
-        gameMechanicsThread.setDaemon(false);
-        gameMechanicsThread.setName("GameMechanics");
-//        context.add(GameMechanics.class, gameMechanicsThread);
-
-        gameMechanicsThread.start();
+            final Thread gameMechanicsThread = new Thread(gameMechanics);
+            gameMechanicsThread.setDaemon(false);
+            gameMechanicsThread.setName("GameMechanics" + (i + 1));
+            gameMechanicsThread.start();
+        }
 
         logger.info("version: Threads in process");
         logger.info("Start");
-        gameMechanicsThread.join();
+        server.getServer().join();
     }
 
     private static void startMBean(Context context) throws Exception{

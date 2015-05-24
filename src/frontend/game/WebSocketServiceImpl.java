@@ -1,8 +1,11 @@
 package frontend.game;
 
+import main.Context;
 import mechanics.GameMap;
 import mechanics.GameSession;
 import mechanics.GameUser;
+import messageSystem.Address;
+import messageSystem.MessageSystem;
 import org.json.simple.JSONObject;
 import utils.Id;
 
@@ -12,39 +15,56 @@ import java.util.Map;
 public class WebSocketServiceImpl implements WebSocketService {
     private Map<Id <GameUser>, GameWebSocket> userSockets = new HashMap<>();
 
+    private final Address address = new Address();
+    private final MessageSystem messageSystem;
+
+    public WebSocketServiceImpl(Context context) {
+        messageSystem = (MessageSystem) context.get(MessageSystem.class);
+        messageSystem.addService(this);
+        messageSystem.getAddressService().registerSocketService(this);
+    }
+
+    @Override
+    public void run() {
+        while (true){
+            messageSystem.execForAbonent(this);
+            try {
+                Thread.sleep(25);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public Address getAddress() {
+        return address;
+    }
+
+    @Override
     public void addUser(GameWebSocket user) {
         userSockets.put(user.getId(), user);
     }
 
-    public void sendSettings(GameUser user, GameMap map) {
-        userSockets.get(user.getId()).settings(map);
+    @Override
+    public void sendSettings(Id <GameUser> id, GameMap map) {
+        userSockets.get(id).settings(map);
     }
 
-    public void notifyAction(GameUser user, JSONObject action) {
-        GameWebSocket gameWebSocket = userSockets.get(user.getId());
+    @Override
+    public void notifyAction(Id <GameUser> id, JSONObject action) {
+        GameWebSocket gameWebSocket = userSockets.get(id);
         gameWebSocket.sendAction(action);
     }
 
-    public void notifyMyNewScore(GameUser user) {
-        userSockets.get(user.getId()).setMyScore(user);
-    }
-
-    public void notifyEnemyNewScore(GameSession session, int position) {
-        userSockets.get(session.getSelf(position).getId()).setMyScore(session.getEnemy(position));
-    }
-
-    public void notifyStartGame(GameSession session, int position) {
-        GameWebSocket gameWebSocket = userSockets.get(session.getSelf(position).getId());
-        gameWebSocket.startGame(session, position);
+    @Override
+    public void notifyStartGame(GameSession session, Id <GameUser> id) {
+        GameWebSocket gameWebSocket = userSockets.get(id);
+        gameWebSocket.startGame(session, id);
     }
 
     @Override
-    public void notifyGameOver(GameUser user, int result) {
-        userSockets.get(user.getId()).gameOver(user, result);
-    }
-
-    @Override
-    public void notifyResult(GameUser user, String result) {
-        userSockets.get(user.getId()).setMyResult(result);
+    public void notifyGameOver(Id <GameUser> id, int result) {
+        userSockets.get(id).gameOver(result);
     }
 }

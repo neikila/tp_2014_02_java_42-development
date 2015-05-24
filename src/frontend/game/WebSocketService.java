@@ -3,26 +3,19 @@ package frontend.game;
 import mechanics.GameMap;
 import mechanics.GameSession;
 import mechanics.GameUser;
+import messageSystem.Abonent;
 import org.json.simple.JSONObject;
+import utils.Id;
 
-/**
- * @author v.chibrikov
- */
-public interface WebSocketService {
+public interface WebSocketService extends Abonent, Runnable{
 
     void addUser(GameWebSocket user);
 
-    void sendSettings(GameUser user, GameMap map);
+    void sendSettings(Id<GameUser> id, GameMap map);
 
-    void notifyMyNewScore(GameUser user);
+    void notifyStartGame(GameSession session, Id <GameUser> id);
 
-    void notifyEnemyNewScore(GameSession session, int gameUserPosition);
+    void notifyGameOver(Id <GameUser> id, int result);
 
-    void notifyStartGame(GameSession session, int gameUserPosition);
-
-    void notifyGameOver(GameUser user, int result);
-
-    void notifyAction(GameUser user, JSONObject action);
-
-    void notifyResult(GameUser user, String result);
+    void notifyAction(Id <GameUser> id, JSONObject action);
 }

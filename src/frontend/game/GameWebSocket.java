@@ -3,9 +3,12 @@ package frontend.game;
 import main.Context;
 import main.user.UserProfile;
 import mechanics.GameMap;
-import mechanics.GameMechanics;
 import mechanics.GameSession;
 import mechanics.GameUser;
+import mechanics.messages.MessageAddUser;
+import mechanics.messages.MessageFromWebSocket;
+import messageSystem.Address;
+import messageSystem.MessageSystem;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -26,7 +29,8 @@ public class GameWebSocket {
     final private Logger logger = getLogger(GameWebSocket.class.getName());
 
     final private UserProfile user;
-    final private GameMechanics gameMechanics;
+    final private Address GMAdress;
+    final private MessageSystem messageSystem;
     final private WebSocketService webSocketService;
     final private Id<GameUser> id;
     private Session session;
@@ -35,10 +39,12 @@ public class GameWebSocket {
     private boolean gameSessionClosed;
 
     public GameWebSocket(UserProfile userProfile, Context context) {
-        this.gameMechanics = (GameMechanics) context.get(GameMechanics.class);
         this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
         this.user = userProfile;
         this.id = new Id<>(user.getId());
+        this.messageSystem = (MessageSystem) context.get(MessageSystem.class);
+        this.GMAdress = messageSystem.getAddressService().getGameMechanicsAddress();
+
         session = null;
         closed = true;
         gameSessionClosed = true;
@@ -67,7 +73,9 @@ public class GameWebSocket {
         sendJSON(jsonStart);
     }
 
-    public void startGame(GameSession session, int position) {
+    public void startGame(GameSession session, Id <GameUser> id) {
+        int position = session.getUser(id).getMyPosition();
+        // Заглушка
         String sequence = "123123123123";
         JSONObject jsonStart = new JSONObject();
         jsonStart.put("status", Messages.JSONStatusStart());
@@ -77,7 +85,7 @@ public class GameWebSocket {
         sendJSON(jsonStart);
     }
 
-    public void gameOver(GameUser user, int result) {
+    public void gameOver(int result) {
         gameSessionClosed = true;
         JSONObject jsonEnd = new JSONObject();
         jsonEnd.put("status", Messages.JSONStatusFinish());
@@ -93,7 +101,7 @@ public class GameWebSocket {
     public void onMessage(String data) {
         if (!gameSessionClosed) {
             JSONObject message = getJsonFromString(data);
-            gameMechanics.analyzeMessage(id, message);
+            messageSystem.sendMessage(new MessageFromWebSocket(webSocketService.getAddress(), GMAdress, id, message));
         }
     }
 
@@ -104,22 +112,8 @@ public class GameWebSocket {
         logger.info(LoggerMessages.onOpen(), user.getLogin());
         setSession(session);
         webSocketService.addUser(this);
-        gameMechanics.addUser(id, user);
-    }
 
-    public void setMyScore(GameUser user) {
-        JSONObject jsonStart = new JSONObject();
-        jsonStart.put("status", Messages.JSONStatusIncrement());
-        jsonStart.put("name", user.getUser().getLogin());
-        jsonStart.put("score", user.getMyScore());
-        sendJSON(jsonStart);
-    }
-
-    public void setMyResult(String result) {
-        JSONObject jsonStart = new JSONObject();
-        jsonStart.put("status", Messages.JSONStatusResult());
-        jsonStart.put("result", result);
-        sendJSON(jsonStart);
+        messageSystem.sendMessage(new MessageAddUser(webSocketService.getAddress(), GMAdress, id, user));
     }
 
     public Session getSession() {
