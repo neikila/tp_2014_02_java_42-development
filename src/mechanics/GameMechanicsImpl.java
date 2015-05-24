@@ -1,9 +1,6 @@
 package mechanics;
 
-import frontend.game.messages.MessageAction;
-import frontend.game.messages.MessageGameOver;
-import frontend.game.messages.MessageSendSettings;
-import frontend.game.messages.MessageStartGame;
+import frontend.game.messages.*;
 import main.Context;
 import main.accountService.messages.MessageSaveGameSession;
 import main.user.UserProfile;
@@ -124,10 +121,24 @@ public final class GameMechanicsImpl implements GameMechanics {
 
     private void gmStep() {
         for (GameSession session : allSessions) {
-            if(!session.isFinished() && session.getSessionTime() > gameTime) {
-                finishGame(session);
+            if (!session.isFinished()) {
+                session.makeStep();
+                if (session.getCountStep() % 5 == 0)
+                    sendSync(session);
+                if (session.getSessionTime() > gameTime) {
+                    finishGame(session);
+                }
             }
         }
+    }
+
+    private void sendSync(GameSession session) {
+        Id <GameUser> first = session.getFirst().getId();
+        Id <GameUser> second = session.getSecond().getId();
+
+        Address to = messageSystem.getAddressService().getWebSocketServiceAddress();
+        messageSystem.sendMessage(new MessageSynchronize(address, to, session, first));
+        messageSystem.sendMessage(new MessageSynchronize(address, to, session, second));
     }
 
     private void finishGame(GameSession session) {

@@ -13,6 +13,8 @@ public class GameSession {
     private GameResult winner;
     private State state = State.Playing;
 
+    private int countStep = -1;
+
     private enum State {
         Playing,
         Finished
@@ -51,6 +53,15 @@ public class GameSession {
 
     public GameUser getSecond() {
         return second;
+    }
+
+    public int getCountStep() {
+        return countStep;
+    }
+
+    public int makeStep() {
+        System.out.println("countStep: " + countStep);
+        return ++countStep;
     }
 
     public GameResult getWinner() {

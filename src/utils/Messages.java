@@ -19,6 +19,7 @@ public class Messages {
     public static String wrongSignUpData() { return "Wrong sign Up data"; }
     public static String wrongLimit() { return "WrongLimit";}
     public static String askToSignIn() { return "You haven't signed up yet. Please, do it."; }
+    public static String JSONStatusSync() { return "sync"; };
     public static String JSONStatusIncrement() { return "increment"; };
     public static String JSONStatusFinish() { return "finish"; };
     public static String JSONStatusResult() { return "result"; };

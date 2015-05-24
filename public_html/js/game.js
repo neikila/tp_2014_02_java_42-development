@@ -18,10 +18,10 @@ init = function () {
 
     ws.onmessage = function (event) {
         var data = JSON.parse(event.data);
+        console.log(data);
         if(data.status == "start"){
             myPosition = data.position;
             console.log("MyPosition = " + myPosition);
-            console.log(data);
             document.getElementById("wait").style.display = "none";
             document.getElementById("gameplay").style.display = "block";
             document.getElementById("enemyName").innerHTML = data.enemyName;

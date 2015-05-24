@@ -73,6 +73,13 @@ public class GameWebSocket {
         sendJSON(jsonStart);
     }
 
+    public void sync(GameSession session, Id <GameUser> id) {
+        JSONObject jsonStart = new JSONObject();
+        jsonStart.put("status", Messages.JSONStatusSync());
+        jsonStart.put("time", session.getSessionTime());
+        sendJSON(jsonStart);
+    }
+
     public void startGame(GameSession session, Id <GameUser> id) {
         int position = session.getUser(id).getMyPosition();
         // Заглушка

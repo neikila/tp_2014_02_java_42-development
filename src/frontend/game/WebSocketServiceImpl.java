@@ -58,6 +58,11 @@ public class WebSocketServiceImpl implements WebSocketService {
     }
 
     @Override
+    public void sync(GameSession session, Id <GameUser> id) {
+        GameWebSocket gameWebSocket = userSockets.get(id);
+        gameWebSocket.sync(session, id);
+    }
+    @Override
     public void notifyStartGame(GameSession session, Id <GameUser> id) {
         GameWebSocket gameWebSocket = userSockets.get(id);
         gameWebSocket.startGame(session, id);
