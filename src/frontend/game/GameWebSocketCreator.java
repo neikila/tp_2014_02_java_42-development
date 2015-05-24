@@ -1,7 +1,7 @@
 package frontend.game;
 
 import main.Context;
-import main.accountService.AccountServiceDAO;
+import main.accountService.AccountService;
 import main.user.UserProfile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,11 +15,11 @@ public class GameWebSocketCreator implements WebSocketCreator {
 
     final private Logger logger = LogManager.getLogger(GameWebSocketCreator.class.getName());
     final private Context context;
-    final private AccountServiceDAO accountServiceDAO;
+    final private AccountService accountService;
 
     public GameWebSocketCreator(Context context) {
         this.context = context;
-        this.accountServiceDAO = (AccountServiceDAO) context.get(AccountServiceDAO.class);
+        this.accountService = (AccountService) context.get(AccountService.class);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class GameWebSocketCreator implements WebSocketCreator {
         String sessionId = req.getHttpServletRequest().getSession().getId();
         UserProfile temp;
         logger.info(LoggerMessages.newSocket());
-        if ((temp = accountServiceDAO.getSessions(sessionId)) == null) {
+        if ((temp = accountService.getSessions(sessionId)) == null) {
             logger.info(LoggerMessages.notAuthorised());
             return null;
         }

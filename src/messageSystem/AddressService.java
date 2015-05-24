@@ -1,6 +1,6 @@
 package messageSystem;
 
-import main.accountService.AccountService;
+import main.accountService.AccountServiceThread;
 import mechanics.GameMechanics;
 
 import java.util.ArrayList;
@@ -22,8 +22,8 @@ public final class AddressService {
         gameMechanicsList.add(gameMechanics.getAddress());
     }
 
-    public void registerAccountService(AccountService accountService) {
-        accountServiceList.add(accountService.getAddress());
+    public void registerAccountService(AccountServiceThread accountServiceThread) {
+        accountServiceList.add(accountServiceThread.getAddress());
     }
 
     // TODO два synchronized - плохо, можно ли поправить?

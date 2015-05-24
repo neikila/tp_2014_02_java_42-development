@@ -2,7 +2,7 @@ package test;
 
 import frontend.SignUpServlet;
 import main.Context;
-import main.accountService.AccountServiceDAO;
+import main.accountService.AccountService;
 import org.junit.Before;
 import org.junit.Test;
 import utils.Messages;
@@ -29,9 +29,9 @@ public class SignUpServletTest extends ServletTest {
 
     @Before
     public void setUp() throws Exception {
-        accountServiceDAO = getAccountServiceDAO();
+        accountService = getAccountService();
         context = new Context();
-        context.add(AccountServiceDAO.class, accountServiceDAO);
+        context.add(AccountService.class, accountService);
         servlet = new SignUpServlet(context);
         stringWriter = new StringWriter();
         response = getResponse(stringWriter);
@@ -107,7 +107,7 @@ public class SignUpServletTest extends ServletTest {
         String login = getUser().getLogin();
         String pass = getUser().getPassword();
         String email = getUser().getEmail();
-        accountServiceDAO.addUser(login, getUser());
+        accountService.addUser(login, getUser());
         request = getRequest(null);
         setRequestReader(login, pass, email);
         String CorrectResponse = "{\"data\":{\"message\":\"" + Messages.exist() + "\"},\"status\":400}";
@@ -122,8 +122,8 @@ public class SignUpServletTest extends ServletTest {
         String login = getUser().getLogin();
         String pass = getUser().getPassword();
         String email = getUser().getEmail();
-        accountServiceDAO.addUser(login, getUser());
-        accountServiceDAO.addSessions(null, getUser());
+        accountService.addUser(login, getUser());
+        accountService.addSessions(null, getUser());
         request = getRequest(null);
         setRequestReader(login, pass, email);
         String CorrectResponse = "{\"data\":{\"message\":\"" + Messages.alreadyLoggedIn() + "\"},\"status\":400}";

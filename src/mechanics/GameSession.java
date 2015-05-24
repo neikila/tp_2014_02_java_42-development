@@ -10,6 +10,12 @@ public class GameSession {
     private final GameUser second;
     private GameMap map;
     private Id<GameUser> id;
+    private State state = State.Playing;
+
+    private enum State {
+        Playing,
+        Finished
+    }
 
     public GameSession(GameUser first, GameUser second, GameMap map) {
         this.map = map;
@@ -59,4 +65,8 @@ public class GameSession {
     }
 
     public GameMap getMap() { return map; }
+
+    public boolean isFinished() { return state == State.Finished; }
+
+    public void save() { state = State.Finished; }
 }

@@ -1,46 +1,36 @@
 package main.accountService;
 
-import main.Context;
-import messageSystem.Abonent;
-import messageSystem.Address;
-import messageSystem.MessageSystem;
+import main.user.UserProfile;
 
-public final class AccountService implements Abonent, Runnable {
-    private final Address address = new Address();
-    private final MessageSystem messageSystem;
+import java.util.List;
 
-    private final AccountServiceDAO accountServiceDAO;
+public interface AccountService {
 
-    public AccountService(Context context) {
-        this.messageSystem = (MessageSystem) context.get(MessageSystem.class);
-        messageSystem.addService(this);
-        messageSystem.getAddressService().registerAccountService(this);
+    public boolean addUser(String userName, UserProfile userProfile);
 
-        this.accountServiceDAO = (AccountServiceDAO) context.get(AccountServiceDAO.class);
-    }
+    public boolean addSessions(String sessionId, UserProfile userProfile);
 
-    public MessageSystem getMessageSystem() {
-        return messageSystem;
-    }
+    public int getAmountOfSessions();
 
-    public AccountServiceDAO getAccountServiceDAO() {
-        return accountServiceDAO;
-    }
+    public int getAmountOfSessionsWitUserAsKey();
 
-    @Override
-    public Address getAddress() {
-        return address;
-    }
+    public long getAmountOfUsers();
 
-    @Override
-    public void run() {
-        while (true){
-            messageSystem.execForAbonent(this);
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    public boolean isSessionWithSuchLoginExist(String userName);
+
+    public UserProfile getUser(String userName);
+
+    public UserProfile getSessions(String sessionId);
+
+    public UserProfile getSessionsByLogin(String login);
+
+    public void removeSession(String sessionId);
+
+    public void createAdmin();
+
+    public void createTestAccount();
+
+    public void updateUser(UserProfile user);
+
+    public List<UserProfile> getFirstPlayersByScore(int limit);
 }

@@ -2,7 +2,7 @@ package test;
 
 import frontend.ScoreServlet;
 import main.Context;
-import main.accountService.AccountServiceDAO;
+import main.accountService.AccountService;
 import main.user.UserProfile;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,24 +18,24 @@ public class ScoreServletTest extends ServletTest {
     private void createUsers() {
         UserProfile Vas = new UserProfile("Vasya", "Vasya", "Vasya@gmail.com");
         Vas.setScore(14);
-        accountServiceDAO.addUser(Vas.getLogin(), Vas);
+        accountService.addUser(Vas.getLogin(), Vas);
         UserProfile Van = new UserProfile("Vanya", "Vanya", "Vanya@gmail.com");
         Van.setScore(12);
-        accountServiceDAO.addUser(Van.getLogin(), Van);
+        accountService.addUser(Van.getLogin(), Van);
         UserProfile Pet = new UserProfile("Petya", "Petya", "Petya@gmail.com");
         Pet.setScore(10);
-        accountServiceDAO.addUser(Pet.getLogin(), Pet);
+        accountService.addUser(Pet.getLogin(), Pet);
         UserProfile Dan = new UserProfile("Danya", "Danya", "Danya@gmail.com");
         Dan.setScore(2);
-        accountServiceDAO.addUser(Dan.getLogin(), Dan);
+        accountService.addUser(Dan.getLogin(), Dan);
     }
 
 
     @Before
     public void setUp() throws Exception {
-        accountServiceDAO = getAccountServiceDAO();
+        accountService = getAccountService();
         Context context = new Context();
-        context.add(AccountServiceDAO.class, accountServiceDAO);
+        context.add(AccountService.class, accountService);
         servlet = new ScoreServlet(context);
 
         stringWriter = new StringWriter();

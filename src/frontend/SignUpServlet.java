@@ -1,7 +1,7 @@
 package frontend;
 
 import main.Context;
-import main.accountService.AccountServiceDAO;
+import main.accountService.AccountService;
 import main.user.UserProfile;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -26,11 +26,11 @@ import static utils.PageGenerator.getPage;
 public class SignUpServlet extends HttpServlet {
 
     final private Logger logger = getLogger(SignUpServlet.class.getName());
-    final private AccountServiceDAO accountServiceDAO;
+    final private AccountService accountService;
     final private Context context;
 
     public SignUpServlet(Context contextGlobal) {
-        this.accountServiceDAO = (AccountServiceDAO) contextGlobal.get(AccountServiceDAO.class);
+        this.accountService = (AccountService) contextGlobal.get(AccountService.class);
         context = contextGlobal;
     }
 
@@ -40,7 +40,7 @@ public class SignUpServlet extends HttpServlet {
         logger.info(LoggerMessages.doGetStart());
         logger.info(LoggerMessages.requestGetParams(), request.getParameterMap().toString());
         HttpSession session = request.getSession();
-        UserProfile user = accountServiceDAO.getSessions(session.getId());
+        UserProfile user = accountService.getSessions(session.getId());
 
         String pageToReturn;
         String message;
@@ -85,12 +85,12 @@ public class SignUpServlet extends HttpServlet {
         short status;
 
         if (!context.isBlocked()) {
-            if (accountServiceDAO.getSessions(session.getId()) == null) {
+            if (accountService.getSessions(session.getId()) == null) {
                 if (isUserNameValid(login) && isPasswordValid(password) && isEmailValid(email)) {
-                    if (accountServiceDAO.addUser(login, user)) {
+                    if (accountService.addUser(login, user)) {
                         status = 200;
                         logger.info(LoggerMessages.signUpSuccess(), user.getLogin());
-                        accountServiceDAO.addSessions(session.getId(), user);
+                        accountService.addSessions(session.getId(), user);
                         logger.info(LoggerMessages.hasAuthorised(), user.getLogin());
                     } else {
                         status = 400;

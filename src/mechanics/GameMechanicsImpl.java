@@ -2,7 +2,11 @@ package mechanics;
 
 import frontend.game.WebSocketService;
 import main.Context;
+import main.accountService.messages.MessageSaveGameSession;
 import main.user.UserProfile;
+import messageSystem.Address;
+import messageSystem.Message;
+import messageSystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -12,10 +16,11 @@ import utils.LoggerMessages;
 
 import java.util.*;
 
-public final class GameMechanicsDAOImpl implements GameMechanicsDAO {
-    final private Logger logger = LogManager.getLogger(GameMechanicsDAO.class.getName());
+public final class GameMechanicsImpl implements GameMechanics {
+    final private Logger logger = LogManager.getLogger(GameMechanics.class.getName());
 
-    private GameMechanics shellAbove = null;
+    private final Address address = new Address();
+    private final MessageSystem messageSystem;
 
     private static final int STEP_TIME = 100;
 
@@ -27,6 +32,7 @@ public final class GameMechanicsDAOImpl implements GameMechanicsDAO {
     final private WebSocketService webSocketService;
 
     final private Map<Id <GameUser>, GameSession> nameToGame = new HashMap<>();
+    final private Map<Id <GameSession>, GameSession> idToSession = new HashMap<>();
 
     final private Set<GameSession> allSessions = new HashSet<>();
 
@@ -35,7 +41,10 @@ public final class GameMechanicsDAOImpl implements GameMechanicsDAO {
     private GameUser waiter = null;
     private int nextMap = 0;
 
-    public GameMechanicsDAOImpl(Context context, GameMechanicsSettings settings) {
+    public GameMechanicsImpl(Context context, GameMechanicsSettings settings) {
+        this.messageSystem = (MessageSystem) context.get(MessageSystem.class);
+        messageSystem.addService(this);
+        messageSystem.getAddressService().registerGameMechanics(this);
 
         this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
 
@@ -45,10 +54,22 @@ public final class GameMechanicsDAOImpl implements GameMechanicsDAO {
         maps = settings.getMaps();
     }
 
-    public void setShellAbove(GameMechanics shellAbove) {
-        if (this.shellAbove == null) {
-            this.shellAbove = shellAbove;
+    @Override
+    public void run() {
+        while (true){
+            gmStep();
+            messageSystem.execForAbonent(this);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    @Override
+    public Address getAddress() {
+        return address;
     }
 
     public void addUser(Id <GameUser> id, UserProfile user) {
@@ -102,9 +123,9 @@ public final class GameMechanicsDAOImpl implements GameMechanicsDAO {
         webSocketService.notifyEnemyNewScore(myGameSession, user.getMyPosition());
     }
 
-    public void gmStep() {
+    private void gmStep() {
         for (GameSession session : allSessions) {
-            if(session.getSessionTime() > gameTime) {
+            if(!session.isFinished() && session.getSessionTime() > gameTime) {
                 finishGame(session);
             }
         }
@@ -132,15 +153,26 @@ public final class GameMechanicsDAOImpl implements GameMechanicsDAO {
         first.getUser().increaseScoreOnValue(deltaScore + 123);
         second.getUser().increaseScoreOnValue(-1 * deltaScore - 123);
 
-        shellAbove.updateUser(first.getUser());
-        shellAbove.updateUser(second.getUser());
+        saveSession(session);
 
         webSocketService.notifyGameOver(first, firstResult);
         webSocketService.notifyGameOver(second, secondResult);
-        allSessions.remove(session);
+        session.save();
+        nameToGame.remove(firstId);
+        nameToGame.remove(secondId);
         userManager.removeUser(first);
         userManager.removeUser(second);
         logger.info(LoggerMessages.sessionFinished());
+    }
+
+    private void saveSession(GameSession gameSession) {
+        Message updateMes = new MessageSaveGameSession(this.getAddress(), messageSystem.getAddressService().getAccountServiceAddress(), gameSession);
+        messageSystem.sendMessage(updateMes);
+    }
+
+    public void removeSession(GameSession session) {
+        if (session.isFinished())
+            allSessions.remove(session);
     }
 
     private void starGame(GameUser first, GameUser second, GameMap nextMap) {

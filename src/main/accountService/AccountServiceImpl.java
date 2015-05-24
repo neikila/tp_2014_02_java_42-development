@@ -6,12 +6,12 @@ import main.user.UserProfile;
 
 import java.util.*;
 
-public class AccountServiceDAOImpl implements AccountServiceDAO {
+public class AccountServiceImpl implements AccountService {
     final private Map<String, UserProfile> users = new HashMap<>();
     final private Map<String, UserProfile> sessions = new HashMap<>();
     final private Map<String, UserProfile> sessionsWithUserAsKey = new HashMap<>();
 
-    public AccountServiceDAOImpl(Context context) {
+    public AccountServiceImpl(Context context) {
     }
 
     public boolean addUser(String userName, UserProfile userProfile) {

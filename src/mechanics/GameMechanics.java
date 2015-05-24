@@ -1,56 +1,17 @@
 package mechanics;
 
-import main.Context;
-import main.accountService.messages.MessageUpdateProfile;
 import main.user.UserProfile;
 import messageSystem.Abonent;
-import messageSystem.Address;
-import messageSystem.Message;
-import messageSystem.MessageSystem;
+import org.json.simple.JSONObject;
+import utils.Id;
 
-public final class GameMechanics implements Abonent, Runnable {
-    private final Address address = new Address();
-    private final MessageSystem messageSystem;
+public interface GameMechanics extends Abonent, Runnable{
 
-    private final GameMechanicsDAO gameMechanicsDAO;
+    public void addUser(Id<GameUser> id, UserProfile user);
 
-    public GameMechanics(Context context) {
-        this.messageSystem = (MessageSystem) context.get(MessageSystem.class);
-        messageSystem.addService(this);
-        messageSystem.getAddressService().registerGameMechanics(this);
+    public void incrementScore(GameUser user);
 
-        this.gameMechanicsDAO = (GameMechanicsDAO) context.get(GameMechanicsDAO.class);
-        gameMechanicsDAO.setShellAbove(this);
-    }
+    public void analyzeMessage(Id<GameUser> id, JSONObject message);
 
-    public MessageSystem getMessageSystem() {
-        return messageSystem;
-    }
-
-    public GameMechanicsDAO getGameMechanicsDAO() {
-        return gameMechanicsDAO;
-    }
-
-    @Override
-    public Address getAddress() {
-        return address;
-    }
-
-    @Override
-    public void run() {
-        while (true){
-            gameMechanicsDAO.gmStep();
-            messageSystem.execForAbonent(this);
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void updateUser(UserProfile user) {
-        Message updateMes = new MessageUpdateProfile(this.getAddress(), messageSystem.getAddressService().getAccountServiceAddress(), user);
-        messageSystem.sendMessage(updateMes);
-    }
+    public void removeSession(GameSession session);
 }

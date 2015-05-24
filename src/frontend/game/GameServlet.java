@@ -1,7 +1,7 @@
 package frontend.game;
 
 import main.Context;
-import main.accountService.AccountServiceDAO;
+import main.accountService.AccountService;
 import main.user.UserProfile;
 import org.apache.logging.log4j.Logger;
 import utils.LoggerMessages;
@@ -22,10 +22,10 @@ import static utils.PageGenerator.getPage;
 public class GameServlet extends HttpServlet {
 
     final private Logger logger = getLogger(GameServlet.class.getName());
-    final private AccountServiceDAO accountServiceDAO;
+    final private AccountService accountService;
 
     public GameServlet(Context context) {
-        this.accountServiceDAO = (AccountServiceDAO) context.get(AccountServiceDAO.class);
+        this.accountService = (AccountService) context.get(AccountService.class);
     }
 
     public void doPost(HttpServletRequest request,
@@ -34,7 +34,7 @@ public class GameServlet extends HttpServlet {
         logger.info(LoggerMessages.doPostStart());
 
         Map<String, Object> pageVariables = new HashMap<>();
-        UserProfile user = accountServiceDAO.getSessions(request.getSession().getId());
+        UserProfile user = accountService.getSessions(request.getSession().getId());
         response.setStatus(SC_OK);
         response.setContentType("text/html;charset=utf-8");
 

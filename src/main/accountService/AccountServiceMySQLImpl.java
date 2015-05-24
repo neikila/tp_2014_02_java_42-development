@@ -8,12 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AccountServiceDAOMySQLImpl implements AccountServiceDAO {
+public class AccountServiceMySQLImpl implements AccountService {
     final private DBService dbService;
     final private Map<String, UserProfile> sessions = new HashMap<>();
     final private Map<String, UserProfile> sessionsWithUserAsKey = new HashMap<>();
 
-    public AccountServiceDAOMySQLImpl(Context context) {
+    public AccountServiceMySQLImpl(Context context) {
         dbService = (DBService) context.get(DBService.class);
     }
 

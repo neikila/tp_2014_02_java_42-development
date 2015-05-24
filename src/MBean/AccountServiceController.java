@@ -1,7 +1,7 @@
 package MBean;
 
 import main.Context;
-import main.accountService.AccountServiceDAO;
+import main.accountService.AccountService;
 import org.apache.logging.log4j.Logger;
 import utils.LoggerMessages;
 
@@ -12,11 +12,11 @@ import static org.apache.logging.log4j.LogManager.getLogger;
  */
 public class AccountServiceController implements AccountServiceControllerMBean {
     final private Logger logger = getLogger(AccountServiceController.class.getName());
-    final private AccountServiceDAO accountServer;
+    final private AccountService accountServer;
     final private Context context;
 
     public AccountServiceController(Context context) {
-        this.accountServer = (AccountServiceDAO) context.get(AccountServiceDAO.class);
+        this.accountServer = (AccountService) context.get(AccountService.class);
         this.context = context;
     }
 

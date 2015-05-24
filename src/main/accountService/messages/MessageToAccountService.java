@@ -1,6 +1,6 @@
 package main.accountService.messages;
 
-import main.accountService.AccountService;
+import main.accountService.AccountServiceThread;
 import messageSystem.Abonent;
 import messageSystem.Address;
 import messageSystem.Message;
@@ -12,10 +12,10 @@ public abstract class MessageToAccountService extends Message {
 
     @Override
     public final void exec(Abonent abonent) {
-        if (abonent instanceof AccountService) {
-            exec((AccountService) abonent);
+        if (abonent instanceof AccountServiceThread) {
+            exec((AccountServiceThread) abonent);
         }
     }
 
-    protected abstract void exec(AccountService service);
+    protected abstract void exec(AccountServiceThread service);
 }

@@ -2,7 +2,7 @@ package test;
 
 import frontend.AdminServlet;
 import main.Context;
-import main.accountService.AccountServiceDAO;
+import main.accountService.AccountService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,9 +35,9 @@ public class AdminServletTest extends ServletTest {
 
     @Before
     public void setUp() throws Exception {
-        accountServiceDAO = getAccountServiceWithSession(getAdmin());
+        accountService = getAccountServiceWithSession(getAdmin());
         Context context = new Context();
-        context.add(AccountServiceDAO.class, accountServiceDAO);
+        context.add(AccountService.class, accountService);
         servlet = new AdminServletTestExtension(context);
         stringWriter = new StringWriter();
         response = getResponse(stringWriter);
@@ -59,8 +59,8 @@ public class AdminServletTest extends ServletTest {
         String sessionId = "";
         request = getRequest(sessionId);
         when(request.getParameter("action")).thenReturn("stop");
-        accountServiceDAO.addUser(getUser().getLogin(), getUser());
-        accountServiceDAO.addSessions(sessionId, getUser());
+        accountService.addUser(getUser().getLogin(), getUser());
+        accountService.addSessions(sessionId, getUser());
 
         servlet.doPost(request, response);
 
@@ -71,7 +71,7 @@ public class AdminServletTest extends ServletTest {
     public void testDoPostIfNotAuthorized() throws Exception {
         request = getRequest(null);
         when(request.getParameter("action")).thenReturn("stop");
-        accountServiceDAO.removeSession(null);
+        accountService.removeSession(null);
 
         servlet.doPost(request, response);
 

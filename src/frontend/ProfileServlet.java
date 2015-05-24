@@ -1,7 +1,7 @@
 package frontend;
 
 import main.Context;
-import main.accountService.AccountServiceDAO;
+import main.accountService.AccountService;
 import main.user.UserProfile;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -21,10 +21,10 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 public class ProfileServlet extends HttpServlet {
 
     final private Logger logger = getLogger(ProfileServlet.class.getName());
-    final private AccountServiceDAO accountServiceDAO;
+    final private AccountService accountService;
 
     public ProfileServlet(Context contextGlobal) {
-        this.accountServiceDAO = (AccountServiceDAO) contextGlobal.get(AccountServiceDAO.class);
+        this.accountService = (AccountService) contextGlobal.get(AccountService.class);
     }
 
     public void doGet(HttpServletRequest request,
@@ -34,7 +34,7 @@ public class ProfileServlet extends HttpServlet {
         logger.info(LoggerMessages.requestGetParams(), request.getParameterMap().toString());
         HttpSession session = request.getSession();
 
-        UserProfile user = accountServiceDAO.getSessions(session.getId());
+        UserProfile user = accountService.getSessions(session.getId());
 
         short status;
         String message = "";

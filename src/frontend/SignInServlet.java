@@ -1,7 +1,7 @@
 package frontend;
 
 import main.Context;
-import main.accountService.AccountServiceDAO;
+import main.accountService.AccountService;
 import main.user.UserProfile;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -25,11 +25,11 @@ import static utils.PageGenerator.getPage;
 public class SignInServlet extends HttpServlet {
 
     final private Logger logger = getLogger(SignInServlet.class.getName());
-    final private AccountServiceDAO accountServiceDAO;
+    final private AccountService accountService;
     final private Context context;
 
     public SignInServlet(Context contextGlobal) {
-        this.accountServiceDAO = (AccountServiceDAO) contextGlobal.get(AccountServiceDAO.class);
+        this.accountService = (AccountService) contextGlobal.get(AccountService.class);
         context = contextGlobal;
     }
 
@@ -44,7 +44,7 @@ public class SignInServlet extends HttpServlet {
         Map<String, Object> pageVariables = new HashMap<>();
 
         HttpSession session = request.getSession();
-        UserProfile user = accountServiceDAO.getSessions(session.getId());
+        UserProfile user = accountService.getSessions(session.getId());
 
         String loginStatus;
 
@@ -85,10 +85,10 @@ public class SignInServlet extends HttpServlet {
         short status;
 
         if (!context.isBlocked()) {
-            if (!accountServiceDAO.isSessionWithSuchLoginExist(login)) {
-                UserProfile profile = accountServiceDAO.getUser(login);
+            if (!accountService.isSessionWithSuchLoginExist(login)) {
+                UserProfile profile = accountService.getUser(login);
                 if (profile != null && profile.getPassword().equals(password)) {
-                    accountServiceDAO.addSessions(session.getId(), profile);
+                    accountService.addSessions(session.getId(), profile);
                     status = 200;
                     logger.info(LoggerMessages.hasAuthorised(), profile.getLogin());
                 } else {
