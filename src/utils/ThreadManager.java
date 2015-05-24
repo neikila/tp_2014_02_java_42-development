@@ -1,6 +1,7 @@
 package utils;
 
 import main.AppServer;
+import org.eclipse.jetty.server.Server;
 
 import java.util.ArrayList;
 
@@ -30,20 +31,27 @@ public class ThreadManager {
     }
 
     public void interruptThreads() {
-        if(frontEnd != null) {
-            frontEnd.stop();
-            frontEnd = null;
-        }
+        new Thread() {
+            @Override
+            public void run() {
+                if(frontEnd != null) {
+                    Server server = frontEnd.getServer();
+                    try {
+                        server.stop();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                for (Thread a: GMThreads) {
+                    a.interrupt();
+                }
+                GMThreads = null;
 
-        for (Thread a: GMThreads) {
-            a.interrupt();
-        }
-        GMThreads = null;
-
-        for (Thread a: ASThreads) {
-            a.interrupt();
-        }
-        ASThreads = null;
-
+                for (Thread a: ASThreads) {
+                    a.interrupt();
+                }
+                ASThreads = null;
+            }
+        }.start();
     }
 }

@@ -53,7 +53,7 @@ public class Main {
         context.add(AccountServiceDAO.class, accountServiceDAO);
 
 
-        startMBean(context);
+//        startMBean(context);
 
         logger.info(LoggerMessages.serverStart(), (String.valueOf(port)));
 
@@ -86,7 +86,8 @@ public class Main {
 
         logger.info("version: Threads in process");
         logger.info("Start");
-        gameMechanicsThread.join();
+        server.getServer().join();
+        System.out.println("Well done");
     }
 
     private static void startMBean(Context context) throws Exception{
@@ -95,6 +96,5 @@ public class Main {
         ObjectName name = new ObjectName("ServerManager:type=AccountServiceController");
         AccountServiceControllerMBean serverStatistics = new AccountServiceController(context);
         mbs.registerMBean(serverStatistics, name);
-
     }
 }

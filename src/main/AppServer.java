@@ -51,6 +51,10 @@ public class AppServer {
         server.setHandler(handlers);
     }
 
+    public Server getServer() {
+        return server;
+    }
+
     public void start(){
         try {
             server.start();
@@ -79,7 +83,7 @@ public class AppServer {
         } catch (Exception e) {
             logger.fatal("There is an error in Server.Stop()");
             logger.fatal(e);
-//            e.printStackTrace();
+            e.printStackTrace();
 //            System.exit(1);
         }
     }

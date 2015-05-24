@@ -38,7 +38,10 @@ public final class GameMechanics implements Abonent, Runnable {
 
     @Override
     public void run() {
+        int count = 0;
         while (true){
+            count++;
+            System.out.println("GM " + count);
             gameMechanicsDAO.gmStep();
             messageSystem.execForAbonent(this);
             try {

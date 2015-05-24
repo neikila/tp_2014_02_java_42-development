@@ -34,7 +34,10 @@ public final class AccountService implements Abonent, Runnable {
 
     @Override
     public void run() {
+        int count = 0;
         while (true){
+            count++;
+            System.out.println("AS " + count);
             messageSystem.execForAbonent(this);
             try {
                 Thread.sleep(100);
