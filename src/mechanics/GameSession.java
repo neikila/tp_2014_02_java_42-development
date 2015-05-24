@@ -1,15 +1,14 @@
 package mechanics;
 
-import utils.Id;
-
 import java.util.Date;
+import java.util.Random;
 
 public class GameSession {
     private final long startTime;
     private final GameUser first;
     private final GameUser second;
     private GameMap map;
-    private Id<GameUser> id;
+    private GameResult winner;
     private State state = State.Playing;
 
     private enum State {
@@ -20,7 +19,7 @@ public class GameSession {
     public GameSession(GameUser first, GameUser second, GameMap map) {
         this.map = map;
         startTime = new Date().getTime();
-        id = null;
+        winner = null;
 
         this.first = first;
         this.second = second;
@@ -52,21 +51,23 @@ public class GameSession {
         return second;
     }
 
-    public int getWinner() {
-        if (id == null) {
-            return 0;
+    public GameResult getWinner() {
+
+        // Заглушка
+        Random rand = new Random();
+        int nextMap = rand.nextInt(1);
+        if (nextMap == 0) {
+            winner = GameResult.FirstWon;
         } else {
-            if (id.equals(first.getId())) {
-                return 1;
-            } else {
-                return -1;
-            }
+            winner = GameResult.SecondWon;
         }
+
+        return winner;
     }
 
     public GameMap getMap() { return map; }
 
     public boolean isFinished() { return state == State.Finished; }
 
-    public void save() { state = State.Finished; }
+    public void finish() { state = State.Finished; }
 }

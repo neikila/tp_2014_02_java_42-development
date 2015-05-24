@@ -44,9 +44,9 @@ public class LoggerMessages {
     public static String gameUserPosition() { return "User {} is the {}";}
     public static String newSocket() {return "Start creating New socket";}
     public static String socketClosed() { return "Socket has been already closed"; }
-    public static String requestGetParams() { return "Starting at port: {}";}
+    public static String serverStart() { return "Starting at port: {}";}
     public static String newSocketSuccess() { return "New Socket Successfully constructed";}
-    public static String serverStart() { return "Request params {}"; }
+    public static String requestGetParams() { return "Request params {}"; }
     public static String jsonGotFromRequest() { return "JSON from request: {}";}
     public static String startXML() {return "Start Document"; }
     public static String errorXML() {return "Error while reading XML"; }

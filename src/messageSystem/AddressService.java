@@ -9,36 +9,31 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class AddressService {
     private List<Address> accountServiceList = new ArrayList<>();
-    private List<Address> gameMechanicsList = new ArrayList<>();
-
     private AtomicInteger accountServiceCounter = new AtomicInteger();
-    private AtomicInteger gameMechanicsCounter= new AtomicInteger();
+    final private Object syncObj = new Object();
 
-//    public void registerFrontEnd(FrontEnd frontEnd) {
-//        this.frontEnd = frontEnd.getAddress();
-//    }
+    private Address gameMechanics;
 
     public void registerGameMechanics(GameMechanics gameMechanics) {
-        gameMechanicsList.add(gameMechanics.getAddress());
+        this.gameMechanics = gameMechanics.getAddress();
     }
 
     public void registerAccountService(AccountServiceThread accountServiceThread) {
         accountServiceList.add(accountServiceThread.getAddress());
     }
 
-    // TODO два synchronized - плохо, можно ли поправить?
-    public synchronized Address getGameMechanicsAddress() {
-        int index = gameMechanicsCounter.getAndIncrement();
-        if (index >= gameMechanicsList.size()) {
-            index = 0;
-        }
-        return gameMechanicsList.get(index);
+    public Address getGameMechanicsAddress() {
+        return gameMechanics;
     }
 
-    public synchronized Address getAccountServiceAddress() {
-        int index = accountServiceCounter.getAndIncrement();
-        if (index >= accountServiceList.size()) {
-            index = 0;
+    public Address getAccountServiceAddress() {
+        int index;
+        synchronized (syncObj) {
+            index = accountServiceCounter.getAndIncrement();
+            if (index >= accountServiceList.size()) {
+                accountServiceCounter.set(1);
+                index = 0;
+            }
         }
         return accountServiceList.get(index);
     }

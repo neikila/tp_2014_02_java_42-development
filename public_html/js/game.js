@@ -7,6 +7,8 @@ var finished = false;
 
 var enemyName = "";
 
+var myPosition;
+
 init = function () {
     ws = new WebSocket("ws://localhost:8080/gameplay");
     console.log("Create");
@@ -17,7 +19,8 @@ init = function () {
     ws.onmessage = function (event) {
         var data = JSON.parse(event.data);
         if(data.status == "start"){
-            console.log("MyPosition = " + data.position);
+            myPosition = data.position;
+            console.log("MyPosition = " + myPosition);
             console.log(data);
             document.getElementById("wait").style.display = "none";
             document.getElementById("gameplay").style.display = "block";
@@ -29,10 +32,10 @@ init = function () {
             document.getElementById("gameOver").style.display = "block";
             document.getElementById("gameplay").style.display = "none";
 
-            if(data.result == 1)
+            if(data.result == myPosition)
                 document.getElementById("win").innerHTML = "winner!";
             else {
-                if (data.result == -1)
+                if (data.result != 0)
                     document.getElementById("win").innerHTML = "loser!";
                 else
                     document.getElementById("win").innerHTML = "loser... just as your opponent!";

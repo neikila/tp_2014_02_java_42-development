@@ -58,12 +58,14 @@ public class Main {
         AppServer server = new AppServer(context, port);
 //        context.add(AppServer.class, server);
 
-        final Thread accountServiceThread = new Thread(new AccountServiceThread(context));
-        accountServiceThread.setDaemon(false);
-        accountServiceThread.setName("AccountService");
+        for (int i = 0; i < 2; ++i) {
+            final Thread accountServiceThread = new Thread(new AccountServiceThread(context));
+            accountServiceThread.setDaemon(false);
+            accountServiceThread.setName("AccountService" + (i + 1));
 //        context.add(AccountService.class, accountServiceThread);
 
-        accountServiceThread.start();
+            accountServiceThread.start();
+        }
         server.start();
 
         GameMechanics gameMechanics;
