@@ -26,6 +26,7 @@ public class UserProfileDAO {
         session.flush();
         session.close();
     }
+
     public UserProfile read(long id) {
         return (UserProfile) session.load(UserProfile.class, id);
     }
