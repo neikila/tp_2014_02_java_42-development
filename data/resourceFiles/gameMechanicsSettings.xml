@@ -1,5 +1,5 @@
 <class type='resource.GameMechanicsSettings'>
-    <timeLimit>3</timeLimit>
+    <timeLimit>9</timeLimit>
     <numAmount>10</numAmount>
     <weight>10</weight>
     <minDelta>10</minDelta>

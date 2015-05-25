@@ -60,7 +60,6 @@ public class GameSession {
     }
 
     public int makeStep() {
-        System.out.println("countStep: " + countStep);
         return ++countStep;
     }
 

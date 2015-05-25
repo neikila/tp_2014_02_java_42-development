@@ -18,6 +18,8 @@ public class WebSocketServiceImpl implements WebSocketService {
     private final Address address = new Address();
     private final MessageSystem messageSystem;
 
+    private final short STEP_TIME = 10;
+
     public WebSocketServiceImpl(Context context) {
         messageSystem = (MessageSystem) context.get(MessageSystem.class);
         messageSystem.addService(this);
@@ -29,7 +31,7 @@ public class WebSocketServiceImpl implements WebSocketService {
         while (true){
             messageSystem.execForAbonent(this);
             try {
-                Thread.sleep(25);
+                Thread.sleep(STEP_TIME);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

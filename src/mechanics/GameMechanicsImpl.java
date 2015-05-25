@@ -55,12 +55,13 @@ public final class GameMechanicsImpl implements GameMechanics {
 
     @Override
     public void run() {
+        long startTime = (new Date()).getTime();
         while (true){
             createSessions();
             gmStep();
             messageSystem.execForAbonent(this);
             try {
-                Thread.sleep(STEP_TIME);
+                Thread.sleep(STEP_TIME - (new Date().getTime() - startTime) % STEP_TIME);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
