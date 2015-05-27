@@ -10,6 +10,10 @@ public interface AccountService {
 
     public boolean addSessions(String sessionId, UserProfile userProfile);
 
+    public boolean addPhoneSession(String phoneSessionId, String login);
+
+    public void removePhoneSession(String login);
+
     public int getAmountOfSessions();
 
     public int getAmountOfSessionsWitUserAsKey();
@@ -17,6 +21,8 @@ public interface AccountService {
     public long getAmountOfUsers();
 
     public boolean isSessionWithSuchLoginExist(String userName);
+
+    public boolean isPhoneSessionWithSuchLoginExist(String userName);
 
     public UserProfile getUser(String userName);
 

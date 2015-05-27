@@ -9,6 +9,8 @@ import java.util.*;
 public class AccountServiceImpl implements AccountService {
     final private Map<String, UserProfile> users = new HashMap<>();
     final private Map<String, UserProfile> sessions = new HashMap<>();
+    final private Map<String, String> phoneSessionToLogin = new HashMap<>();
+    final private Map<String, String> phoneLoginToSession = new HashMap<>();
     final private Map<String, UserProfile> sessionsWithUserAsKey = new HashMap<>();
 
     public AccountServiceImpl(Context context) {
@@ -28,10 +30,29 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    public boolean addPhoneSession(String phoneSessionId, String login) {
+        if (!phoneSessionToLogin.containsKey(phoneSessionId)) {
+            phoneSessionToLogin.put(phoneSessionId, login);
+            phoneLoginToSession.put(login, phoneSessionId);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void removePhoneSession(String login) {
+        phoneSessionToLogin.remove(phoneLoginToSession.get(login));
+        phoneLoginToSession.remove(login);
+    }
+
+    public boolean isPhoneSessionWithSuchLoginExist(String userName) {
+
+        return phoneLoginToSession.containsKey(userName);
+    }
+
     public int getAmountOfSessions() {return sessions.size();}
 
     public int getAmountOfSessionsWitUserAsKey() {return sessionsWithUserAsKey.size();}
-
 
     public long getAmountOfUsers() {return (long)users.size();}
 

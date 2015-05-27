@@ -12,6 +12,8 @@ public class AccountServiceMySQLImpl implements AccountService {
     final private DBService dbService;
     final private Map<String, UserProfile> sessions = new HashMap<>();
     final private Map<String, UserProfile> sessionsWithUserAsKey = new HashMap<>();
+    final private Map<String, String> phoneSessionToLogin = new HashMap<>();
+    final private Map<String, String> phoneLoginToSession = new HashMap<>();
 
     public AccountServiceMySQLImpl(Context context) {
         dbService = (DBService) context.get(DBService.class);
@@ -32,6 +34,26 @@ public class AccountServiceMySQLImpl implements AccountService {
         } else {
             return false;
         }
+    }
+
+    public boolean addPhoneSession(String phoneSessionId, String login) {
+        if (!phoneSessionToLogin.containsKey(phoneSessionId)) {
+            phoneSessionToLogin.put(phoneSessionId, login);
+            phoneLoginToSession.put(login, phoneSessionId);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void removePhoneSession(String login) {
+        phoneSessionToLogin.remove(phoneLoginToSession.get(login));
+        phoneLoginToSession.remove(login);
+    }
+
+    public boolean isPhoneSessionWithSuchLoginExist(String userName) {
+
+        return phoneLoginToSession.containsKey(userName);
     }
 
     public int getAmountOfSessions() {return sessions.size();}
