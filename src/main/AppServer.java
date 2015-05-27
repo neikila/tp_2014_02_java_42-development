@@ -33,6 +33,7 @@ public class AppServer {
         context.addServlet(new ServletHolder(new AdminServlet(contextGlobal)), url + "/auth/admin");
         context.addServlet(new ServletHolder(new SignOutServlet(contextGlobal)), url + "/auth/signout");
         context.addServlet(new ServletHolder(new ScoreServlet(contextGlobal)), url + "/score");
+        context.addServlet(new ServletHolder(new PhoneServlet(contextGlobal)), url + "/auth'gamepad");
 
         context.addServlet(new ServletHolder(new WebSocketGameServlet(contextGlobal)), "/gameplay");
         context.addServlet(new ServletHolder(new GameServlet(contextGlobal)), "/game.html");
