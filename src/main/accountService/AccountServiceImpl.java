@@ -73,6 +73,10 @@ public class AccountServiceImpl implements AccountService {
         return sessionsWithUserAsKey.get(login);
     }
 
+    public UserProfile getUserFromPhoneSession(String phoneId) {
+        return sessionsWithUserAsKey.get(phoneSessionToLogin.get(phoneId));
+    }
+
     public void removeSession(String sessionId) {
         sessionsWithUserAsKey.remove(sessions.get(sessionId).getLogin());
         sessions.remove(sessionId);

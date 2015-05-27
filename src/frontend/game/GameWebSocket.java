@@ -37,8 +37,9 @@ public class GameWebSocket {
     private boolean closed; // TODO возможно ли обратиться к этомму объекту после того как сработает OnSocketClosed
     // На случай, если сокет закрыт, но объект остался
     private boolean gameSessionClosed;
+    private boolean isGamePad;
 
-    public GameWebSocket(UserProfile userProfile, Context context) {
+    public GameWebSocket(UserProfile userProfile, Context context, boolean isGamePad) {
         this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
         this.user = userProfile;
         this.id = new Id<>(user.getId());
@@ -118,7 +119,8 @@ public class GameWebSocket {
         gameSessionClosed = false;
         logger.info(LoggerMessages.onOpen(), user.getLogin());
         setSession(session);
-        webSocketService.addUser(this);
+        if (isGamePad == false)
+            webSocketService.addUser(this);
 
         messageSystem.sendMessage(new MessageAddUser(webSocketService.getAddress(), GMAdress, id, user));
     }

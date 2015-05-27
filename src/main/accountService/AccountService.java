@@ -30,6 +30,8 @@ public interface AccountService {
 
     public UserProfile getSessionsByLogin(String login);
 
+    public UserProfile getUserFromPhoneSession(String phoneId);
+
     public void removeSession(String sessionId);
 
     public void createAdmin();

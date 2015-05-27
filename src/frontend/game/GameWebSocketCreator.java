@@ -28,9 +28,17 @@ public class GameWebSocketCreator implements WebSocketCreator {
         UserProfile temp;
         logger.info(LoggerMessages.newSocket());
         if ((temp = accountService.getSessions(sessionId)) == null) {
-            logger.info(LoggerMessages.notAuthorised());
-            return null;
+            if ((temp = accountService.getUserFromPhoneSession(sessionId)) != null) {
+                return new GameWebSocket(temp, context, true);
+            } else {
+                logger.info(LoggerMessages.notAuthorised());
+            }
+        } else {
+            return new GameWebSocket(temp, context, false);
         }
-        return new GameWebSocket(temp, context);
+
+        logger.info("Huston we have some problems");
+        //  TODO
+        return null;
     }
 }
