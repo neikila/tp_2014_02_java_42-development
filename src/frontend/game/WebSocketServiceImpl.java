@@ -6,6 +6,8 @@ import mechanics.GameSession;
 import mechanics.GameUser;
 import messageSystem.Address;
 import messageSystem.MessageSystem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import utils.Id;
 
@@ -13,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WebSocketServiceImpl implements WebSocketService {
+    final private Logger logger = LogManager.getLogger(WebSocketService.class);
     private Map<Id <GameUser>, GameWebSocket> userSockets = new HashMap<>();
 
     private final Address address = new Address();
@@ -48,30 +51,54 @@ public class WebSocketServiceImpl implements WebSocketService {
         userSockets.put(user.getId(), user);
     }
 
+    // TODO переделать на лямбды
     @Override
     public void sendSettings(Id <GameUser> id, GameMap map) {
-        userSockets.get(id).settings(map);
+       GameWebSocket socket;
+        if ((socket = userSockets.get(id)) != null) {
+            socket.settings(map);
+        } else {
+            logger.info("No logger related to such GameUser ID: {}", id);
+        }
     }
 
     @Override
     public void notifyAction(Id <GameUser> id, JSONObject action) {
-        GameWebSocket gameWebSocket = userSockets.get(id);
-        gameWebSocket.sendAction(action);
+        GameWebSocket socket;
+        if ((socket = userSockets.get(id)) != null) {
+            socket.sendAction(action);
+        } else {
+            logger.info("No logger related to such GameUser ID: {}", id);
+        }
     }
 
     @Override
     public void sync(GameSession session, Id <GameUser> id) {
-        GameWebSocket gameWebSocket = userSockets.get(id);
-        gameWebSocket.sync(session, id);
+        GameWebSocket socket;
+        if ((socket = userSockets.get(id)) != null) {
+            socket.sync(session, id);
+        } else {
+            logger.info("No logger related to such GameUser ID: {}", id);
+        }
     }
+
     @Override
     public void notifyStartGame(GameSession session, Id <GameUser> id) {
-        GameWebSocket gameWebSocket = userSockets.get(id);
-        gameWebSocket.startGame(session, id);
+        GameWebSocket socket;
+        if ((socket = userSockets.get(id)) != null) {
+            socket.startGame(session, id);
+        } else {
+            logger.info("No logger related to such GameUser ID: {}", id);
+        }
     }
 
     @Override
     public void notifyGameOver(Id <GameUser> id, int result) {
-        userSockets.get(id).gameOver(result);
+        GameWebSocket socket;
+        if ((socket = userSockets.get(id)) != null) {
+            socket.gameOver(result);
+        } else {
+            logger.info("No logger related to such GameUser ID: {}", id);
+        }
     }
 }

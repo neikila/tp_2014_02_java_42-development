@@ -60,7 +60,7 @@ public class Main {
         AppServer server = new AppServer(context, port);
 //        context.add(AppServer.class, server);
 
-        for (int i = 0; i < 2; ++i) {
+        for (int i = 0; i < 1; ++i) {
             Thread accountServiceThread = new Thread(new AccountServiceThread(context));
             accountServiceThread.setDaemon(false);
             accountServiceThread.setName("AccountService" + (i + 1));
@@ -78,7 +78,7 @@ public class Main {
 
         GameMechanics gameMechanics;
         GameMechanicsSettings gameMechanicsSettings = (GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings");
-        for (int i = 0; i < 2; ++i) {
+        for (int i = 0; i < 1; ++i) {
             gameMechanics = new GameMechanicsImpl(context, gameMechanicsSettings);
 
             final Thread gameMechanicsThread = new Thread(gameMechanics);

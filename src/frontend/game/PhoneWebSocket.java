@@ -37,18 +37,21 @@ public class PhoneWebSocket {
 
         session = null;
         logger.info(LoggerMessages.newSocketSuccess());
+        System.out.println("Phone Socket created  with id =" + id.getId());
     }
 
     public Id <GameUser> getId() { return id; }
 
     @OnWebSocketMessage
     public void onMessage(String data) {
+        System.out.println("Message income");
         JSONObject message = getJsonFromString(data);
         messageSystem.sendMessage(new MessageFromWebSocket(webSocketAddr, GMAdress, id, message));
     }
 
     @OnWebSocketConnect
     public void onOpen(Session session) {
+        System.out.println("Phone socket");
         logger.info("User with id {} open gamePad socket", id.getId());
         setSession(session);
     }
