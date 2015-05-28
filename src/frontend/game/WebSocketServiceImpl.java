@@ -42,6 +42,11 @@ public class WebSocketServiceImpl implements WebSocketService {
     }
 
     @Override
+    public GameWebSocket getSocket(Id<GameUser> id) {
+        return userSockets.get(id);
+    }
+
+    @Override
     public Address getAddress() {
         return address;
     }

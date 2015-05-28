@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public final class MessageSystem {
+public class MessageSystem {
     private final Logger logger = LogManager.getLogger(MessageSystem.class.getName());
     private final Map<Address, ConcurrentLinkedQueue<Message>> messages = new HashMap<>();
     private final AddressService addressService = new AddressService();

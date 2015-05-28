@@ -32,12 +32,13 @@ public class PhoneWebSocket {
     public PhoneWebSocket(Id <GameUser> id, Context context) {
         this.id = id;
         this.messageSystem = (MessageSystem) context.get(MessageSystem.class);
-        this.GMAdress = messageSystem.getAddressService().getGameMechanicsAddress();
+        WebSocketService webSocketService = (WebSocketService) context.get(WebSocketService.class);
+        this.GMAdress = webSocketService.getSocket(id).getGMAdress();
         this.webSocketAddr = messageSystem.getAddressService().getWebSocketServiceAddress();
 
         session = null;
         logger.info(LoggerMessages.newSocketSuccess());
-        System.out.println("Phone Socket created  with id =" + id.getId());
+        System.out.println("Phone Socket created  with id = " + id.getId());
     }
 
     public Id <GameUser> getId() { return id; }

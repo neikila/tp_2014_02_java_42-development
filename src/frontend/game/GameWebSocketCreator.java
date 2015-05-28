@@ -28,12 +28,14 @@ public class GameWebSocketCreator implements WebSocketCreator {
         String sessionId = req.getHttpServletRequest().getSession().getId();
         UserProfile temp;
         logger.info(LoggerMessages.newSocket());
-        if ((temp = accountService.getSessions(sessionId)) == null) {
-            if ((temp = accountService.getUserFromPhoneSession(sessionId)) != null) {
-                logger.info("New phoneSocket for user {} with id {}", temp.getLogin(), temp.getId());
-                return new PhoneWebSocket(new Id<>(temp.getId()), context);
-            }
-        } else {
+
+        if ((temp = accountService.getUserFromPhoneSession(sessionId)) != null) {
+            logger.info("New phoneSocket for user {} with id {}", temp.getLogin(), temp.getId());
+            return new PhoneWebSocket(new Id<>(temp.getId()), context);
+        }
+
+        if ((temp = accountService.getSessions(sessionId)) != null) {
+            logger.info("New webSocket for user {} with id {}", temp.getLogin(), temp.getId());
             return new GameWebSocket(temp, context);
         }
 

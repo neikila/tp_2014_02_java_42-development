@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public final class AddressService {
+public class AddressService {
     private List<Address> accountServiceList = new ArrayList<>();
     private AtomicInteger accountServiceCounter = new AtomicInteger();
     final private Object syncObjAS = new Object();

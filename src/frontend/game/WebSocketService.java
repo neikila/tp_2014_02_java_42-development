@@ -11,6 +11,8 @@ public interface WebSocketService extends Abonent, Runnable{
 
     void addUser(GameWebSocket user);
 
+    GameWebSocket getSocket(Id<GameUser> id);
+
     void sendSettings(Id<GameUser> id, GameMap map);
 
     void notifyStartGame(GameSession session, Id <GameUser> id);

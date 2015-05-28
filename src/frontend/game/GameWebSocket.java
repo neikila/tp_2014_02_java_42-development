@@ -54,6 +54,10 @@ public class GameWebSocket {
         logger.info(LoggerMessages.newSocketSuccess());
     }
 
+    public Address getGMAdress() {
+        return GMAdress;
+    }
+
     public Id <GameUser> getId() { return id; }
 
     private void sendJSON(JSONObject jsonObject) {

@@ -12,11 +12,16 @@ public class Id <T>{
 
     @Override
     public String toString() {
-        return "" + id;
+        return "" + (int)id;
     }
 
     @Override
     public int hashCode() {
         return (int)id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return (id == ((Id<T>) o).id);
     }
 }

@@ -2,7 +2,7 @@ package messageSystem;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public final class Address {
+public class Address {
     private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
     private final int id;
 
