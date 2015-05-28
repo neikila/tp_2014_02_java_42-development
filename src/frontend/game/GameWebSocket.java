@@ -30,21 +30,23 @@ public class GameWebSocket {
 
     final private UserProfile user;
     final private Address GMAdress;
+    final private Address webSocketAddr;
     final private MessageSystem messageSystem;
-    final private WebSocketService webSocketService;
     final private Id<GameUser> id;
     private Session session;
     private boolean closed; // TODO возможно ли обратиться к этомму объекту после того как сработает OnSocketClosed
     // На случай, если сокет закрыт, но объект остался
     private boolean gameSessionClosed;
-    private boolean isGamePad;
+    final private WebSocketService webSocketService;
 
-    public GameWebSocket(UserProfile userProfile, Context context, boolean isGamePad) {
-        this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
+    public GameWebSocket(UserProfile userProfile, Context context) {
         this.user = userProfile;
         this.id = new Id<>(user.getId());
         this.messageSystem = (MessageSystem) context.get(MessageSystem.class);
         this.GMAdress = messageSystem.getAddressService().getGameMechanicsAddress();
+        this.webSocketAddr = messageSystem.getAddressService().getWebSocketServiceAddress();
+
+        this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
 
         session = null;
         closed = true;
@@ -109,7 +111,7 @@ public class GameWebSocket {
     public void onMessage(String data) {
         if (!gameSessionClosed) {
             JSONObject message = getJsonFromString(data);
-            messageSystem.sendMessage(new MessageFromWebSocket(webSocketService.getAddress(), GMAdress, id, message));
+            messageSystem.sendMessage(new MessageFromWebSocket(webSocketAddr, GMAdress, id, message));
         }
     }
 
@@ -119,10 +121,9 @@ public class GameWebSocket {
         gameSessionClosed = false;
         logger.info(LoggerMessages.onOpen(), user.getLogin());
         setSession(session);
-        if (isGamePad == false)
-            webSocketService.addUser(this);
 
-        messageSystem.sendMessage(new MessageAddUser(webSocketService.getAddress(), GMAdress, id, user));
+        webSocketService.addUser(this);
+        messageSystem.sendMessage(new MessageAddUser(webSocketAddr, GMAdress, id, user));
     }
 
     public Session getSession() {

@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
+import utils.Id;
 import utils.LoggerMessages;
 
 
@@ -29,16 +30,14 @@ public class GameWebSocketCreator implements WebSocketCreator {
         logger.info(LoggerMessages.newSocket());
         if ((temp = accountService.getSessions(sessionId)) == null) {
             if ((temp = accountService.getUserFromPhoneSession(sessionId)) != null) {
-                return new GameWebSocket(temp, context, true);
-            } else {
-                logger.info(LoggerMessages.notAuthorised());
+                logger.info("New phoneSocket for user {} with id {}", temp.getLogin(), temp.getId());
+                return new PhoneWebSocket(new Id<>(temp.getId()), context);
             }
         } else {
-            return new GameWebSocket(temp, context, false);
+            return new GameWebSocket(temp, context);
         }
 
-        logger.info("Huston we have some problems");
-        //  TODO
+        logger.info(LoggerMessages.notAuthorised());
         return null;
     }
 }
