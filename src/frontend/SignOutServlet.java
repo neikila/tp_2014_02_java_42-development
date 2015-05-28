@@ -41,6 +41,7 @@ public class SignOutServlet extends HttpServlet {
         if (user != null) {
             logger.info(LoggerMessages.loggedOut(), user.getLogin());
             accountService.removeSession(session.getId());
+            accountService.removePhoneSession(user.getLogin());
             status = 200;
         } else {
             logger.info(LoggerMessages.notAuthorised());
