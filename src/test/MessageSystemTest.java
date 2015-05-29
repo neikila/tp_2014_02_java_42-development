@@ -97,6 +97,13 @@ public class MessageSystemTest {
         };
         messageSystem.sendMessage(message);
 
-        messageSystem.execForAbonent(abonent2);
+        boolean result = true;
+        try {
+            messageSystem.execForAbonent(abonent2);
+        } catch (Exception e) {
+            result = false;
+        }
+
+        assertEquals(true, result);
     }
 }

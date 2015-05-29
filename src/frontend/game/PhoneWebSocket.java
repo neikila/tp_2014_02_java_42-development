@@ -45,7 +45,6 @@ public class PhoneWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) {
-        System.out.println("Message income");
         JSONObject message = getJsonFromString(data);
         messageSystem.sendMessage(new MessageFromWebSocket(webSocketAddr, GMAdress, id, message));
     }
