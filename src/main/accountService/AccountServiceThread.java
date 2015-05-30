@@ -4,10 +4,14 @@ import main.Context;
 import messageSystem.Abonent;
 import messageSystem.Address;
 import messageSystem.MessageSystem;
+import resource.ResourceFactory;
+import resource.ThreadsSettings;
 
 public final class AccountServiceThread implements Abonent, Runnable {
     private final Address address = new Address();
     private final MessageSystem messageSystem;
+
+    private final int stepTime;
 
     private final AccountService accountService;
 
@@ -17,6 +21,7 @@ public final class AccountServiceThread implements Abonent, Runnable {
         messageSystem.getAddressService().registerAccountService(this);
 
         this.accountService = (AccountService) context.get(AccountService.class);
+        stepTime = ((ThreadsSettings) ResourceFactory.instance().getResource("threadsSettings")).getASTimeStep();
     }
 
     public MessageSystem getMessageSystem() {
@@ -37,7 +42,7 @@ public final class AccountServiceThread implements Abonent, Runnable {
         while (true){
             messageSystem.execForAbonent(this);
             try {
-                Thread.sleep(100);
+                Thread.sleep(stepTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

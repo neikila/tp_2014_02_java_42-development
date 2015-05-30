@@ -7,6 +7,12 @@ import main.user.UserProfile;
 import java.util.*;
 
 public class AccountServiceImpl implements AccountService {
+//    final private Map<String, UserProfile> users = new ConcurrentHashMap<>();
+//    final private Map<String, UserProfile> sessions = new ConcurrentHashMap<>();
+//    final private Map<String, String> phoneSessionToLogin = new ConcurrentHashMap<>();
+//    final private Map<String, String> phoneLoginToSession = new ConcurrentHashMap<>();
+//    final private Map<String, UserProfile> sessionsWithUserAsKey = new ConcurrentHashMap<>();
+
     final private Map<String, UserProfile> users = new HashMap<>();
     final private Map<String, UserProfile> sessions = new HashMap<>();
     final private Map<String, String> phoneSessionToLogin = new HashMap<>();

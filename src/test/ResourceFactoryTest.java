@@ -34,7 +34,6 @@ public class ResourceFactoryTest {
         try {
             resource = ResourceFactory.instance().getResource("notExist");
         } catch (Exception  e) {
-            e.printStackTrace();
             resource = null;
         }
         assertEquals(null, resource);

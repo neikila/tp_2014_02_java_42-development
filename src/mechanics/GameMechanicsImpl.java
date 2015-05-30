@@ -9,13 +9,15 @@ import messageSystem.Message;
 import messageSystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.util.ArrayQueue;
 import org.json.simple.JSONObject;
 import resource.GameMechanicsSettings;
+import resource.ResourceFactory;
+import resource.ThreadsSettings;
 import utils.Id;
 import utils.LoggerMessages;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public final class GameMechanicsImpl implements GameMechanics {
     final private Logger logger = LogManager.getLogger(GameMechanics.class.getName());
@@ -23,14 +25,12 @@ public final class GameMechanicsImpl implements GameMechanics {
     private final Address address = new Address();
     private final MessageSystem messageSystem;
 
-    private static final int STEP_TIME = 100;
+    private final int stepTime;
 
     final private int gameTime;
     final private int weight;
     final private int minDelta;
     final private ArrayList<GameMap> maps;
-
-//    final private WebSocketService webSocketService;
 
     final private Map<Id <GameUser>, GameSession> nameToGame = new HashMap<>();
 
@@ -38,19 +38,19 @@ public final class GameMechanicsImpl implements GameMechanics {
 
     final private GameUserManager userManager = new GameUserManager();
 
-    private ConcurrentLinkedQueue<GameUser> waiters = new ConcurrentLinkedQueue<>();
+//    private ConcurrentLinkedQueue<GameUser> waiters = new ConcurrentLinkedQueue<>();
+    private Queue<GameUser> waiters = new ArrayQueue<>(50);
 
     public GameMechanicsImpl(Context context, GameMechanicsSettings settings) {
         this.messageSystem = (MessageSystem) context.get(MessageSystem.class);
         messageSystem.addService(this);
         messageSystem.getAddressService().registerGameMechanics(this);
 
-//        this.webSocketService = (WebSocketService) context.get(WebSocketService.class);
-
         gameTime = settings.getTimeLimit() * 1000;
         weight = settings.getWeight();
         minDelta = settings.getMinDelta();
         maps = settings.getMaps();
+        stepTime = ((ThreadsSettings)ResourceFactory.instance().getResource("threadsSettings")).getGMTimeStep();
     }
 
     @Override
@@ -61,7 +61,7 @@ public final class GameMechanicsImpl implements GameMechanics {
             gmStep();
             messageSystem.execForAbonent(this);
             try {
-                Thread.sleep(STEP_TIME - (new Date().getTime() - startTime) % STEP_TIME);
+                Thread.sleep(stepTime - (new Date().getTime() - startTime) % stepTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

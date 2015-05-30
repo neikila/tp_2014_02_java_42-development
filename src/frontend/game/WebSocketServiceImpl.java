@@ -9,24 +9,28 @@ import messageSystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
+import resource.ResourceFactory;
+import resource.ThreadsSettings;
 import utils.Id;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class WebSocketServiceImpl implements WebSocketService {
     final private Logger logger = LogManager.getLogger(WebSocketService.class);
-    private Map<Id <GameUser>, GameWebSocket> userSockets = new HashMap<>();
+    private Map<Id <GameUser>, GameWebSocket> userSockets = new ConcurrentHashMap<>();
 
     private final Address address = new Address();
     private final MessageSystem messageSystem;
 
-    private final short STEP_TIME = 10;
+    private final int stepTime;
 
     public WebSocketServiceImpl(Context context) {
         messageSystem = (MessageSystem) context.get(MessageSystem.class);
         messageSystem.addService(this);
         messageSystem.getAddressService().registerSocketService(this);
+
+        stepTime = ((ThreadsSettings) ResourceFactory.instance().getResource("threadsSettings")).getWebSocketServiceTimeStep();
     }
 
     @Override
@@ -34,7 +38,7 @@ public class WebSocketServiceImpl implements WebSocketService {
         while (true){
             messageSystem.execForAbonent(this);
             try {
-                Thread.sleep(STEP_TIME);
+                Thread.sleep(stepTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

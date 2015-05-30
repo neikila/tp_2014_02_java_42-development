@@ -10,6 +10,12 @@ import java.util.Map;
 
 public class AccountServiceMySQLImpl implements AccountService {
     final private DBService dbService;
+
+//    final private Map<String, UserProfile> sessions = new ConcurrentHashMap<>();
+//    final private Map<String, UserProfile> sessionsWithUserAsKey = new ConcurrentHashMap<>();
+//    final private Map<String, String> phoneSessionToLogin = new ConcurrentHashMap<>();
+//    final private Map<String, String> phoneLoginToSession = new ConcurrentHashMap<>();
+
     final private Map<String, UserProfile> sessions = new HashMap<>();
     final private Map<String, UserProfile> sessionsWithUserAsKey = new HashMap<>();
     final private Map<String, String> phoneSessionToLogin = new HashMap<>();

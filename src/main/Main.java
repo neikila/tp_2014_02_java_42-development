@@ -15,10 +15,7 @@ import mechanics.GameMechanicsImpl;
 import messageSystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import resource.DbServerSettings;
-import resource.GameMechanicsSettings;
-import resource.ResourceFactory;
-import resource.ServerSettings;
+import resource.*;
 import utils.LoggerMessages;
 
 import javax.management.MBeanServer;
@@ -58,13 +55,13 @@ public class Main {
         logger.info(LoggerMessages.serverStart(), (String.valueOf(port)));
 
         AppServer server = new AppServer(context, port);
-//        context.add(AppServer.class, server);
 
-        for (int i = 0; i < 1; ++i) {
+        ThreadsSettings threadsSettings = (ThreadsSettings) ResourceFactory.instance().getResource("threadsSettings");
+
+        for (int i = 0; i < threadsSettings.getASThreadsAmount(); ++i) {
             Thread accountServiceThread = new Thread(new AccountServiceThread(context));
             accountServiceThread.setDaemon(false);
             accountServiceThread.setName("AccountService" + (i + 1));
-//        context.add(AccountService.class, accountServiceThread);
 
             accountServiceThread.start();
         }
@@ -78,7 +75,7 @@ public class Main {
 
         GameMechanics gameMechanics;
         GameMechanicsSettings gameMechanicsSettings = (GameMechanicsSettings)ResourceFactory.instance().getResource("gameMechanicsSettings");
-        for (int i = 0; i < 1; ++i) {
+        for (int i = 0; i < threadsSettings.getGMThreadsAmount(); ++i) {
             gameMechanics = new GameMechanicsImpl(context, gameMechanicsSettings);
 
             final Thread gameMechanicsThread = new Thread(gameMechanics);
@@ -98,6 +95,5 @@ public class Main {
         ObjectName name = new ObjectName("ServerManager:type=AccountServiceController");
         AccountServiceControllerMBean serverStatistics = new AccountServiceController(context);
         mbs.registerMBean(serverStatistics, name);
-
     }
 }
