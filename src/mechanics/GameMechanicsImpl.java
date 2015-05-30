@@ -9,7 +9,6 @@ import messageSystem.Message;
 import messageSystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jetty.util.ArrayQueue;
 import org.json.simple.JSONObject;
 import resource.GameMechanicsSettings;
 import resource.ResourceFactory;
@@ -39,7 +38,7 @@ public final class GameMechanicsImpl implements GameMechanics {
     final private GameUserManager userManager = new GameUserManager();
 
 //    private ConcurrentLinkedQueue<GameUser> waiters = new ConcurrentLinkedQueue<>();
-    private Queue<GameUser> waiters = new ArrayQueue<>(50);
+    private Queue<GameUser> waiters = new LinkedList<>();
 
     public GameMechanicsImpl(Context context, GameMechanicsSettings settings) {
         this.messageSystem = (MessageSystem) context.get(MessageSystem.class);
