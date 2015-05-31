@@ -1,16 +1,33 @@
 package test;
 
+import org.junit.Before;
 import org.junit.Test;
 import resource.Resource;
 import resource.ResourceFactory;
 
+import java.lang.reflect.Field;
+
 import static org.junit.Assert.*;
 
 public class ResourceFactoryTest {
+    private ResourceFactory resourceFactory;
+
+    @Before
+    public void setup() throws Exception {
+        resourceFactory = ResourceFactory.instance();
+        Field field = resourceFactory.getClass().getDeclaredField("resourceDirectory");
+        try {
+            field.setAccessible(true);
+            field.set(resourceFactory, "data/testFiles/");
+            field.setAccessible(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     public void testGetResource() throws Exception {
-        TestResource resource = (TestResource) ResourceFactory.instance().getResource("test");
+        TestResource resource = (TestResource) resourceFactory.getResource("test");
 
         assertEquals(8080, resource.getSuccess());
         assertNotEquals(null, resource);
@@ -20,7 +37,7 @@ public class ResourceFactoryTest {
     public void testGetNotExistingResource() throws Exception {
         Resource resource;
         try {
-            resource = ResourceFactory.instance().getResource("testXMLDifferentFromResource");
+            resource = resourceFactory.getResource("testXMLDifferentFromResource");
         } catch (Exception  e) {
             e.printStackTrace();
             resource = null;
@@ -32,7 +49,7 @@ public class ResourceFactoryTest {
     public void testGetNotExistingXML() throws Exception {
         Resource resource;
         try {
-            resource = ResourceFactory.instance().getResource("notExist");
+            resource = resourceFactory.getResource("notExist");
         } catch (Exception  e) {
             resource = null;
         }
@@ -43,7 +60,7 @@ public class ResourceFactoryTest {
     public void testGetWrongXMLResource() throws Exception {
         Resource resource;
         try {
-            resource = ResourceFactory.instance().getResource("wrongTest");
+            resource = resourceFactory.getResource("wrongTest");
         } catch (Exception  e) {
             e.printStackTrace();
             resource = null;

@@ -48,8 +48,4 @@ public class AddressServiceTest {
             assertEquals(1,getGMId());
         }
     }
-
-
-
-
 }

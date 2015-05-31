@@ -18,6 +18,8 @@ public class ResourceFactory {
 
     private static ResourceFactory resourceFactory = null;
 
+    private String resourceDirectory = "data/resourceFiles/";
+
     public static ResourceFactory instance() {
         if (resourceFactory == null) {
             resourceFactory = new ResourceFactory();
@@ -29,7 +31,7 @@ public class ResourceFactory {
     public Resource getResource(String resourceWay) {
         Resource object;
         if((object = resources.get(resourceWay)) == null) {
-            object = (Resource) ReadXMLFileSAX.readXML("data/resourceFiles/" + resourceWay + ".xml");
+            object = (Resource) ReadXMLFileSAX.readXML(resourceDirectory + resourceWay + ".xml");
             object.checkState();
             resources.put(resourceWay, object);
             logger.info(LoggerMessages.resourceWasParsed(), resourceWay);
@@ -37,5 +39,5 @@ public class ResourceFactory {
         return object;
     }
 
-    private ResourceFactory () {}
+    private ResourceFactory () { resourceDirectory = "data/resourceFiles/"; }
 }
