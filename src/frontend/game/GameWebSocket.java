@@ -84,6 +84,24 @@ public class GameWebSocket {
         JSONObject jsonStart = new JSONObject();
         jsonStart.put("status", Messages.JSONStatusSync());
         jsonStart.put("time", session.getSessionTime());
+
+        GameUser gameUser1 = session.getFirst();
+        JSONObject firstPlayer = new JSONObject();
+        firstPlayer.put("x", gameUser1.getCoordinate().getX());
+        firstPlayer.put("y", gameUser1.getCoordinate().getY());
+        firstPlayer.put("health", gameUser1.getHealth());
+        firstPlayer.put("position", gameUser1.getMyPosition());
+
+        GameUser gameUser2 = session.getSecond();
+        JSONObject secondPlayer = new JSONObject();
+        secondPlayer.put("x", gameUser2.getCoordinate().getX());
+        secondPlayer.put("y", gameUser2.getCoordinate().getY());
+        secondPlayer.put("health", gameUser2.getHealth());
+        secondPlayer.put("position", gameUser2.getMyPosition());
+
+        jsonStart.put("firstPlayer", firstPlayer);
+        jsonStart.put("secondPlayer", secondPlayer);
+
         sendJSON(jsonStart);
     }
 

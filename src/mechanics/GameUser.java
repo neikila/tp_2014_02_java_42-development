@@ -10,7 +10,7 @@ import utils.Point;
 public class GameUser {
     private Id <GameUser> id;
     private int myScore = 0;
-    private int position = 0; // It is needed for left or right position on the screen
+    private int position = 0; // It is needed for left 1 or right 2 position on the screen
     private UserProfile user;
 
     private int health;
@@ -19,11 +19,18 @@ public class GameUser {
     public GameUser(Id <GameUser> id, UserProfile user) {
         this.id = id;
         this.user = user;
+        this.health = 100;
     }
 
     public void setMyPosition(int myPos) {
-        if (position == 0)
-        position = myPos;
+        if (position == 0) {
+            position = myPos;
+            if (myPos == 1) {
+                coordinate = new Point(32, 380);
+            } else {
+                coordinate = new Point(768, 380);
+            }
+        }
     }
 
     public int getMyPosition() { return position; }
@@ -36,6 +43,14 @@ public class GameUser {
 
     public Id <GameUser> getId() { return id; }
 
+    public int getHealth() { return health; }
+
+    public int reduceHealth(int damage) {
+        health -= damage;
+        return health;
+    }
+
+    public Point getCoordinate() { return coordinate; }
 
     public void incrementMyScore() {
         myScore++;

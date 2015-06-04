@@ -3,7 +3,6 @@ package mechanics;
 import utils.Id;
 
 import java.util.Date;
-import java.util.Random;
 
 public class GameSession {
     private final long startTime;
@@ -64,7 +63,7 @@ public class GameSession {
     }
 
     public GameResult getWinner() {
-
+/*
         // Заглушка
         Random rand = new Random();
         int nextMap = rand.nextInt(1);
@@ -73,6 +72,13 @@ public class GameSession {
         } else {
             winner = GameResult.SecondWon;
         }
+*/
+        if (first.getHealth() > second.getHealth())
+            winner = GameResult.FirstWon;
+        if (second.getHealth() > first.getHealth())
+            winner = GameResult.SecondWon;
+        if (first.getHealth() == second.getHealth())
+            winner = GameResult.Draw;
 
         return winner;
     }

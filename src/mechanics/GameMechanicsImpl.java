@@ -29,6 +29,8 @@ public final class GameMechanicsImpl implements GameMechanics {
     final private int gameTime;
     final private int weight;
     final private int minDelta;
+
+    final private int damage = 10;
     final private ArrayList<GameMap> maps;
 
     final private Map<Id <GameUser>, GameSession> nameToGame = new HashMap<>();
@@ -104,18 +106,34 @@ public final class GameMechanicsImpl implements GameMechanics {
     }
 
     public void analyzeMessage(Id<GameUser> id, JSONObject message) {
+
+        GameUser myUser = userManager.getSelf(id);
+        GameSession myGameSession = nameToGame.get(id);
+        if (myUser == null || myGameSession == null) {
+            return;
+        }
+
         if (message.containsKey("action")) {
-            GameUser myUser = userManager.getSelf(id);
-            GameSession myGameSession = nameToGame.get(id);
+            myUser.getCoordinate().setXY((int)message.get("x"), (int)message.get("y"));
+
             GameUser opponent = myGameSession.getEnemy(myUser.getMyPosition());
 
             message.put("player", myUser.getMyPosition());
+
+            message.remove("x");
+            message.remove("y");
 
             Address to = messageSystem.getAddressService().getWebSocketServiceAddress();
             messageSystem.sendMessage(new MessageAction(address, to, id, message));
             messageSystem.sendMessage(new MessageAction(address, to, opponent.getId(), message));
         } else {
             logger.info(LoggerMessages.onMessage(), id, message.toString());
+        }
+
+        if (message.containsKey("fire")) {
+            if (myUser.reduceHealth(damage) <= 0) {
+                finishGame(myGameSession);
+            }
         }
     }
 
@@ -146,7 +164,7 @@ public final class GameMechanicsImpl implements GameMechanics {
         GameUser first = session.getFirst();
         GameUser second = session.getSecond();
 
-        int deltaScore = (minDelta + weight * Math.abs(first.getMyScore() - second.getMyScore()));
+        int deltaScore = (minDelta + weight * Math.abs(first.getHealth() - second.getHealth()));
 
         switch (gameResult) {
             case Draw:
