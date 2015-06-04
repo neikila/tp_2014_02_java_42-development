@@ -25,7 +25,7 @@ public final class GameMechanicsImpl implements GameMechanics {
     private final MessageSystem messageSystem;
 
     private final int stepTime;
-
+    final private int syncFrequency;
     final private int gameTime;
     final private int weight;
     final private int minDelta;
@@ -51,6 +51,7 @@ public final class GameMechanicsImpl implements GameMechanics {
         weight = settings.getWeight();
         minDelta = settings.getMinDelta();
         maps = settings.getMaps();
+        syncFrequency = settings.getSyncFrequency();
         stepTime = ((ThreadsSettings)ResourceFactory.instance().getResource("threadsSettings")).getGMTimeStep();
     }
 
@@ -114,8 +115,9 @@ public final class GameMechanicsImpl implements GameMechanics {
         }
 
         if (message.containsKey("action")) {
+            double prev = myUser.getCoordinate().getX();
             myUser.getCoordinate().setXY(((Number)message.get("x")).doubleValue(), ((Number) message.get("x")).doubleValue());
-
+            System.out.println("x = " + myUser.getCoordinate().getX() + "\t\tdx = " + Math.abs(prev - myUser.getCoordinate().getX()));
             GameUser opponent = myGameSession.getEnemy(myUser.getMyPosition());
 
             message.put("player", myUser.getMyPosition());
@@ -141,8 +143,10 @@ public final class GameMechanicsImpl implements GameMechanics {
         for (GameSession session : allSessions) {
             if (!session.isFinished()) {
                 session.makeStep();
-                if (session.getCountStep() % 5 == 0)
+                if (session.getCountStep() == (syncFrequency / stepTime) ) {
                     sendSync(session);
+                    session.counterToZero();
+                }
                 if (session.getSessionTime() > gameTime) {
                     finishGame(session);
                 }

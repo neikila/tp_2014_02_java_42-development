@@ -1,5 +1,5 @@
 <class type='resource.ThreadsSettings'>
-    <GMTimeStep>100</GMTimeStep>
+    <GMTimeStep>5</GMTimeStep>
     <GMThreadsAmount>2</GMThreadsAmount>
     <ASTimeStep>100</ASTimeStep>
     <ASThreadsAmount>2</ASThreadsAmount>

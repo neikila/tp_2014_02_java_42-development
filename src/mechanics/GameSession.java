@@ -58,6 +58,10 @@ public class GameSession {
         return countStep;
     }
 
+    public void counterToZero() {
+        countStep = 0;
+    }
+
     public int makeStep() {
         return ++countStep;
     }

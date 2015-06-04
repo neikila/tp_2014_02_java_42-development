@@ -18,6 +18,7 @@ public class GameMechanicsSettings  implements Serializable, Resource {
     private int numAmount;
     private int weight;
     private int minDelta;
+    private int syncFrequency;
     private ArrayList<GameMap> maps;
 
     public GameMechanicsSettings() {
@@ -25,8 +26,11 @@ public class GameMechanicsSettings  implements Serializable, Resource {
         numAmount = 6;
         weight = 10;
         minDelta = 5;
+        syncFrequency = 500;
         maps = new ArrayList<>();
     }
+
+    public int getSyncFrequency() { return syncFrequency; }
 
     public int getTimeLimit() { return timeLimit; }
 
