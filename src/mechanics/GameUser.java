@@ -2,6 +2,7 @@ package mechanics;
 
 import main.user.UserProfile;
 import utils.Id;
+import utils.Point;
 
 /**
  * @author v.chibrikov
@@ -11,6 +12,9 @@ public class GameUser {
     private int myScore = 0;
     private int position = 0; // It is needed for left or right position on the screen
     private UserProfile user;
+
+    private int health;
+    private Point coordinate;
 
     public GameUser(Id <GameUser> id, UserProfile user) {
         this.id = id;
@@ -31,6 +35,7 @@ public class GameUser {
     public UserProfile getUser() { return user; }
 
     public Id <GameUser> getId() { return id; }
+
 
     public void incrementMyScore() {
         myScore++;

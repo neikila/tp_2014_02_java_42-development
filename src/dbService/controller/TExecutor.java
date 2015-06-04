@@ -1,5 +1,7 @@
 package dbService.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,6 +12,7 @@ import org.hibernate.Transaction;
  */
 public class TExecutor{
 
+    private Logger logger = LogManager.getLogger(TExecutor.class.getName());
     private SessionFactory sessionFactory;
 
     public TExecutor (SessionFactory sessionFactory) {
@@ -23,6 +26,7 @@ public class TExecutor{
             session = sessionFactory.openSession();
             value = action.action(session, param);
         } catch (HibernateException he) {
+            logger.error(he);
             he.printStackTrace();
         } finally {
             if (session != null)
@@ -39,6 +43,7 @@ public class TExecutor{
             transaction = session.beginTransaction();
             action.action(session, param);
         } catch (Exception e) {
+            logger.error(e);
             e.printStackTrace();
             if (transaction != null)
                 transaction.rollback();
