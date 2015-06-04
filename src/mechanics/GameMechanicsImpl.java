@@ -114,7 +114,7 @@ public final class GameMechanicsImpl implements GameMechanics {
         }
 
         if (message.containsKey("action")) {
-            myUser.getCoordinate().setXY((double)message.get("x"), (double)message.get("y"));
+            myUser.getCoordinate().setXY(((Number)message.get("x")).doubleValue(), ((Number) message.get("x")).doubleValue());
 
             GameUser opponent = myGameSession.getEnemy(myUser.getMyPosition());
 

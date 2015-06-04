@@ -133,6 +133,7 @@ public class GameWebSocket {
     public void onMessage(String data) {
         if (!gameSessionClosed) {
             JSONObject message = getJsonFromString(data);
+            System.out.println(message);
             messageSystem.sendMessage(new MessageFromWebSocket(webSocketAddr, GMAdress, id, message));
         }
     }
