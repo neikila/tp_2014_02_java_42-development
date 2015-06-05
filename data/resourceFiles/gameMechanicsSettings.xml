@@ -4,4 +4,6 @@
     <weight>10</weight>
     <minDelta>10</minDelta>
     <syncFrequency>500</syncFrequency>
+    <deltaPressed>20</deltaPressed>
+    <damage>10</damage>
 </class>

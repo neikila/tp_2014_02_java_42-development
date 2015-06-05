@@ -19,6 +19,8 @@ public class GameMechanicsSettings  implements Serializable, Resource {
     private int weight;
     private int minDelta;
     private int syncFrequency;
+    private int deltaPressed;
+    private int damage;
     private ArrayList<GameMap> maps;
 
     public GameMechanicsSettings() {
@@ -27,6 +29,8 @@ public class GameMechanicsSettings  implements Serializable, Resource {
         weight = 10;
         minDelta = 5;
         syncFrequency = 500;
+        deltaPressed = 20;
+        damage = 10;
         maps = new ArrayList<>();
     }
 
@@ -41,6 +45,10 @@ public class GameMechanicsSettings  implements Serializable, Resource {
     public int getMinDelta() { return minDelta; }
 
     public ArrayList<GameMap> getMaps() { return maps; }
+
+    public long getDeltaPressed() { return (long)deltaPressed; }
+
+    public int getDamage() { return damage; }
 
     public void checkState() {
         if (numAmount < 6)

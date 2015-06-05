@@ -67,16 +67,7 @@ public class GameSession {
     }
 
     public GameResult getWinner() {
-/*
-        // Заглушка
-        Random rand = new Random();
-        int nextMap = rand.nextInt(1);
-        if (nextMap == 0) {
-            winner = GameResult.FirstWon;
-        } else {
-            winner = GameResult.SecondWon;
-        }
-*/
+
         if (first.getHealth() > second.getHealth())
             winner = GameResult.FirstWon;
         if (second.getHealth() > first.getHealth())

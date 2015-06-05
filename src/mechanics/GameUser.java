@@ -4,6 +4,8 @@ import main.user.UserProfile;
 import utils.Id;
 import utils.Point;
 
+import java.util.Date;
+
 /**
  * @author v.chibrikov
  */
@@ -15,6 +17,9 @@ public class GameUser {
 
     private int health;
     private Point coordinate;
+
+    private long whenWasPressed;
+    private GameDirection direction = GameDirection.None;
 
     public GameUser(Id <GameUser> id, UserProfile user) {
         this.id = id;
@@ -31,6 +36,32 @@ public class GameUser {
                 coordinate = new Point(768, 380);
             }
         }
+    }
+
+    public GameDirection getDirection() { return direction; }
+
+    public long getTime() { return whenWasPressed; }
+
+    public void appendTime(long delta) { whenWasPressed += delta; }
+
+    public void press(int dir) {
+        GameDirection temp;
+        switch (dir) {
+            case 0: temp = GameDirection.None; break;
+            case 1: temp = GameDirection.Up; break;
+            case 2: temp = GameDirection.Right; break;
+            case 3: temp = GameDirection.Down; break;
+            case 4: temp = GameDirection.Left; break;
+            default: temp = GameDirection.None;
+        }
+        if (temp != GameDirection.None) {
+            whenWasPressed = new Date().getTime();
+            direction = temp;
+        }
+    }
+
+    public void release() {
+        direction = GameDirection.None;
     }
 
     public int getMyPosition() { return position; }
