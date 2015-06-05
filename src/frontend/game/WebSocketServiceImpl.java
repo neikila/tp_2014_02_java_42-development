@@ -110,4 +110,9 @@ public class WebSocketServiceImpl implements WebSocketService {
             logger.info("No logger related to such GameUser ID: {}", id);
         }
     }
+
+    @Override
+    public void removeUser(Id <GameUser> id) {
+        userSockets.remove(id);
+    }
 }

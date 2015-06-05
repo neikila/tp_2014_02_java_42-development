@@ -22,4 +22,6 @@ public interface WebSocketService extends Abonent, Runnable{
     void notifyGameOver(Id <GameUser> id, int result);
 
     void notifyAction(Id <GameUser> id, JSONObject action);
+
+    void removeUser(Id <GameUser> id);
 }
