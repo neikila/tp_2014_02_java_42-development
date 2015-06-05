@@ -149,6 +149,7 @@ public final class GameMechanicsImpl implements GameMechanics {
 
             if (message.containsKey("fire")) {
                 if (myUser.reduceHealth(damage) <= 0) {
+                    sendSync(myGameSession);
                     finishGame(myGameSession);
                 }
             }

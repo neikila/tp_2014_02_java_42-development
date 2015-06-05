@@ -2,6 +2,7 @@ package main.user;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "users")
@@ -28,6 +29,8 @@ public class UserProfile implements Serializable {
     @Column(name = "score")
     private int score;
 
+    private long lastAction;
+
     public UserProfile(String login, String password, String email) {
         this.login = login;
         this.password = password;
@@ -35,6 +38,7 @@ public class UserProfile implements Serializable {
         this.isSuperUser = false;
         this.score = 0;
         this.id = -1;
+        lastAction = new Date().getTime();
     }
 
     public UserProfile(long id, String login, String password, String email) {
@@ -72,6 +76,14 @@ public class UserProfile implements Serializable {
     }
 
     public boolean isAdmin() { return isSuperUser; }
+
+    public void act() {
+        lastAction = new Date().getTime();
+    }
+
+    public long getLastAction() {
+        return lastAction;
+    }
 
     @Override
     public boolean equals(Object o) {
