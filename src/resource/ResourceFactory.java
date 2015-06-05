@@ -4,8 +4,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import resource.sax.ReadXMLFileSAX;
 import utils.LoggerMessages;
+import utils.vfs.VFS;
+import utils.vfs.VFSImpl;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by neikila on 02.04.15.
@@ -40,4 +43,17 @@ public class ResourceFactory {
     }
 
     private ResourceFactory () { resourceDirectory = "data/resourceFiles/"; }
+
+    public void getAllResources() {
+        VFS temp = new VFSImpl(resourceDirectory);
+        Iterator<String> iterator = temp.getIterator("");
+        while (iterator.hasNext()) {
+            String fileName = iterator.next();
+            int indexPoint = fileName.lastIndexOf(".");
+            if (indexPoint > 0 && fileName.length() - indexPoint == 4) {
+                fileName = fileName.substring(fileName.lastIndexOf("/") + 1, indexPoint);
+                getResource(fileName);
+            }
+        }
+    }
 }

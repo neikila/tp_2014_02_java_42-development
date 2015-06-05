@@ -3,9 +3,12 @@ package resource;
 import mechanics.GameMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import utils.vfs.VFS;
+import utils.vfs.VFSImpl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by neikila on 03.04.15.
@@ -68,8 +71,16 @@ public class GameMechanicsSettings  implements Serializable, Resource {
     private void setAllMaps() {
         // TODO переделать в цикл
         try {
-            GameMap temp = new GameMap("defaultMap");
-            maps.add(temp);
+            VFS temp = new VFSImpl("data/game/");
+            Iterator<String> iterator = temp.getIterator("maps/");
+            while (iterator.hasNext()) {
+                String fileName = iterator.next();
+                fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+                if (!temp.isDirectory(fileName)) {
+                    GameMap map = new GameMap(fileName);
+                    maps.add(map);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e);

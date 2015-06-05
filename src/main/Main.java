@@ -26,6 +26,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         ResourceFactory resourceFactory = ResourceFactory.instance();
+        resourceFactory.getAllResources();
         Context context = new Context();
 
         final Logger logger = LogManager.getLogger(Main.class.getName());
