@@ -126,6 +126,16 @@ public final class GameMechanicsImpl implements GameMechanics {
             if (message.containsKey("action")) {
                 GameUser opponent = myGameSession.getEnemy(myUser.getMyPosition());
 
+                if (message.containsKey("touchEvent")) {
+                    String touchEvent = (String) message.get("touchEvent");
+                    if (touchEvent.equals("touchStart")) {
+                        myUser.press(((Number) message.get("action")).intValue());
+                        message.remove("touchEvent");
+                    } else {
+                        myUser.release();
+                    }
+                }
+
                 message.put("player", myUser.getMyPosition());
 
                 Address to = messageSystem.getAddressService().getWebSocketServiceAddress();
@@ -134,7 +144,7 @@ public final class GameMechanicsImpl implements GameMechanics {
             }
 
             if (message.containsKey("check")) {
-                myUser.getCoordinate().setXY(((Number) message.get("x")).doubleValue(), ((Number) message.get("x")).doubleValue());
+                myUser.getCoordinate().setXY(((Number) message.get("x")).doubleValue(), ((Number) message.get("y")).doubleValue());
             }
 
             if (message.containsKey("fire")) {
