@@ -131,8 +131,6 @@ public final class GameMechanicsImpl implements GameMechanics {
                 Address to = messageSystem.getAddressService().getWebSocketServiceAddress();
                 messageSystem.sendMessage(new MessageAction(address, to, id, message));
                 messageSystem.sendMessage(new MessageAction(address, to, opponent.getId(), message));
-            } else {
-                logger.info(LoggerMessages.onMessage(), id, message.toString());
             }
 
             if (message.containsKey("check")) {
