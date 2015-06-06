@@ -39,7 +39,6 @@ public final class GameMechanicsImpl implements GameMechanics {
 
     final private GameUserManager userManager = new GameUserManager();
 
-//    private ConcurrentLinkedQueue<GameUser> waiters = new ConcurrentLinkedQueue<>();
     private Queue<GameUser> waiters = new LinkedList<>();
 
     public GameMechanicsImpl(Context context, GameMechanicsSettings settings) {
@@ -119,22 +118,26 @@ public final class GameMechanicsImpl implements GameMechanics {
         GameUser myUser = userManager.getSelf(id);
         GameSession myGameSession = nameToGame.get(id);
         if (myUser == null || myGameSession == null) {
+            logger.info("Huston we have some problems");
             return;
         }
 
         try {
             if (message.containsKey("action")) {
-                GameUser opponent = myGameSession.getEnemy(myUser.getMyPosition());
 
                 if (message.containsKey("touchEvent")) {
                     String touchEvent = (String) message.get("touchEvent");
+                    GameDirection dir = GameDirection.getDirection(((Number) message.get("action")).intValue());
                     if (touchEvent.equals("touchStart")) {
-                        myUser.press(((Number) message.get("action")).intValue());
+                        myUser.press(dir);
                         message.remove("touchEvent");
                     } else {
                         myUser.release();
+                        return;
                     }
                 }
+
+                GameUser opponent = myGameSession.getEnemy(myUser.getMyPosition());
 
                 message.put("player", myUser.getMyPosition());
 
@@ -155,7 +158,29 @@ public final class GameMechanicsImpl implements GameMechanics {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("Bad json");
+            logger.error("Bad json. Very bad JSON.");
+        }
+    }
+
+    @Override
+    public void userLostConnection(Id <GameUser> id) {
+
+        GameUser first = userManager.getSelf(id);
+
+        waiters.remove(first);
+        userManager.removeUser(first);
+
+        GameSession session = nameToGame.get(id);
+        if (session != null) {
+            GameUser second = session.getEnemy(first.getMyPosition());
+
+            Address to = messageSystem.getAddressService().getWebSocketServiceAddress();
+            messageSystem.sendMessage(new MessageErrorInGameProcess(address, to, second.getId(), GameError.OpponentLostConnection));
+
+            nameToGame.remove(first.getId());
+            nameToGame.remove(second.getId());
+            userManager.removeUser(second);
+            allSessions.remove(session);
         }
     }
 
@@ -171,6 +196,8 @@ public final class GameMechanicsImpl implements GameMechanics {
             Address to = messageSystem.getAddressService().getWebSocketServiceAddress();
             messageSystem.sendMessage(new MessageAction(address, to, first.getId(), message));
             messageSystem.sendMessage(new MessageAction(address, to, second.getId(), message));
+
+            logger.info("touchEvent message was send");
         }
     }
 

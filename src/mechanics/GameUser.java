@@ -6,12 +6,8 @@ import utils.Point;
 
 import java.util.Date;
 
-/**
- * @author v.chibrikov
- */
 public class GameUser {
     private Id <GameUser> id;
-    private int myScore = 0;
     private int position = 0; // It is needed for left 1 or right 2 position on the screen
     private UserProfile user;
 
@@ -44,16 +40,7 @@ public class GameUser {
 
     public void appendTime(long delta) { whenWasPressed += delta; }
 
-    public void press(int dir) {
-        GameDirection temp;
-        switch (dir) {
-            case 0: temp = GameDirection.None; break;
-            case 1: temp = GameDirection.Up; break;
-            case 2: temp = GameDirection.Right; break;
-            case 3: temp = GameDirection.Down; break;
-            case 4: temp = GameDirection.Left; break;
-            default: temp = GameDirection.None;
-        }
+    public void press(GameDirection temp) {
         if (temp != GameDirection.None) {
             whenWasPressed = new Date().getTime();
             direction = temp;
@@ -65,10 +52,6 @@ public class GameUser {
     }
 
     public int getMyPosition() { return position; }
-
-    public int getMyScore() {
-        return myScore;
-    }
 
     public UserProfile getUser() { return user; }
 
@@ -82,8 +65,4 @@ public class GameUser {
     }
 
     public Point getCoordinate() { return coordinate; }
-
-    public void incrementMyScore() {
-        myScore++;
-    }
 }

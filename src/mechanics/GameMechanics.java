@@ -12,4 +12,6 @@ public interface GameMechanics extends Abonent, Runnable{
     public void analyzeMessage(Id<GameUser> id, JSONObject message);
 
     public void removeSession(GameSession session);
+
+    public void userLostConnection(Id <GameUser> id);
 }

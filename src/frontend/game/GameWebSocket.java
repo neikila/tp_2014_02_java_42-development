@@ -2,11 +2,13 @@ package frontend.game;
 
 import main.Context;
 import main.user.UserProfile;
+import mechanics.GameError;
 import mechanics.GameMap;
 import mechanics.GameSession;
 import mechanics.GameUser;
 import mechanics.messages.MessageAddUser;
 import mechanics.messages.MessageFromWebSocket;
+import mechanics.messages.MessageLostConnection;
 import messageSystem.Address;
 import messageSystem.MessageSystem;
 import org.apache.logging.log4j.Logger;
@@ -156,9 +158,22 @@ public class GameWebSocket {
         this.session = session;
     }
 
+    public void opponentLostConnection(GameError gameError) {
+        gameSessionClosed = true;
+        JSONObject jsonEnd = new JSONObject();
+        jsonEnd.put("error", gameError.getErrorMessage());
+        jsonEnd.put("code", gameError.ordinal());
+        sendJSON(jsonEnd);
+    }
+
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
         closed = true;
+        if (!gameSessionClosed) {       // Закрытие во время игры
+            webSocketService.removeUser(id);
+            messageSystem.sendMessage(new MessageLostConnection(webSocketAddr, GMAdress, id));
+            gameSessionClosed = true;
+        }
         logger.info(LoggerMessages.onClose(), user.getLogin());
     }
 }

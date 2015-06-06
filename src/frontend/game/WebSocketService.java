@@ -1,5 +1,6 @@
 package frontend.game;
 
+import mechanics.GameError;
 import mechanics.GameMap;
 import mechanics.GameSession;
 import mechanics.GameUser;
@@ -22,6 +23,8 @@ public interface WebSocketService extends Abonent, Runnable{
     void notifyGameOver(Id <GameUser> id, int result);
 
     void notifyAction(Id <GameUser> id, JSONObject action);
+
+    void notifyOpponentLostConnection(Id <GameUser> id, GameError gameError);
 
     void removeUser(Id <GameUser> id);
 }

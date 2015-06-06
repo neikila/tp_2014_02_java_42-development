@@ -1,6 +1,7 @@
 package frontend.game;
 
 import main.Context;
+import mechanics.GameError;
 import mechanics.GameMap;
 import mechanics.GameSession;
 import mechanics.GameUser;
@@ -106,6 +107,16 @@ public class WebSocketServiceImpl implements WebSocketService {
         GameWebSocket socket;
         if ((socket = userSockets.get(id)) != null) {
             socket.gameOver(result);
+        } else {
+            logger.info("No logger related to such GameUser ID: {}", id);
+        }
+    }
+
+    @Override
+    public void notifyOpponentLostConnection(Id <GameUser> id, GameError gameError) {
+        GameWebSocket socket;
+        if ((socket = userSockets.get(id)) != null) {
+            socket.opponentLostConnection(gameError);
         } else {
             logger.info("No logger related to such GameUser ID: {}", id);
         }
