@@ -42,6 +42,15 @@ public class GameSession {
             return second;
     }
 
+    public void lostConnectionToPlayer(GameUser iAmOut) {
+        state = State.Finished;
+        if (iAmOut.getMyPosition() == 1) {
+            winner = GameResult.SecondWon;
+        } else {
+            winner = GameResult.FirstWon;
+        }
+    }
+
     public long getSessionTime(){
         return new Date().getTime() - startTime;
     }
@@ -66,7 +75,8 @@ public class GameSession {
         return ++countStep;
     }
 
-    public GameResult getWinner() {
+    public void gameOver() {
+        state = State.Finished;
 
         if (first.getHealth() > second.getHealth())
             winner = GameResult.FirstWon;
@@ -74,7 +84,9 @@ public class GameSession {
             winner = GameResult.SecondWon;
         if (first.getHealth() == second.getHealth())
             winner = GameResult.Draw;
+    }
 
+    public GameResult getWinner() {
         return winner;
     }
 

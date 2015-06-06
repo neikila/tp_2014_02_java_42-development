@@ -86,33 +86,6 @@ public final class GameMechanicsImpl implements GameMechanics {
         waiters.add(new GameUser(id, user));
     }
 
-    private void createSessions() {
-        while (waiters.size() > 1) {
-            GameUser first = waiters.poll();
-            GameUser second = waiters.poll();
-
-            first.setMyPosition(1);
-            userManager.addUser(first);
-
-            second.setMyPosition(2);
-            userManager.addUser(second);
-
-            Random rand = new Random();
-            int nextMap = rand.nextInt(maps.size());
-            GameMap map = maps.get(nextMap);
-
-            Address to = messageSystem.getAddressService().getWebSocketServiceAddress();
-            messageSystem.sendMessage(new MessageSendSettings(address, to, first.getId(), map));
-            messageSystem.sendMessage(new MessageSendSettings(address, to, second.getId(), map));
-
-            starGame(first, second, map);
-            logger.info(LoggerMessages.firstPlayer());
-            logger.info(LoggerMessages.secondPlayer());
-            logger.info("Map Number: {}", nextMap);
-            logger.info(LoggerMessages.startGame());
-        }
-    }
-
     public void analyzeMessage(Id<GameUser> id, JSONObject message) {
 
         GameUser myUser = userManager.getSelf(id);
@@ -162,6 +135,11 @@ public final class GameMechanicsImpl implements GameMechanics {
         }
     }
 
+    public void removeSession(GameSession session) {
+        if (session.isFinished())
+            allSessions.remove(session);
+    }
+
     @Override
     public void userLostConnection(Id <GameUser> id) {
 
@@ -177,27 +155,38 @@ public final class GameMechanicsImpl implements GameMechanics {
             Address to = messageSystem.getAddressService().getWebSocketServiceAddress();
             messageSystem.sendMessage(new MessageErrorInGameProcess(address, to, second.getId(), GameError.OpponentLostConnection));
 
+            finishOnLostConnection(session, first);
+
             nameToGame.remove(first.getId());
             nameToGame.remove(second.getId());
             userManager.removeUser(second);
-            allSessions.remove(session);
         }
     }
 
-    private void sendPressedForUser(GameUser first, GameUser second) {
-        GameDirection temp;
-        if ((temp = first.getDirection()) != GameDirection.None && (new Date().getTime() - first.getTime()) > deltaPressed) {
-            first.appendTime(deltaPressed);
+    private void createSessions() {
+        while (waiters.size() > 1) {
+            GameUser first = waiters.poll();
+            GameUser second = waiters.poll();
 
-            JSONObject message = new JSONObject();
-            message.put("action", temp.ordinal());
-            message.put("player", first.getMyPosition());
+            first.setMyPosition(1);
+            userManager.addUser(first);
+
+            second.setMyPosition(2);
+            userManager.addUser(second);
+
+            Random rand = new Random();
+            int nextMap = rand.nextInt(maps.size());
+            GameMap map = maps.get(nextMap);
 
             Address to = messageSystem.getAddressService().getWebSocketServiceAddress();
-            messageSystem.sendMessage(new MessageAction(address, to, first.getId(), message));
-            messageSystem.sendMessage(new MessageAction(address, to, second.getId(), message));
+            messageSystem.sendMessage(new MessageSendSettings(address, to, first.getId(), map));
+            messageSystem.sendMessage(new MessageSendSettings(address, to, second.getId(), map));
 
-            logger.info("touchEvent message was send");
+            starGame(first, second, map);
+            logger.info(LoggerMessages.firstPlayer());
+            logger.info(LoggerMessages.secondPlayer());
+            logger.info("Map Number: {}", nextMap);
+            logger.info(LoggerMessages.startGame());
         }
     }
 
@@ -223,6 +212,21 @@ public final class GameMechanicsImpl implements GameMechanics {
         }
     }
 
+    private void sendPressedForUser(GameUser first, GameUser second) {
+        GameDirection temp;
+        if ((temp = first.getDirection()) != GameDirection.None && (new Date().getTime() - first.getTime()) > deltaPressed) {
+            first.appendTime(deltaPressed);
+
+            JSONObject message = new JSONObject();
+            message.put("action", temp.ordinal());
+            message.put("player", first.getMyPosition());
+
+            Address to = messageSystem.getAddressService().getWebSocketServiceAddress();
+            messageSystem.sendMessage(new MessageAction(address, to, first.getId(), message));
+            messageSystem.sendMessage(new MessageAction(address, to, second.getId(), message));
+        }
+    }
+
     private void sendSync(GameSession session) {
         Id <GameUser> first = session.getFirst().getId();
         Id <GameUser> second = session.getSecond().getId();
@@ -232,12 +236,33 @@ public final class GameMechanicsImpl implements GameMechanics {
         messageSystem.sendMessage(new MessageSynchronize(address, to, session, second));
     }
 
+    private void finishOnLostConnection(GameSession session, GameUser iAmOut) {
+        GameUser winner = session.getEnemy(iAmOut.getMyPosition());
+        session.lostConnectionToPlayer(iAmOut);
+        GameResult gameResult = session.getWinner();
+
+        int deltaScore = Math.abs(winner.getHealth() / 2 );
+
+        winner.getUser().increaseScoreOnValue(deltaScore);
+        iAmOut.getUser().increaseScoreOnValue(-1 * deltaScore);
+
+        logger.info(LoggerMessages.isWinner(), winner.getUser().getLogin());
+        logger.info(LoggerMessages.isLoser(), iAmOut.getUser().getLogin());
+
+        saveSession(session);
+
+        Address to = messageSystem.getAddressService().getWebSocketServiceAddress();
+        messageSystem.sendMessage(new MessageGameOver(address, to, winner.getId(), gameResult.ordinal()));
+
+    }
+
     private void finishGame(GameSession session) {
+        session.gameOver();
         GameResult gameResult = session.getWinner();
         GameUser first = session.getFirst();
         GameUser second = session.getSecond();
 
-        int deltaScore = (minDelta + weight * Math.abs(first.getHealth() - second.getHealth()));
+        int deltaScore = minDelta + weight * Math.abs(first.getHealth() - second.getHealth());
 
         switch (gameResult) {
             case Draw:
@@ -263,8 +288,6 @@ public final class GameMechanicsImpl implements GameMechanics {
         messageSystem.sendMessage(new MessageGameOver(address, to, first.getId(), gameResult.ordinal()));
         messageSystem.sendMessage(new MessageGameOver(address, to, second.getId(), gameResult.ordinal()));
 
-        session.finish();
-
         nameToGame.remove(first.getId());
         nameToGame.remove(second.getId());
         userManager.removeUser(first);
@@ -275,11 +298,6 @@ public final class GameMechanicsImpl implements GameMechanics {
     private void saveSession(GameSession gameSession) {
         Message updateMes = new MessageSaveGameSession(this.getAddress(), messageSystem.getAddressService().getAccountServiceAddress(), gameSession);
         messageSystem.sendMessage(updateMes);
-    }
-
-    public void removeSession(GameSession session) {
-        if (session.isFinished())
-            allSessions.remove(session);
     }
 
     private void starGame(GameUser first, GameUser second, GameMap nextMap) {
