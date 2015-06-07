@@ -5,7 +5,39 @@
     <title>Admin page</title>
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8">
     <script type="text/javascript" src="/js/lib/jquery.js"></script>
-    <script type="text/javascript" src="/js/select.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var version = "v1";
+            console.log("It is ready!!");
+
+            $('#getStatistic').click(function () {
+                console.log("Request: getStatistic!");
+                $.ajax({
+                    url: "/api/v1/auth/admin?action=get",
+                    type: "post",
+                    success: function(result){
+                        console.log("Response on adminGetStatistic!");
+                        console.log($(result.code));
+                        console.log($(result));
+                    }
+                });
+            });
+
+            $('#stopServer').click(function () {
+                console.log("Request: stopServer!");
+                $.ajax({
+                    url: "/api/v1/auth/admin?action=stop",
+                    type: "post",
+                    success: function(result){
+                        console.log("Response on adminStopServer!");
+                        console.log($(result.code));
+                        console.log($(result));
+                    }
+                });
+            });
+
+        });
+    </script>
 </head>
 <body>
 <p>${titleMessage}</p>
